@@ -1,11 +1,5 @@
 import { createSystem, defaultConfig } from "@chakra-ui/react";
 
-const config = {
-  // theme: {
-  //   tokens: {
-  //     colors: {},
-  //   },
-  // },
-};
+const config = {};
 
 export default createSystem(defaultConfig, config);
