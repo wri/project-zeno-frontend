@@ -1,25 +1,13 @@
-import { useState } from "react";
-import { Button } from "@chakra-ui/react";
-
+import { Box } from "@chakra-ui/react";
 import Providers from "./Providers";
+import { Map } from "./components";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <Providers>
-      <h1>Vite + React</h1>
-      <div>
-        <Button type="button" onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </Button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Box position="absolute" top="0" left="0" bottom="0" right="0">
+        <Map />
+      </Box>
     </Providers>
   );
 }
