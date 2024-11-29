@@ -9,6 +9,7 @@ function ChatInput({ addPrompt }) {
     if(e.keyCode === 13) {
       e.preventDefault();
       addPrompt(inputValue);
+      setInputValue("");
     }
   };
 
