@@ -33,7 +33,10 @@ function useChat() {
         let result = re.exec(messages);
         if (result) {
           // if messages contains a line break, add the last message to the chat history
-          const message = JSON.parse(messages.substring(0, result.index));
+          const message = {
+            ...JSON.parse(messages.substring(0, result.index)),
+            timestamp: Date.now()
+          };
           setChatHistory(prev => ([ ...prev, message ]));
           messages = messages.substring(result.index + 2);
         }
