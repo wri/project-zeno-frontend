@@ -1,19 +1,8 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import T from "prop-types";
 import { Box } from "@chakra-ui/react";
-import { useEffect } from "react";
 
-function MessageIn({ message }) {
-  return (
-    <Box ml="12" mb="4" p="2" bgColor="blue.700" color="white" borderRadius="4px">
-      {message}
-    </Box>
-  );
-}
-
-MessageIn.propTypes = {
-  message: T.string.isRequired
-};
+import { MessageIn, MessageTool, MessageAssistant, MessageDefault } from ".";
 
 function ChatOutput({ chatHistory }) {
   const containerRef = useRef();
@@ -42,8 +31,15 @@ function ChatOutput({ chatHistory }) {
   return (
     <Box ref={containerRef}>
       {chatHistory.map((msg) => {
-        if (msg.type === "in") {
-          return <MessageIn key={msg.timestamp} message={msg.message} />;
+        switch (msg.type) {
+          case "in":
+            return <MessageIn key={msg.timestamp} message={msg.message} />;
+          case "tool":
+            return <MessageTool key={msg.timestamp} message={msg.message} toolName={msg.tool_name} artifact={msg.artifact} />;
+          case "assistant":
+            return <MessageAssistant key={msg.timestamp} message={msg.message} />;
+          default:
+            return <MessageDefault key={msg.timestamp} type={msg.type} message={JSON.stringify(msg)} />;
         }
       })}
     </Box>
