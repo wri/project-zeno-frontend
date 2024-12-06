@@ -25,7 +25,7 @@ function App() {
         backdropFilter="blur(8px)"
       >
         <Box overflowY="auto" px="4">
-          <ChatOutput chatHistory={chatHistory} />
+          {/* <ChatOutput chatHistory={chatHistory} /> */}
         </Box>
         <Box px="4">
           <ChatInput addPrompt={addPrompt} />
