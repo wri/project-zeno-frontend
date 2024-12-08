@@ -1,6 +1,7 @@
 import T from "prop-types";
 import { Box }  from "@chakra-ui/react";
 import Map from "./Map";
+import BarChart from "./BarChart";
 
 function ContextLayer({message}) {
   return (
@@ -40,10 +41,17 @@ LocationTool.propTypes = {
 };
 
 function DistAlertsTool({message, artifact}) {
+  // message is of the form { "location": { "category": "value"}, { "category": "value"} }
+  // artifact is geojson object to render to a map
+
+  const json = JSON.parse(message);
+  const keys = Object.keys(json);
+  const data = Object.entries(json[keys[0]]).map(([category, value]) => ({ category, value }));
   return (
     <>
       <h2>Dist alerts tool</h2>
-      <p>Dist alerts: <b>{message}</b></p>
+      <h3>Dist alerts</h3>
+      <BarChart data={data} />
       <h3>Map</h3>
       <Box height="200px" position="relative">
         <Map artifact={artifact} mini />
@@ -58,7 +66,6 @@ DistAlertsTool.propTypes = {
 };
 
 function MessageTool({message, toolName, artifact}) {
-  console.log("MessageTool", message, toolName, artifact);
   let render;
 
   switch(toolName) {

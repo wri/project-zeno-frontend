@@ -2,7 +2,6 @@ import { useState } from "react";
 
 function useChat() {
   const [chatHistory, setChatHistory] = useState([]);
-  console.log(chatHistory);
 
   const addPrompt = (promt) => {
     setChatHistory([
