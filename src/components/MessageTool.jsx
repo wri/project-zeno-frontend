@@ -1,6 +1,6 @@
 import T from "prop-types";
 import { Box }  from "@chakra-ui/react";
-import Map from "./Map";
+import MiniMap from "./MiniMap";
 import BarChart from "./BarChart";
 
 function ContextLayer({message}) {
@@ -29,7 +29,7 @@ function LocationTool({message, artifact}) {
       <p>Location found: <b>{message}</b></p>
       <h3>Map</h3>
       <Box height="200px" position="relative">
-        <Map artifact={artifact} mini />
+        <MiniMap artifact={artifact} />
       </Box>
     </>
   );
@@ -54,7 +54,7 @@ function DistAlertsTool({message, artifact}) {
       <BarChart data={data} />
       <h3>Map</h3>
       <Box height="200px" position="relative">
-        <Map artifact={artifact} mini />
+        <MiniMap artifact={artifact} />
       </Box>
     </>
   );
