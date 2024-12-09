@@ -1,7 +1,10 @@
 import T from "prop-types";
-import { Box }  from "@chakra-ui/react";
+import { Box, Button }  from "@chakra-ui/react";
 import MiniMap from "./MiniMap";
 import BarChart from "./BarChart";
+
+import { useSetAtom } from "jotai";
+import { mapLayersAtom } from "../atoms";
 
 function ContextLayer({message}) {
   return (
@@ -23,6 +26,8 @@ function LocationTool({message, artifact}) {
    * message is found location
    * artifact is geojson object to render to a map
    */
+
+  const setMapLayers = useSetAtom(mapLayersAtom);
   return (
     <>
       <h2>Location tool</h2>
@@ -31,6 +36,7 @@ function LocationTool({message, artifact}) {
       <Box height="200px" position="relative">
         <MiniMap artifact={artifact} />
       </Box>
+      <Button onClick={() => setMapLayers(() => [artifact])}>Show on map</Button>
     </>
   );
 }
@@ -44,6 +50,8 @@ function DistAlertsTool({message, artifact}) {
   // message is of the form { "location": { "category": "value"}, { "category": "value"} }
   // artifact is geojson object to render to a map
 
+  const setMapLayers = useSetAtom(mapLayersAtom);
+
   const json = JSON.parse(message);
   const keys = Object.keys(json);
   const data = Object.entries(json[keys[0]]).map(([category, value]) => ({ category, value }));
@@ -56,6 +64,7 @@ function DistAlertsTool({message, artifact}) {
       <Box height="200px" position="relative">
         <MiniMap artifact={artifact} />
       </Box>
+      <Button onClick={() => setMapLayers(() => [artifact])}>Show on map</Button>
     </>
   );
 }
