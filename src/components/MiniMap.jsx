@@ -1,8 +1,7 @@
 import T from "prop-types";
-import MapGl, { Layer, Source } from "react-map-gl/maplibre";
+import MapGl, { Layer, Source, AttributionControl } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import bbox from "@turf/bbox";
-import { AttributionControl } from "react-map-gl";
 
 /**
  * MiniMap is a static map for the sidebar 
