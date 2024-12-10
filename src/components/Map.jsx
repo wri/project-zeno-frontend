@@ -1,8 +1,7 @@
 import "maplibre-gl/dist/maplibre-gl.css";
 import T from "prop-types";
-import MapGl, { Layer, Source } from "react-map-gl/maplibre";
+import MapGl, { Layer, Source, AttributionControl } from "react-map-gl/maplibre";
 import { useState, useEffect } from "react";
-import { AttributionControl } from "react-map-gl";
 import bbox from "@turf/bbox";
 import { mapLayersAtom } from "../atoms";
 import { useAtomValue } from "jotai";
