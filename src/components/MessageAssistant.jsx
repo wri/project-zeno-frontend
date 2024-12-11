@@ -47,12 +47,12 @@ const ToolUseMessageType = T.shape({
 
 MessageAssistant.propTypes = {
   message: T.oneOfType([
-    T.string.isRequired,
+    T.string,
     T.arrayOf(T.oneOfType([
       TextMessageType,
       ToolUseMessageType
-    ])).isRequired
-  ])
+    ]))
+  ]).isRequired
 };
 
 export default MessageAssistant;

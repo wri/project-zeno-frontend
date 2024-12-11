@@ -101,7 +101,7 @@ function MessageTool({message, toolName, artifact}) {
 
 MessageTool.propTypes = {
   message: T.string.isRequired,
-  toolName: T.oneOf(["context-layer-tool", "location-tool", "dist-alerts-tool"]),
+  toolName: T.oneOf(["context-layer-tool", "location-tool", "dist-alerts-tool", "retrieve_blog_posts"]),
   artifact: T.object
 };
 
