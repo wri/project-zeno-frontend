@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import T from "prop-types";
 
 const BarChart = ({ data }) => {
+  const containerRef = useRef();
   const chartRef = useRef();
   const tooltipRef = useRef();
 
@@ -12,7 +13,7 @@ const BarChart = ({ data }) => {
 
     const tooltip = d3.select(tooltipRef.current);
 
-    const width = 250;
+    const width = containerRef.current?.offsetWidth || 250;
     const height = 250;
     const margin = { top: 20, right: 20, bottom: 20, left: 50 };
 
@@ -66,10 +67,10 @@ const BarChart = ({ data }) => {
   }, [data]);
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative" }} ref={containerRef}>
       <svg
         ref={chartRef}
-        width={400}
+        width={containerRef.current?.offsetWidth || 250}
         height={400}
       />
       <div
