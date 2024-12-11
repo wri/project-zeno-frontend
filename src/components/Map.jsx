@@ -30,7 +30,7 @@ function Map() {
       }, [Infinity, Infinity, -Infinity, -Infinity]);
 
       mapRef.current.fitBounds([[bounds[0], bounds[1]], [bounds[2], bounds[3]]], {
-        padding: 100
+        padding: {top: 100, bottom: 100, left: 450, right: 100}
       });
     }
   }, [mapLayers]);
@@ -54,7 +54,7 @@ function Map() {
         <Layer id="background-tiles" type="raster" />
       </Source>
         {mapLayers.map((layer, idx) => {
-          const layerId = layer?.features[0]?.id || idx; 
+          const layerId = layer?.features[0]?.id || idx;
           return (
             <Source id={layerId} type="geojson" data={layer} key={layerId}>
               <Layer id={layerId} type="line" paint={{ "line-color": "#ff0000", "line-width": 2 }} />
