@@ -1,9 +1,10 @@
 import { useState } from "react";
-import T from "prop-types";
 import { Input } from "@chakra-ui/react";
+import { useChat } from "../context/ChatHistory";
 
-function ChatInput({ addPrompt }) {
-  const [inputValue, setInputValue ] = useState("");
+function ChatInput() {
+  const { addPrompt } = useChat();
+  const [ inputValue, setInputValue ] = useState("");
 
   const handleKeyUp = (e) => {
     if(e.keyCode === 13) {
@@ -24,9 +25,5 @@ function ChatInput({ addPrompt }) {
     />
   );
 }
-
-ChatInput.propTypes = {
-  addPrompt: T.func.isRequired
-};
 
 export default ChatInput;

@@ -2,7 +2,11 @@ import T from "prop-types";
 import { Box, Button } from "@chakra-ui/react";
 import Markdown from "react-markdown";
 
+import { useChat } from "../context/ChatHistory";
+
 function MessageAssistant({ message }) {
+  const { addPrompt } = useChat();
+
   if (typeof message === "string" || message instanceof String) {
     return (
       <Box mb="4" p="2" bgColor="gray.50" borderRadius="4px">
@@ -17,7 +21,8 @@ function MessageAssistant({ message }) {
           if (type === "text") {
             return <Markdown key={index}>{messagePart.text}</Markdown>;
           } else {
-            return <Button size="xs" mt="4" key={index}>{messagePart.name}</Button>;
+            const { query } = JSON.parse(messagePart.partial_json);
+            return <Button size="xs" mt="4" key={index} onClick={() => addPrompt(query)}>{messagePart.name}</Button>;
           }
         })}
       </Box>

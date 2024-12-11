@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { createContext, useContext, useState } from "react";
+import T from "prop-types";
 
-function useChat() {
+const ChatHistoryContext = createContext();
+
+export function ChatHistoryProvider({ children }) {
   const [chatHistory, setChatHistory] = useState([]);
 
   const addPrompt = (promt) => {
@@ -50,11 +53,24 @@ function useChat() {
       }
     });
   };
-
-  return {
-    addPrompt,
-    chatHistory
+  const contextValue = {
+    chatHistory,
+    addPrompt
   };
+
+  return (
+    <ChatHistoryContext.Provider value={contextValue}>
+      {children}
+    </ChatHistoryContext.Provider>
+  );
 }
 
-export default useChat;
+ChatHistoryProvider.propTypes = {
+  children: T.node.isRequired,
+};
+
+export function useChat() {
+  const { chatHistory, addPrompt } = useContext(ChatHistoryContext);
+
+  return { chatHistory, addPrompt };
+}
