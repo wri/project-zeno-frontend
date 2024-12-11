@@ -36,7 +36,7 @@ function LocationTool({message, artifact}) {
       <Box height="200px" position="relative">
         <MiniMap artifact={artifact} />
       </Box>
-      <Button onClick={() => setMapLayers(() => [artifact])}>Show on map</Button>
+      <Button size="xs" mt="4" onClick={() => setMapLayers(() => [artifact])}>Show on map</Button>
     </>
   );
 }
@@ -64,7 +64,7 @@ function DistAlertsTool({message, artifact}) {
       <Box height="200px" position="relative">
         <MiniMap artifact={artifact} />
       </Box>
-      <Button onClick={() => setMapLayers(() => [artifact])}>Show on map</Button>
+      <Button size="xs" mt="4" onClick={() => setMapLayers(() => [artifact])}>Show on map</Button>
     </>
   );
 }
