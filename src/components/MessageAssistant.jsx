@@ -5,7 +5,7 @@ import Markdown from "react-markdown";
 import { useChat } from "../context/ChatHistory";
 
 function MessageAssistant({ message }) {
-  const { addPrompt } = useChat();
+  const { addPrompt, confirm } = useChat();
 
   if (typeof message === "string" || message instanceof String) {
     return (
@@ -20,9 +20,18 @@ function MessageAssistant({ message }) {
           const { index, type } = messagePart;
           if (type === "text") {
             return <Markdown key={index}>{messagePart.text}</Markdown>;
-          } else {
+          }
+          if (type === "tool_use") {
             const { query } = JSON.parse(messagePart.partial_json);
             return <Button size="xs" mt="4" key={index} onClick={() => addPrompt(query)}>{messagePart.name}</Button>;
+          }
+          if (type === "tool_confirm") {
+            return (
+              <>
+                <Markdown>{messagePart.name}</Markdown>
+                <Button size="xs" mt="4" onClick={confirm}>Yes</Button>
+              </>
+            );
           }
         })}
       </Box>
@@ -45,12 +54,18 @@ const ToolUseMessageType = T.shape({
   type: "tool_use"
 });
 
+const ToolConfirm = T.shape({
+  name: T.string.isRequired,
+  type: "tool_confirm"
+});
+
 MessageAssistant.propTypes = {
   message: T.oneOfType([
     T.string,
     T.arrayOf(T.oneOfType([
       TextMessageType,
-      ToolUseMessageType
+      ToolUseMessageType,
+      ToolConfirm
     ]))
   ]).isRequired
 };
