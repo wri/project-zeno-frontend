@@ -1,11 +1,12 @@
 import { useEffect, useRef } from "react";
 import { Box } from "@chakra-ui/react";
+import { useAtom } from "jotai";
 
 import { MessageIn, MessageTool, MessageAssistant, MessageDefault } from ".";
-import { useChat } from "../context/ChatHistory";
+import { chatHistoryAtom } from "../atoms";
 
 function ChatOutput() {
-  const { chatHistory } = useChat();
+  const [ chatHistory ] = useAtom(chatHistoryAtom);
   const containerRef = useRef();
 
   useEffect(() => {

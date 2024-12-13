@@ -2,10 +2,11 @@ import T from "prop-types";
 import { Box, Button } from "@chakra-ui/react";
 import Markdown from "react-markdown";
 
-import { useChat } from "../context/ChatHistory";
+import { useSetAtom } from "jotai";
+import { addPrompt } from "../atoms";
 
 function MessageAssistant({ message }) {
-  const { addPrompt } = useChat();
+  const submit = useSetAtom(addPrompt);
 
   if (typeof message === "string" || message instanceof String) {
     return (
@@ -22,7 +23,7 @@ function MessageAssistant({ message }) {
             return <Markdown key={index}>{messagePart.text}</Markdown>;
           } else {
             const { query } = JSON.parse(messagePart.partial_json);
-            return <Button size="xs" mt="4" key={index} onClick={() => addPrompt(query)}>{messagePart.name}</Button>;
+            return <Button size="xs" mt="4" key={index} onClick={() => submit(query)}>{messagePart.name}</Button>;
           }
         })}
       </Box>

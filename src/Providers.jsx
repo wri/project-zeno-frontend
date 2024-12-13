@@ -2,14 +2,11 @@ import T from "prop-types";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import theme from "./theme";
-import { ChatHistoryProvider } from "./context/ChatHistory";
 
 function Providers({ children }) {
   return (
     <ChakraProvider value={theme}>
-      <ChatHistoryProvider>
-        {children}
-      </ChatHistoryProvider>
+      {children}
     </ChakraProvider>
   );
 }

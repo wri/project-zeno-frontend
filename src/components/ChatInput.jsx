@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { Input } from "@chakra-ui/react";
-import { useChat } from "../context/ChatHistory";
+import { useSetAtom } from "jotai";
+import { addPrompt } from "../atoms";
 
 function ChatInput() {
-  const { addPrompt } = useChat();
   const [ inputValue, setInputValue ] = useState("");
+
+  const submit = useSetAtom(addPrompt);
 
   const handleKeyUp = (e) => {
     if(e.keyCode === 13) {
       e.preventDefault();
-      addPrompt(inputValue);
+      submit(inputValue);
       setInputValue("");
     }
   };
