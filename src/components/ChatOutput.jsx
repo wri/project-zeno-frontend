@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
-import T from "prop-types";
 import { Box } from "@chakra-ui/react";
+import { useAtom } from "jotai";
 
 import { MessageIn, MessageTool, MessageAssistant, MessageDefault } from ".";
+import { chatHistoryAtom } from "../atoms";
 
-function ChatOutput({ chatHistory }) {
+function ChatOutput() {
+  const [ chatHistory ] = useAtom(chatHistoryAtom);
   const containerRef = useRef();
 
   useEffect(() => {
@@ -45,9 +47,5 @@ function ChatOutput({ chatHistory }) {
     </Box>
   );
 }
-
-ChatOutput.propTypes = {
-  chatHistory: T.array.isRequired
-};
 
 export default ChatOutput;
