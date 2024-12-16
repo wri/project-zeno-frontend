@@ -4,7 +4,7 @@ import { Alert } from "./ui/alert";
 
 function MessageDefault({message, type}) {
   return (
-    <Box mb="4" p="2" bgColor="gray.50" borderRadius="4px">
+    <Box mb="4" p="2" bgColor="gray.100" borderRadius="md" border="1px solid" borderColor="blackAlpha.200" shadow="sm">
       <Alert status="warning" title={`Unsupported message type "${type}"`} />
       {message}
     </Box>
