@@ -93,7 +93,7 @@ function MessageTool({message, toolName, artifact}) {
   }
 
   return (
-    <Box mb="4" p="2" bgColor="gray.100" borderRadius="md" border="1px solid" borderColor="blackAlpha.200" shadow="sm">
+    <Box mb="4" p="2" bgColor="gray.100" borderRadius="md" shadow="md">
       {render}
     </Box>
   );

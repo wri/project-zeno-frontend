@@ -10,13 +10,13 @@ function MessageAssistant({ message }) {
 
   if (typeof message === "string" || message instanceof String) {
     return (
-      <Box mb="4" p="2" bgColor="gray.100" borderRadius="md" border="1px solid" borderColor="blackAlpha.200" shadow="sm">
+      <Box mb="4" p="2" bgColor="gray.100" borderRadius="md" shadow="md">
         <Markdown>{message}</Markdown>
       </Box>
     );
   } else {
     return (
-      <Box mb="4" p="2" bgColor="gray.100" borderRadius="md" border="1px solid" borderColor="blackAlpha.200" shadow="sm">
+      <Box mb="4" p="2" bgColor="gray.100" borderRadius="md" shadow="md">
         {message.map((messagePart) => {
           const { index, type } = messagePart;
           if (type === "text") {

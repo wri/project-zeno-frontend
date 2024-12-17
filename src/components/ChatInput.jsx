@@ -24,6 +24,8 @@ function ChatInput() {
         placeholder="Ask a question"
         fontSize="sm"
         pr="12"
+        shadow="md"
+        border="0"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyUp={handleKeyUp}
