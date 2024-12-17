@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Input } from "@chakra-ui/react";
+import { Box, Button, Input } from "@chakra-ui/react";
+import { MdChevronRight } from "react-icons/md";
 import { useSetAtom } from "jotai";
 import { addPrompt } from "../atoms";
 
@@ -17,15 +18,31 @@ function ChatInput() {
   };
 
   return (
-    <Input
-      aria-label="Ask a question"
-      placeholder="Ask a question"
-      bgColor="white"
-      fontSize="sm"
-      value={inputValue}
-      onChange={(e) => setInputValue(e.target.value)}
-      onKeyUp={handleKeyUp}
-    />
+    <Box position="relative">
+      <Input
+        aria-label="Ask a question"
+        placeholder="Ask a question"
+        fontSize="sm"
+        pr="12"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        onKeyUp={handleKeyUp}
+      />
+      <Button
+        position="absolute"
+        right="2"
+        top="50%"
+        transform="translateY(-50%)"
+        padding="0"
+        borderRadius="full"
+        colorPalette="blue"
+        type="button"
+        size="xs"
+        onClick={() => submit(inputValue)}
+      >
+        <MdChevronRight />
+      </Button>
+    </Box>
   );
 }
 
