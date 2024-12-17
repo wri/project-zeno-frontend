@@ -1,8 +1,8 @@
-"use client";
+import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
+import globalCss from "./globalCss";
 
-import { createSystem, defaultConfig } from "@chakra-ui/react";
-
-const config = {
+const config = defineConfig({
+  globalCss,
   theme: {
     tokens: {
       fonts: {
@@ -11,6 +11,6 @@ const config = {
       }
     }
   }
-};
+});
 
 export default createSystem(defaultConfig, config);
