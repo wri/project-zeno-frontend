@@ -17,7 +17,7 @@ function App() {
             shadow="md"
             p="4"
           >
-            <Box overflowY="auto">
+            <Box overflowY="auto" mx="-8" px="8">
               <ChatOutput />
             </Box>
             <Box>
