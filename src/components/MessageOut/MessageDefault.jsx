@@ -1,13 +1,13 @@
 import T from "prop-types";
-import { Box } from "@chakra-ui/react";
-import { Alert } from "./ui/alert";
+import { Alert } from "../ui/alert";
+import MessageOutWrapper from "./wrapper";
 
 function MessageDefault({message, type}) {
   return (
-    <Box mb="4" p="2" bgColor="gray.100" borderRadius="md" border="1px solid" borderColor="blackAlpha.200" shadow="sm">
+    <MessageOutWrapper>
       <Alert status="warning" title={`Unsupported message type "${type}"`} />
       {message}
-    </Box>
+    </MessageOutWrapper>
   );
 }
 

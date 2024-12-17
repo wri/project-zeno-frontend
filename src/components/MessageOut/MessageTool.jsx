@@ -1,10 +1,11 @@
 import T from "prop-types";
 import { Box, Button }  from "@chakra-ui/react";
-import MiniMap from "./MiniMap";
-import BarChart from "./BarChart";
+import MiniMap from "../MiniMap";
+import BarChart from "../BarChart";
 
 import { useSetAtom } from "jotai";
-import { mapLayersAtom } from "../atoms";
+import { mapLayersAtom } from "../../atoms";
+import MessageOutWrapper from "./wrapper";
 
 function ContextLayer({message}) {
   return (
@@ -93,9 +94,9 @@ function MessageTool({message, toolName, artifact}) {
   }
 
   return (
-    <Box mb="4" p="2" bgColor="gray.100" borderRadius="md" shadow="md">
+    <MessageOutWrapper>
       {render}
-    </Box>
+    </MessageOutWrapper>
   );
 }
 
