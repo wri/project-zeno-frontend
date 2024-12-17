@@ -9,7 +9,7 @@ function App() {
         <Box bgColor="blue.50" shadow="sm" px="8" py="4">
           <Text as="h1" color="blue.900" fontWeight="700">Land Carbon Lab - Zeno</Text>
         </Box>
-        <Grid templateColumns="300px 1fr" p="8" gap="2">
+        <Grid templateColumns="350px 1fr" p="8" gap="2">
           <Grid
             gap="4"
             templateRows="1fr max-content"
