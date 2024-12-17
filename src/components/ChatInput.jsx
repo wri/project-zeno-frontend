@@ -21,6 +21,7 @@ function ChatInput() {
       aria-label="Ask a question"
       placeholder="Ask a question"
       bgColor="white"
+      fontSize="sm"
       value={inputValue}
       onChange={(e) => setInputValue(e.target.value)}
       onKeyUp={handleKeyUp}
