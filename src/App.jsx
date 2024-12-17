@@ -5,7 +5,7 @@ import { ChatInput, ChatOutput, Map } from "./components";
 function App() {
   return (
     <Providers>
-      <Grid position="absolute" top="0" left="0" bottom="0" right="0" templateRows="max-content 1fr">
+      <Grid maxH="vh" h="vh" templateRows="min-content minmax(0, 1fr)">
         <Box bgColor="blue.50" shadow="sm" px="8" py="4">
           <Text as="h1" color="blue.900" fontWeight="700">Land Carbon Lab - Zeno</Text>
         </Box>
@@ -16,19 +16,17 @@ function App() {
             borderRadius="lg"
             shadow="md"
             p="4"
+            height="0"
+            minH="100%"
           >
-            <Box overflowY="auto" mx="-8" px="8">
+            <Box overflowY="auto" height="100%" mx="-4" px="4">
               <ChatOutput />
             </Box>
             <Box>
               <ChatInput />
             </Box>
           </Grid>
-          <Box
-            borderRadius="lg"
-            shadow="md"
-            overflow="hidden"
-          >
+          <Box borderRadius="lg" shadow="md" overflow="hidden">
             <Map />
           </Box>
         </Grid>
