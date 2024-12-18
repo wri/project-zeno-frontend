@@ -5,7 +5,14 @@ import { ChatInput, ChatOutput, Map } from "./components";
 function App() {
   return (
     <Providers>
-      <Grid maxH="vh" h="vh" templateRows="min-content minmax(0, 1fr)">
+      <Grid
+        maxH="vh"
+        h="vh"
+        templateRows="min-content minmax(0, 1fr)"
+        bgGradient="to-b"
+        gradientFrom="teal.50"
+        gradientTo="blue.50"
+      >
         <Box bgColor="blue.50" shadow="sm" px="8" py="4">
           <Text as="h1" color="blue.900" fontWeight="700">Land Carbon Lab - Zeno</Text>
         </Box>
@@ -18,6 +25,7 @@ function App() {
             p="4"
             height="0"
             minH="100%"
+            bgColor="white"
           >
             <Box overflowY="auto" height="100%" mx="-4" px="4">
               <ChatOutput />
