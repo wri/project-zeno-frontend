@@ -71,12 +71,12 @@ function Map() {
         return (
           <Source id={layerId} type="geojson" data={layer} key={layerId}>
             <Layer
-              id="fill-layer"
+              id={`fill-layer-${layerId}`}
               type="fill"
               paint={{ "fill-color": "#1857e0", "fill-opacity": 0.25 }}
             />
             <Layer
-              id="line-layer"
+              id={`line-layer-${layerId}`}
               type="line"
               paint={{ "line-color": "#1857e0", "line-width": 2 }}
             />
