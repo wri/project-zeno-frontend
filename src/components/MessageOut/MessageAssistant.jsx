@@ -24,7 +24,18 @@ function MessageAssistant({ message }) {
             return <Markdown key={index}>{messagePart.text}</Markdown>;
           } else {
             const { query } = JSON.parse(messagePart.partial_json);
-            return <Button size="xs" mt="4" key={index} onClick={() => submit(query)}>{messagePart.name}</Button>;
+            return (
+              <Button
+                size="xs"
+                mt="4"
+                key={index}
+                onClick={() => submit(query)}
+                borderRadius="full"
+                colorPalette="blue"
+                type="button"
+              >
+                {messagePart.name}
+              </Button>);
           }
         })}
       </MessageOutWrapper>
