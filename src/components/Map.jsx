@@ -42,7 +42,7 @@ function Map() {
           [bounds[2], bounds[3]],
         ],
         {
-          padding: { top: 100, bottom: 100, left: 450, right: 100 },
+          padding: 100,
         }
       );
     }
