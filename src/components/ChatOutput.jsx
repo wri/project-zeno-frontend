@@ -36,10 +36,10 @@ function ChatOutput() {
         switch (msg.type) {
           case "in":
             return <MessageIn key={msg.timestamp} message={msg.message} />;
-          case "tool":
-            return <MessageTool key={msg.timestamp} message={msg.message} toolName={msg.tool_name} artifact={msg.artifact} />;
+          case "tool_call":
+            return <MessageTool key={msg.timestamp} message={msg.content} toolName={msg.tool_name} artifact={msg.artifact} />;
           case "assistant":
-            return <MessageAssistant key={msg.timestamp} message={msg.message} />;
+            return <MessageAssistant key={msg.timestamp} message={msg.content} />;
           default:
             return <MessageDefault key={msg.timestamp} type={msg.type} message={JSON.stringify(msg)} />;
         }
