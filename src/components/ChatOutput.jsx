@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Box } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 
-import { MessageIn, MessageTool, MessageAssistant, MessageDefault } from ".";
+import { MessageIn, MessageTool, MessageAssistant, MessageDefault, HumanInput } from ".";
 import { chatHistoryAtom } from "../atoms";
 
 function ChatOutput() {
@@ -37,9 +37,15 @@ function ChatOutput() {
           case "in":
             return <MessageIn key={msg.timestamp} message={msg.message} />;
           case "tool_call":
+            if (!msg.content) {
+              // If no message, there's nothing to render
+              return null;
+            }
             return <MessageTool key={msg.timestamp} message={msg.content} toolName={msg.tool_name} artifact={msg.artifact} />;
-          case "assistant":
+          case "update":
             return <MessageAssistant key={msg.timestamp} message={msg.content} />;
+          case "human_input":
+            return <HumanInput key={msg.timestamp} message={msg.question} artifact={msg.artifact} options={msg.options} />;
           default:
             return <MessageDefault key={msg.timestamp} type={msg.type} message={JSON.stringify(msg)} />;
         }

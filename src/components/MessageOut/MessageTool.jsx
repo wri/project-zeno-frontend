@@ -21,7 +21,7 @@ ContextLayer.propTypes = {
   message: T.string.isRequired
 };
 
-function LocationTool({message, artifact}) {
+function LocationTool({artifact}) {
   /**
    * LocationTool component
    * message is found location
@@ -29,21 +29,18 @@ function LocationTool({message, artifact}) {
    */
 
   const setMapLayers = useSetAtom(mapLayersAtom);
+
+  const locationNames = artifact?.features.map(f => f.properties.name).join(", ");
+
   return (
     <>
-      <h2>Location tool</h2>
-      <p>Location found: <b>{message}</b></p>
-      <h3>Map</h3>
-      <Box height="200px" position="relative">
-        <MiniMap artifact={artifact} />
-      </Box>
+      <p>Locations found: <b>{locationNames}</b></p>
       <Button size="xs" mt="4" onClick={() => setMapLayers(() => [artifact])}>Show on map</Button>
     </>
   );
 }
 
 LocationTool.propTypes = {
-  message: T.string.isRequired,
   artifact: T.object
 };
 
