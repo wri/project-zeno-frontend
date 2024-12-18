@@ -31,7 +31,7 @@ function ChatOutput() {
   }, []);
 
   return (
-    <Box ref={containerRef}>
+    <Box ref={containerRef} fontSize="sm">
       {chatHistory.map((msg) => {
         switch (msg.type) {
           case "in":

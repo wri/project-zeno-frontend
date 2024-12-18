@@ -4,7 +4,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import bbox from "@turf/bbox";
 
 /**
- * MiniMap is a static map for the sidebar 
+ * MiniMap is a static map for the sidebar
  */
 function MiniMap({ artifact }){
   let viewState = {
@@ -34,7 +34,7 @@ function MiniMap({ artifact }){
       <Source
         id="background"
         type="raster"
-        tiles={["https://tile.openstreetmap.org/{z}/{x}/{y}.png"]}
+        tiles={["https://api.mapbox.com/styles/v1/devseed/cm4sj2dh6005b01s80c8t623r/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGV2c2VlZCIsImEiOiJnUi1mbkVvIn0.018aLhX0Mb0tdtaT2QNe2Q"]}
         tileSize={256}
       >
         <Layer id="background-tiles" type="raster" />
@@ -45,7 +45,16 @@ function MiniMap({ artifact }){
           type="geojson"
           data={artifact}
         >
-          <Layer id="artifact-layer" type="line" paint={{ "line-color": "#ff0000", "line-width": 2 }} />
+          <Layer
+            id="fill-layer"
+            type="fill"
+            paint={{ "fill-color": "#1857e0", "fill-opacity": 0.25 }}
+          />
+          <Layer
+            id="line-layer"
+            type="line"
+            paint={{ "line-color": "#1857e0", "line-width": 2 }}
+          />
         </Source>
       )}
       <AttributionControl customAttribution="OSM contributors" />

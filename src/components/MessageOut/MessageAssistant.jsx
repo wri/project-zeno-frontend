@@ -1,32 +1,44 @@
 import T from "prop-types";
-import { Box, Button } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import Markdown from "react-markdown";
 
 import { useSetAtom } from "jotai";
-import { addPrompt } from "../atoms";
+import { addPrompt } from "../../atoms";
+import MessageOutWrapper from "./wrapper";
 
 function MessageAssistant({ message }) {
   const submit = useSetAtom(addPrompt);
 
   if (typeof message === "string" || message instanceof String) {
     return (
-      <Box mb="4" p="2" bgColor="gray.50" borderRadius="4px">
+      <MessageOutWrapper>
         <Markdown>{message}</Markdown>
-      </Box>
+      </MessageOutWrapper>
     );
   } else {
     return (
-      <Box mb="4" p="2" bgColor="gray.50" borderRadius="4px">
+      <MessageOutWrapper>
         {message.map((messagePart) => {
           const { index, type } = messagePart;
           if (type === "text") {
             return <Markdown key={index}>{messagePart.text}</Markdown>;
           } else {
             const { query } = JSON.parse(messagePart.partial_json);
-            return <Button size="xs" mt="4" key={index} onClick={() => submit(query)}>{messagePart.name}</Button>;
+            return (
+              <Button
+                size="xs"
+                mt="4"
+                key={index}
+                onClick={() => submit(query)}
+                borderRadius="full"
+                colorPalette="blue"
+                type="button"
+              >
+                {messagePart.name}
+              </Button>);
           }
         })}
-      </Box>
+      </MessageOutWrapper>
     );
   }
 }
