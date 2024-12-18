@@ -1,7 +1,9 @@
 import { atom } from "jotai";
+import { v4 as uuidv4 } from "uuid";
 
 export const mapLayersAtom = atom([]);
 export const chatHistoryAtom = atom([]);
+export const sessionIdAtom = atom(uuidv4());
 
 function makeInputMessage(query) {
   return {
@@ -14,10 +16,14 @@ function makeInputMessage(query) {
 export const addPrompt = atom(null, (get, set, query) => {
   set(chatHistoryAtom, (prev => [...prev, makeInputMessage(query)]));
 
-  fetch("https://api.zeno.ds.io/stream", {
+  let queryUrl = "https://api.zeno.ds.io/stream";
+  if (import.meta.env.MOCK_QUERIES === "true") {
+    queryUrl = "/stream";
+  }
+  fetch(queryUrl, {
     method: "POST",
     headers:{"content-type": "application/json"},
-    body: JSON.stringify({ query })
+    body: JSON.stringify({ query, query_type: "query", thread_id: get(sessionIdAtom) })
   }).then(async (response) => {
     const utf8Decoder = new TextDecoder("utf-8");
     const reader = response.body.getReader();
@@ -32,6 +38,8 @@ export const addPrompt = atom(null, (get, set, query) => {
 
       let result = re.exec(messages);
       if (result) {
+        try {
+
         // if messages contains a line break, add the last message to the chat history
         const message = {
           ...JSON.parse(messages.substring(0, result.index)),
@@ -39,6 +47,10 @@ export const addPrompt = atom(null, (get, set, query) => {
         };
         set(chatHistoryAtom, (prev => [...prev, message]));
         messages = messages.substring(result.index + 2);
+        } catch (err) {
+          console.error("Failed to parse line:", result);
+          console.error("Error details:", err);
+        }
       }
 
       if (readerDone) {
