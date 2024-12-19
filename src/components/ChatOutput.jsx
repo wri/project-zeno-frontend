@@ -7,6 +7,7 @@ import { chatHistoryAtom } from "../atoms";
 
 function ChatOutput() {
   const [ chatHistory ] = useAtom(chatHistoryAtom);
+  console.log(chatHistory);
   const containerRef = useRef();
 
   useEffect(() => {

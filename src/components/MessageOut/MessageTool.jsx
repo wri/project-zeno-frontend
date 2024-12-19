@@ -8,12 +8,7 @@ import { useSetAtom } from "jotai";
 import { mapLayersAtom } from "../../atoms";
 
 function ContextLayer({message}) {
-  return (
-    <>
-      <h2>Context layer</h2>
-      <p>Use context layer <b>{message}</b></p>
-    </>
-  );
+  return (<p>Using context layer <b>{message}</b></p>);
 }
 
 
@@ -30,12 +25,29 @@ function LocationTool({artifact}) {
 
   const setMapLayers = useSetAtom(mapLayersAtom);
 
-  const locationNames = artifact?.features.map(f => f.properties.name).join(", ");
+  const numLocations = artifact ? artifact?.features.length : 0;
+
+  if (numLocations === 0) {
+    return <p>No locations found.</p>;
+  }
 
   return (
     <>
-      <p>Locations found: <b>{locationNames}</b></p>
-      <Button size="xs" mt="4" onClick={() => setMapLayers(() => [artifact])}>Show on map</Button>
+      <p>Found {numLocations} Locations:</p>
+      <ul>
+        {artifact?.features.map((f) => (
+          <li key="f.id">{f.properties.name}</li>
+        ))}
+      </ul>
+      <Button
+        type="button"
+        size="xs"
+        borderRadius="full"
+        colorPalette="blue"
+        onClick={() => setMapLayers(() => [artifact])}
+      >
+        Show on map
+      </Button>
     </>
   );
 }
