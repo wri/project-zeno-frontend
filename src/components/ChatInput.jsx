@@ -12,7 +12,7 @@ function ChatInput() {
   const handleKeyUp = (e) => {
     if(e.keyCode === 13) {
       e.preventDefault();
-      submit(inputValue);
+      submit({ query: inputValue, queryType: "query" });
       setInputValue("");
     }
   };
@@ -40,7 +40,7 @@ function ChatInput() {
         colorPalette="blue"
         type="button"
         size="xs"
-        onClick={() => submit(inputValue)}
+        onClick={() => submit({ query: inputValue, queryType: "query" })}
       >
         <MdChevronRight />
       </Button>

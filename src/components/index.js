@@ -5,7 +5,9 @@ import Map from "./Map";
 import MessageIn from "./MessageIn";
 import MessageTool from "./MessageOut/MessageTool";
 import MessageAssistant from "./MessageOut/MessageAssistant";
+import HumanInput from "./MessageOut/HumanInput";
 import MessageDefault from "./MessageOut/MessageDefault";
+import Loading from "./MessageOut/Loading";
 
 export {
   ChatInput,
@@ -15,5 +17,7 @@ export {
   MessageIn,
   MessageTool,
   MessageAssistant,
-  MessageDefault
+  MessageDefault,
+  HumanInput,
+  Loading
 };

@@ -14,8 +14,8 @@ const BarChart = ({ data }) => {
     const tooltip = d3.select(tooltipRef.current);
 
     const width = containerRef.current?.offsetWidth || 250;
-    const height = 250;
-    const margin = { top: 20, right: 20, bottom: 20, left: 50 };
+    const height = 230;
+    const margin = { top: 20, right: 20, bottom: 20, left: 60 };
 
     const x = d3.scaleBand()
       .domain(data.map(d => d.category))
@@ -32,14 +32,14 @@ const BarChart = ({ data }) => {
       .attr("transform", `translate(0,${height - margin.bottom})`)
       .call(d3.axisBottom(x))
       .selectAll("text")
-      .style("text-anchor", "end")
-      .attr("transform", "rotate(-45)")
       .style("font-size", "12px");
 
     // Add y-axis
     svg.append("g")
       .attr("transform", `translate(${margin.left},0)`)
-      .call(d3.axisLeft(y));
+      .call(d3.axisLeft(y))
+      .selectAll("text")
+      .style("font-size", "12px");
 
     // Add bars
     svg.append("g")
@@ -71,7 +71,7 @@ const BarChart = ({ data }) => {
       <svg
         ref={chartRef}
         width={containerRef.current?.offsetWidth || 250}
-        height={400}
+        height={230}
       />
       <div
         ref={tooltipRef}
