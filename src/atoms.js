@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 export const mapLayersAtom = atom([]);
 export const chatHistoryAtom = atom([]);
 export const sessionIdAtom = atom(uuidv4());
+export const isLoadingAtom = atom(false);
 
 function makeInputMessage(query) {
   return {
@@ -24,6 +25,8 @@ export const addPrompt = atom(null, (get, set, promt) => {
   if (import.meta.env.MOCK_QUERIES === "true") {
     queryUrl = "/stream";
   }
+
+  set(isLoadingAtom, true);
   fetch(queryUrl, {
     method: "POST",
     headers:{"content-type": "application/json"},
@@ -74,5 +77,6 @@ export const addPrompt = atom(null, (get, set, promt) => {
         console.error("Failed to parse final buffer", buffer, err);
       }
     }
-  });
+  })
+  .finally(() => set(isLoadingAtom, false));
 });

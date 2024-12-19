@@ -2,11 +2,12 @@ import { useEffect, useRef } from "react";
 import { Box } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 
-import { MessageIn, MessageTool, MessageAssistant, MessageDefault, HumanInput } from ".";
-import { chatHistoryAtom } from "../atoms";
+import { MessageIn, MessageTool, MessageAssistant, MessageDefault, HumanInput, Loading } from ".";
+import { chatHistoryAtom, isLoadingAtom } from "../atoms";
 
 function ChatOutput() {
   const [ chatHistory ] = useAtom(chatHistoryAtom);
+  const [ isLoading ] = useAtom(isLoadingAtom);
   console.log(chatHistory);
   const containerRef = useRef();
 
@@ -51,6 +52,7 @@ function ChatOutput() {
             return <MessageDefault key={msg.timestamp} type={msg.type} message={JSON.stringify(msg)} />;
         }
       })}
+      { isLoading && <Loading />}
     </Box>
   );
 }
