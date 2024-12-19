@@ -13,8 +13,12 @@ function makeInputMessage(query) {
   };
 }
 
-export const addPrompt = atom(null, (get, set, query) => {
-  set(chatHistoryAtom, (prev => [...prev, makeInputMessage(query)]));
+export const addPrompt = atom(null, (get, set, promt) => {
+  const { queryType, query } = promt;
+
+  if (queryType === "query") {
+    set(chatHistoryAtom, (prev => [...prev, makeInputMessage(query)]));
+  }
 
   let queryUrl = "https://api.zeno.ds.io/stream";
   if (import.meta.env.MOCK_QUERIES === "true") {
@@ -23,7 +27,7 @@ export const addPrompt = atom(null, (get, set, query) => {
   fetch(queryUrl, {
     method: "POST",
     headers:{"content-type": "application/json"},
-    body: JSON.stringify({ query, query_type: "query", thread_id: get(sessionIdAtom) })
+    body: JSON.stringify({ query, query_type: queryType, thread_id: get(sessionIdAtom) })
   }).then(async (response) => {
     const utf8Decoder = new TextDecoder("utf-8");
     const reader = response.body.getReader();

@@ -1,8 +1,8 @@
 
 import T from "prop-types";
 import { Button, List } from "@chakra-ui/react";
-import { useAtomValue } from "jotai";
-import {sessionIdAtom} from "../../atoms";
+import { useSetAtom } from "jotai";
+import { addPrompt } from "../../atoms";
 import MessageOutWrapper from "./wrapper";
 
 /**
@@ -14,8 +14,8 @@ import MessageOutWrapper from "./wrapper";
  *
  */
 function HumanInput({ message, options, artifact }) {
-  const queryUrl = import.meta.env.MOCK_QUERIES === "true" ? "/stream" : "https://api.zeno.ds.io/stream";
-  const sessionId = useAtomValue(sessionIdAtom);
+  const submit = useSetAtom(addPrompt);
+
   return (
     <MessageOutWrapper>
       {message}
@@ -31,13 +31,7 @@ function HumanInput({ message, options, artifact }) {
                 type="button"
                 colorPalette="blue"
                 borderRadius="full"
-                onClick={() => {
-                  fetch(queryUrl, {
-                    method: "POST",
-                    headers: { "content-type": "application/json" },
-                    body: JSON.stringify({ query: `${index}`, query_type: "human_input", thread_id: sessionId })
-                  });
-                }}
+                onClick={() => submit({ query: `${index}`, queryType: "human_input" })}
               >
                 {feature.properties.name}
               </Button>
