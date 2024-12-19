@@ -5,6 +5,7 @@ export const mapLayersAtom = atom([]);
 export const chatHistoryAtom = atom([]);
 export const sessionIdAtom = atom(uuidv4());
 export const isLoadingAtom = atom(false);
+export const chartDataAtom = atom();
 
 function makeInputMessage(query) {
   return {

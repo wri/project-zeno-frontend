@@ -1,11 +1,9 @@
 import T from "prop-types";
-import { Box, Button }  from "@chakra-ui/react";
+import { Button }  from "@chakra-ui/react";
 import MessageOutWrapper from "./wrapper";
-import MiniMap from "../MiniMap";
-import BarChart from "../BarChart";
 
 import { useSetAtom } from "jotai";
-import { mapLayersAtom } from "../../atoms";
+import { mapLayersAtom, chartDataAtom } from "../../atoms";
 
 function ContextLayer({message}) {
   return (<p>Using context layer <b>{message}</b></p>);
@@ -61,20 +59,33 @@ function DistAlertsTool({message, artifact}) {
   // artifact is geojson object to render to a map
 
   const setMapLayers = useSetAtom(mapLayersAtom);
+  const setChartData = useSetAtom(chartDataAtom);
+
+  const numDisturbances = artifact ? artifact?.features.length : 0;
+
+  if (numDisturbances === 0) {
+    return <p>No disturbances found in the region.</p>;
+  }
 
   const json = JSON.parse(message);
   const keys = Object.keys(json);
   const data = Object.entries(json[keys[0]]).map(([category, value]) => ({ category, value }));
+
   return (
     <>
-      <h2>Dist alerts tool</h2>
-      <h3>Dist alerts</h3>
-      <BarChart data={data} />
-      <h3>Map</h3>
-      <Box height="200px" position="relative">
-        <MiniMap artifact={artifact} />
-      </Box>
-      <Button size="xs" mt="4" onClick={() => setMapLayers(() => [artifact])}>Show on map</Button>
+      <p>Found {numDisturbances} disturbances in the region.</p>
+      <Button
+        size="xs"
+        mt="4"
+        borderRadius="full"
+        colorPalette="blue"
+        onClick={() => {
+          setMapLayers(() => [artifact]);
+          setChartData(data);
+        }}
+      >
+        Show on map
+      </Button>
     </>
   );
 }

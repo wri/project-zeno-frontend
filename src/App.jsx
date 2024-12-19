@@ -1,8 +1,12 @@
 import { Box, Grid, Text } from "@chakra-ui/react";
+import { useAtomValue } from "jotai";
 import Providers from "./Providers";
 import { ChatInput, ChatOutput, Map } from "./components";
+import { chartDataAtom } from "./atoms";
+import BarChart from "./components/BarChart";
 
 function App() {
+  const chartData = useAtomValue(chartDataAtom);
   return (
     <Providers>
       <Grid
@@ -34,9 +38,16 @@ function App() {
               <ChatInput />
             </Box>
           </Grid>
-          <Box borderRadius="lg" shadow="md" overflow="hidden">
-            <Map />
-          </Box>
+          <Grid templateRows={chartData ? "1fr 250px" : "1fr"} gap="2">
+              <Box borderRadius="lg" shadow="md" overflow="hidden">
+                <Map />
+              </Box>
+              {chartData && (
+                <Box bgColor="white" borderRadius="lg" shadow="md" overflow="hidden">
+                  <BarChart data={chartData} />
+                </Box>
+              )}
+          </Grid>
         </Grid>
       </Grid>
     </Providers>
