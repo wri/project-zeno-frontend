@@ -8,7 +8,6 @@ import { chatHistoryAtom, isLoadingAtom } from "../atoms";
 function ChatOutput() {
   const [ chatHistory ] = useAtom(chatHistoryAtom);
   const [ isLoading ] = useAtom(isLoadingAtom);
-  console.log(chatHistory);
   const containerRef = useRef();
 
   useEffect(() => {
