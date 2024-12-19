@@ -39,6 +39,7 @@ function HumanInput({ message, options, artifact }) {
                 }}
                 onMouseEnter={() => setHighlightedLayer(feature.id)}
                 onMouseLeave={() => setHighlightedLayer(null)}
+                _hover={{ bg: "pink.500" }}
               >
                 {feature.properties.name}
               </Button>

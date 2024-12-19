@@ -4,6 +4,7 @@ import MapGl, {
   Source,
   AttributionControl,
 } from "react-map-gl/maplibre";
+import { config } from "../theme";
 import { useEffect, useState, useRef } from "react";
 import bbox from "@turf/bbox";
 import { mapLayersAtom, highlightedLayerAtom, confirmedLocationAtom } from "../atoms";
@@ -14,6 +15,8 @@ import { useAtomValue } from "jotai";
  * Children are the layers to render on the map
  */
 function Map() {
+  const pink500 = config.theme.tokens.colors.pink["500"];
+  const blue500 = config.theme.tokens.colors.blue["500"];
   const [currentFeatures, setFeatures] = useState([]);
   const mapRef = useRef();
 
@@ -70,21 +73,21 @@ function Map() {
           feature.properties = {
             ...feature.properties,
             "fill-opacity": 0.5,
-            "fill-color": "#ff0000",
-            "line-color": "#ff0000",
+            "fill-color": pink500,
+            "line-color": pink500,
           };
         } else {
           // reset the layer to default
           feature.properties = {
             ...feature.properties,
             "fill-opacity": 0.25,
-            "fill-color": "#1857e0",
-            "line-color": "#1857e0",
+            "fill-color": blue500,
+            "line-color": blue500,
           };
         }
     })));
     setFeatures(mapLayers.reduce((acc, layer) => [...acc, ...layer.features], []));
-  }, [mapLayers, highlightedLayer, confirmedLocation]);
+  }, [mapLayers, highlightedLayer, confirmedLocation, pink500, blue500]);
 
   return (
     <MapGl
@@ -106,8 +109,8 @@ function Map() {
       </Source>
       {currentFeatures?.map((feature, idx) => {
           const layerId = feature.id || idx;
-          const fillColor = feature.properties["fill-color"] || "#1857e0";
-          const lineColor = feature.properties["line-color"] || "#1857e0";
+          const fillColor = feature.properties["fill-color"] || blue500;
+          const lineColor = feature.properties["line-color"] || blue500;
           const fillOpacity = feature.properties["fill-opacity"] || 0.25;
 
           return (
