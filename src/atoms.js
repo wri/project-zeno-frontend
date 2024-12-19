@@ -2,6 +2,8 @@ import { atom } from "jotai";
 import { v4 as uuidv4 } from "uuid";
 
 export const mapLayersAtom = atom([]);
+export const highlightedLayerAtom = atom();
+export const confirmedLocationAtom = atom();
 export const chatHistoryAtom = atom([]);
 export const sessionIdAtom = atom(uuidv4());
 export const isLoadingAtom = atom(false);
@@ -23,7 +25,7 @@ export const addPrompt = atom(null, (get, set, promt) => {
   }
 
   let queryUrl = "https://api.zeno.ds.io/stream";
-  if (import.meta.env.MOCK_QUERIES === "true") {
+  if (import.meta.env.VITE_MOCK_QUERIES === "true") {
     queryUrl = "/stream";
   }
 

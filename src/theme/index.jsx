@@ -1,7 +1,7 @@
 import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 import globalCss from "./globalCss";
 
-const config = defineConfig({
+export const config = defineConfig({
   globalCss,
   theme: {
     tokens: {

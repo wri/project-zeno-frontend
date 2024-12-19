@@ -2,7 +2,7 @@
 import T from "prop-types";
 import { Button, List } from "@chakra-ui/react";
 import { useSetAtom } from "jotai";
-import { addPrompt } from "../../atoms";
+import { addPrompt, confirmedLocationAtom, highlightedLayerAtom } from "../../atoms";
 import MessageOutWrapper from "./wrapper";
 
 /**
@@ -15,6 +15,8 @@ import MessageOutWrapper from "./wrapper";
  */
 function HumanInput({ message, options, artifact }) {
   const submit = useSetAtom(addPrompt);
+  const confirmLocation = useSetAtom(confirmedLocationAtom);
+  const setHighlightedLayer = useSetAtom(highlightedLayerAtom);
 
   return (
     <MessageOutWrapper>
@@ -31,7 +33,13 @@ function HumanInput({ message, options, artifact }) {
                 type="button"
                 colorPalette="blue"
                 borderRadius="full"
-                onClick={() => submit({ query: `${index}`, queryType: "human_input" })}
+                onClick={() => {
+                  submit({ query: `${index}`, queryType: "human_input" });
+                  confirmLocation(feature);
+                }}
+                onMouseEnter={() => setHighlightedLayer(feature.id)}
+                onMouseLeave={() => setHighlightedLayer(null)}
+                _hover={{ bg: "pink.500" }}
               >
                 {feature.properties.name}
               </Button>
