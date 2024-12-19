@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "@fontsource/ibm-plex-sans/index.css";
 
-const isMock = import.meta.env.MOCK_QUERIES === "true";
+const isMock = import.meta.env.VITE_MOCK_QUERIES === "true";
 
 async function deferRender() {
   if (isMock) {
@@ -12,6 +12,7 @@ async function deferRender() {
   } else {
     return Promise.resolve();
   }
+
 }
 
 deferRender().then(() => {

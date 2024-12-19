@@ -4,49 +4,87 @@ import MapGl, {
   Source,
   AttributionControl,
 } from "react-map-gl/maplibre";
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import bbox from "@turf/bbox";
-import { mapLayersAtom } from "../atoms";
+import { mapLayersAtom, highlightedLayerAtom, confirmedLocationAtom } from "../atoms";
 import { useAtomValue } from "jotai";
-import { useRef } from "react";
 
 /**
  * Map component
  * Children are the layers to render on the map
  */
 function Map() {
+  const [currentFeatures, setFeatures] = useState([]);
   const mapRef = useRef();
 
   const mapLayers = useAtomValue(mapLayersAtom);
+  const highlightedLayer = useAtomValue(highlightedLayerAtom);
+  const confirmedLocation = useAtomValue(confirmedLocationAtom);
 
   // if there are layers, calculate the bounds
   // each layer is a feature collection, so we need to calculate the bounds of all features
   useEffect(() => {
     if (mapLayers.length > 0) {
-      const bounds = mapLayers.reduce(
-        (acc, layer) => {
-          const layerBounds = bbox(layer);
-          return [
-            Math.min(acc[0], layerBounds[0]),
-            Math.min(acc[1], layerBounds[1]),
-            Math.max(acc[2], layerBounds[2]),
-            Math.max(acc[3], layerBounds[3]),
-          ];
-        },
-        [Infinity, Infinity, -Infinity, -Infinity]
-      );
+      if (!confirmedLocation) {
+        const bounds = mapLayers.reduce(
+          (acc, layer) => {
+            const layerBounds = bbox(layer);
+            return [
+              Math.min(acc[0], layerBounds[0]),
+              Math.min(acc[1], layerBounds[1]),
+              Math.max(acc[2], layerBounds[2]),
+              Math.max(acc[3], layerBounds[3]),
+            ];
+          },
+          [Infinity, Infinity, -Infinity, -Infinity]
+        );
 
-      mapRef.current.fitBounds(
-        [
-          [bounds[0], bounds[1]],
-          [bounds[2], bounds[3]],
-        ],
-        {
-          padding: 100,
-        }
-      );
+        mapRef.current.fitBounds(
+          [
+            [bounds[0], bounds[1]],
+            [bounds[2], bounds[3]],
+          ],
+          {
+            padding: 100,
+          }
+        );
+      } else {
+        // If the location is confirmed, fit to the bounds of the confirmed location
+        const bounds = bbox(confirmedLocation);
+        mapRef.current.fitBounds(
+          [
+            [bounds[0], bounds[1]],
+            [bounds[2], bounds[3]],
+          ],
+          {
+            padding: 100,
+          }
+        );
+      }
     }
-  }, [mapLayers]);
+
+    mapLayers.forEach(layer => layer.features.forEach(
+      ((feature) => {
+        if (feature.id === highlightedLayer) {
+          // add highlight layer to attributes
+          feature.properties = {
+            ...feature.properties,
+            "fill-opacity": 0.5,
+            "fill-color": "#ff0000",
+            "line-color": "#ff0000",
+          };
+        } else {
+          // reset the layer to default
+          feature.properties = {
+            ...feature.properties,
+            "fill-opacity": 0.25,
+            "fill-color": "#1857e0",
+            "line-color": "#1857e0",
+          };
+        }
+    })));
+    setFeatures(mapLayers.reduce((acc, layer) => [...acc, ...layer.features], []));
+  }, [mapLayers, highlightedLayer, confirmedLocation]);
 
   return (
     <MapGl
@@ -66,23 +104,27 @@ function Map() {
       >
         <Layer id="background-tiles" type="raster" />
       </Source>
-      {mapLayers.map((layer, idx) => {
-        const layerId = layer?.features[0]?.id || idx;
-        return (
-          <Source id={layerId} type="geojson" data={layer} key={layerId}>
-            <Layer
-              id={`fill-layer-${layerId}`}
-              type="fill"
-              paint={{ "fill-color": "#1857e0", "fill-opacity": 0.25 }}
-            />
-            <Layer
-              id={`line-layer-${layerId}`}
-              type="line"
-              paint={{ "line-color": "#1857e0", "line-width": 2 }}
-            />
-          </Source>
-        );
-      })}
+      {currentFeatures?.map((feature, idx) => {
+          const layerId = feature.id || idx;
+          const fillColor = feature.properties["fill-color"] || "#1857e0";
+          const lineColor = feature.properties["line-color"] || "#1857e0";
+          const fillOpacity = feature.properties["fill-opacity"] || 0.25;
+
+          return (
+            <Source id={layerId} type="geojson" data={feature} key={layerId}>
+              <Layer
+                id={`fill-layer-${layerId}`}
+                type="fill"
+                paint={{ "fill-color": fillColor , "fill-opacity": fillOpacity }}
+              />
+              <Layer
+                id={`line-layer-${layerId}`}
+                type="line"
+                paint={{ "line-color": lineColor, "line-width": 2 }}
+              />
+            </Source>
+          );
+        })};
       <AttributionControl customAttribution="Background tiles: © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>" />
     </MapGl>
   );
