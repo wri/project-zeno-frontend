@@ -13,9 +13,8 @@ function App() {
         maxH="vh"
         h="vh"
         templateRows="min-content minmax(0, 1fr)"
-        bgGradient="to-b"
-        gradientFrom="teal.50"
-        gradientTo="blue.50"
+        bg="blue.900/15"
+        bgImage="linear-gradient({colors.lime.50}, transparent)"
       >
         <Box bgColor="blue.50" shadow="sm" px="8" py="4">
           <Text as="h1" color="blue.900" fontWeight="700">Land Carbon Lab - Zeno</Text>
