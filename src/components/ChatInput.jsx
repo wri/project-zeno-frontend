@@ -9,11 +9,15 @@ function ChatInput() {
 
   const submit = useSetAtom(addPrompt);
 
+  const submitPrompt = () => {
+    submit({ query: inputValue, queryType: "query" });
+    setInputValue("");
+  };
+
   const handleKeyUp = (e) => {
     if(e.keyCode === 13) {
       e.preventDefault();
-      submit({ query: inputValue, queryType: "query" });
-      setInputValue("");
+      submitPrompt();
     }
   };
 
@@ -40,7 +44,7 @@ function ChatInput() {
         colorPalette="blue"
         type="button"
         size="xs"
-        onClick={() => submit({ query: inputValue, queryType: "query" })}
+        onClick={submitPrompt}
       >
         <MdChevronRight />
       </Button>

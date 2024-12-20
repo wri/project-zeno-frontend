@@ -12,7 +12,6 @@ async function deferRender() {
   } else {
     return Promise.resolve();
   }
-
 }
 
 deferRender().then(() => {
