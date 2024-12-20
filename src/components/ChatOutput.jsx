@@ -28,7 +28,6 @@ function ChatOutput() {
         observer.disconnect();
       };
     }
-
   }, []);
 
   return (
