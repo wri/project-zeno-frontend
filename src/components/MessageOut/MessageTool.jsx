@@ -34,7 +34,7 @@ function LocationTool({artifact}) {
       <p>Found {numLocations} Locations:</p>
       <ul>
         {artifact?.features.map((f) => (
-          <li key="f.id">{f.properties.name}</li>
+          <li key={f.id}>{f.properties.name}</li>
         ))}
       </ul>
       <Button
