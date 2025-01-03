@@ -1,20 +1,23 @@
 import T from "prop-types";
-import { Button }  from "@chakra-ui/react";
 import MessageOutWrapper from "./wrapper";
 
 import { useSetAtom } from "jotai";
 import { mapLayersAtom, chartDataAtom } from "../../atoms";
+import QueryButton from "./QueryButton";
 
-function ContextLayer({message}) {
-  return (<p>Using context layer <b>{message}</b></p>);
+function ContextLayer({ message }) {
+  return (
+    <p>
+      Using context layer <b>{message}</b>
+    </p>
+  );
 }
 
-
 ContextLayer.propTypes = {
-  message: T.string.isRequired
+  message: T.string.isRequired,
 };
 
-function LocationTool({artifact}) {
+function LocationTool({ artifact }) {
   /**
    * LocationTool component
    * message is found location
@@ -37,24 +40,18 @@ function LocationTool({artifact}) {
           <li key="f.id">{f.properties.name}</li>
         ))}
       </ul>
-      <Button
-        type="button"
-        size="xs"
-        borderRadius="full"
-        colorPalette="blue"
-        onClick={() => setMapLayers(() => [artifact])}
-      >
+      <QueryButton clickHandler={() => setMapLayers(() => [artifact])}>
         Show on map
-      </Button>
+      </QueryButton>
     </>
   );
 }
 
 LocationTool.propTypes = {
-  artifact: T.object
+  artifact: T.object,
 };
 
-function DistAlertsTool({message, artifact}) {
+function DistAlertsTool({ message, artifact }) {
   // message is of the form { "location": { "category": "value"}, { "category": "value"} }
   // artifact is geojson object to render to a map
 
@@ -69,36 +66,35 @@ function DistAlertsTool({message, artifact}) {
 
   const json = JSON.parse(message);
   const keys = Object.keys(json);
-  const data = Object.entries(json[keys[0]]).map(([category, value]) => ({ category, value }));
+  const data = Object.entries(json[keys[0]]).map(([category, value]) => ({
+    category,
+    value,
+  }));
 
   return (
     <>
       <p>Found {numDisturbances} disturbances in the region.</p>
-      <Button
-        size="xs"
-        mt="4"
-        borderRadius="full"
-        colorPalette="blue"
-        onClick={() => {
+      <QueryButton
+        clickHandler={() => {
           setMapLayers(() => [artifact]);
           setChartData(data);
         }}
       >
         Show on map
-      </Button>
+      </QueryButton>
     </>
   );
 }
 
 DistAlertsTool.propTypes = {
   message: T.string.isRequired,
-  artifact: T.object
+  artifact: T.object,
 };
 
-function MessageTool({message, toolName, artifact}) {
+function MessageTool({ message, toolName, artifact }) {
   let render;
 
-  switch(toolName) {
+  switch (toolName) {
     case "context-layer-tool":
       render = <ContextLayer message={message} />;
       break;
@@ -113,18 +109,18 @@ function MessageTool({message, toolName, artifact}) {
       break;
   }
 
-  return (
-    <MessageOutWrapper>
-      {render}
-    </MessageOutWrapper>
-  );
+  return <MessageOutWrapper>{render}</MessageOutWrapper>;
 }
 
 MessageTool.propTypes = {
   message: T.string.isRequired,
-  toolName: T.oneOf(["context-layer-tool", "location-tool", "dist-alerts-tool", "retrieve_blog_posts"]),
-  artifact: T.object
+  toolName: T.oneOf([
+    "context-layer-tool",
+    "location-tool",
+    "dist-alerts-tool",
+    "retrieve_blog_posts",
+  ]),
+  artifact: T.object,
 };
-
 
 export default MessageTool;

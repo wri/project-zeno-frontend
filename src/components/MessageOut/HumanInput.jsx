@@ -1,9 +1,10 @@
 
 import T from "prop-types";
-import { Button, List } from "@chakra-ui/react";
+import { List } from "@chakra-ui/react";
 import { useSetAtom } from "jotai";
 import { addPrompt, confirmedLocationAtom, highlightedLayerAtom } from "../../atoms";
 import MessageOutWrapper from "./wrapper";
+import QueryButton from "./QueryButton";
 
 /**
  *
@@ -26,14 +27,9 @@ function HumanInput({ message, options, artifact }) {
           const feature = artifact.features.find((f) => f.id === `${option}`);
 
           return (
-            <List.Item key={option}>
-              <Button
-                size="xs"
-                mb="2"
-                type="button"
-                colorPalette="blue"
-                borderRadius="full"
-                onClick={() => {
+            <List.Item key={option} m="0">
+              <QueryButton
+                clickHandler={() => {
                   submit({ query: `${index}`, queryType: "human_input" });
                   confirmLocation(feature);
                 }}
@@ -41,7 +37,7 @@ function HumanInput({ message, options, artifact }) {
                 onMouseLeave={() => setHighlightedLayer(null)}
               >
                 {feature.properties.name}
-              </Button>
+              </QueryButton>
             </List.Item>
           );
         })}
