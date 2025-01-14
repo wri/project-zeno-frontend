@@ -3,7 +3,7 @@ import { Button }  from "@chakra-ui/react";
 import MessageOutWrapper from "./wrapper";
 
 import { useSetAtom } from "jotai";
-import { mapLayersAtom, chartDataAtom } from "../../atoms";
+import { chartDataAtom, addLayerAtom } from "../../atoms";
 
 function ContextLayer({message}) {
   return (<p>Using context layer <b>{message}</b></p>);
@@ -20,14 +20,15 @@ function LocationTool({artifact}) {
    * message is found location
    * artifact is geojson object to render to a map
    */
-
-  const setMapLayers = useSetAtom(mapLayersAtom);
+  const addLayer = useSetAtom(addLayerAtom);
 
   const numLocations = artifact ? artifact?.features.length : 0;
 
   if (numLocations === 0) {
     return <p>No locations found.</p>;
   }
+
+  const artifactName = "Location Layer";
 
   return (
     <>
@@ -42,7 +43,7 @@ function LocationTool({artifact}) {
         size="xs"
         borderRadius="full"
         colorPalette="blue"
-        onClick={() => setMapLayers(() => [artifact])}
+        onClick={() => addLayer({ ...artifact, name: artifactName })}
       >
         Show on map
       </Button>
@@ -58,7 +59,7 @@ function DistAlertsTool({message, artifact}) {
   // message is of the form { "location": { "category": "value"}, { "category": "value"} }
   // artifact is geojson object to render to a map
 
-  const setMapLayers = useSetAtom(mapLayersAtom);
+  const addLayer = useSetAtom(addLayerAtom);
   const setChartData = useSetAtom(chartDataAtom);
 
   const numDisturbances = artifact ? artifact?.features.length : 0;
@@ -80,7 +81,7 @@ function DistAlertsTool({message, artifact}) {
         borderRadius="full"
         colorPalette="blue"
         onClick={() => {
-          setMapLayers(() => [artifact]);
+          addLayer({ ...artifact, name: "Disturbances" });
           setChartData(data);
         }}
       >

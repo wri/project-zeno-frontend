@@ -7,8 +7,10 @@ import MapGl, {
 import { config } from "../theme";
 import { useEffect, useState, useRef } from "react";
 import bbox from "@turf/bbox";
-import { mapLayersAtom, highlightedLayerAtom, confirmedLocationAtom } from "../atoms";
+import { mapLayersAtom, highlightedLayerAtom, confirmedLocationAtom, layerVisibilityAtom } from "../atoms";
 import { useAtomValue } from "jotai";
+import { Box } from "@chakra-ui/react";
+import LayerSwitcher from "./LayerSwitcher";
 
 /**
  * Map component
@@ -23,6 +25,7 @@ function Map() {
   const mapLayers = useAtomValue(mapLayersAtom);
   const highlightedLayer = useAtomValue(highlightedLayerAtom);
   const confirmedLocation = useAtomValue(confirmedLocationAtom);
+  const layerVisibility = useAtomValue(layerVisibilityAtom);
 
   // if there are layers, calculate the bounds
   // each layer is a feature collection, so we need to calculate the bounds of all features
@@ -66,8 +69,9 @@ function Map() {
       }
     }
 
-    mapLayers.forEach(layer => layer.features.forEach(
+    mapLayers.forEach((layer, idx) => layer.features.forEach(
       ((feature) => {
+        feature.properties.layerId = layer?.features[0]?.id || idx;
         if (feature.id === highlightedLayer) {
           // add highlight layer to attributes
           feature.properties = {
@@ -90,8 +94,10 @@ function Map() {
   }, [mapLayers, highlightedLayer, confirmedLocation, pink500, blue500]);
 
   return (
+    <Box position="relative" height="88vh">
     <MapGl
       ref={mapRef}
+      style={{ width: "100%", height: "100%" }}
       initialViewState={{
         longitude: 0,
         latitude: 0,
@@ -108,28 +114,35 @@ function Map() {
         <Layer id="background-tiles" type="raster" />
       </Source>
       {currentFeatures?.map((feature, idx) => {
-          const layerId = feature.id || idx;
+          const featureId = feature.id || idx;
+          const isVisible = layerVisibility[feature.properties.layerId] ?? true;
+
           const fillColor = feature.properties["fill-color"] || blue500;
           const lineColor = feature.properties["line-color"] || blue500;
           const fillOpacity = feature.properties["fill-opacity"] || 0.25;
 
           return (
-            <Source id={layerId} type="geojson" data={feature} key={layerId}>
+            <Source id={featureId} type="geojson" data={feature} key={featureId}>
               <Layer
-                id={`fill-layer-${layerId}`}
+                id={`fill-layer-${featureId}`}
                 type="fill"
                 paint={{ "fill-color": fillColor , "fill-opacity": fillOpacity }}
+                layout={{ visibility: isVisible ? "visible" : "none" }}
+
               />
               <Layer
-                id={`line-layer-${layerId}`}
+                id={`line-layer-${featureId}`}
                 type="line"
                 paint={{ "line-color": lineColor, "line-width": 2 }}
+                layout={{ visibility: isVisible ? "visible" : "none" }}
               />
             </Source>
           );
         })};
       <AttributionControl customAttribution="Background tiles: © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>" />
     </MapGl>
+    <LayerSwitcher />
+    </Box>
   );
 }
 
