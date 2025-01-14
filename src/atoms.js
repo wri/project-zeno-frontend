@@ -8,6 +8,7 @@ export const chatHistoryAtom = atom([]);
 export const sessionIdAtom = atom(uuidv4());
 export const isLoadingAtom = atom(false);
 export const chartDataAtom = atom();
+export const layerVisibilityAtom = atom({});
 
 function makeInputMessage(query) {
   return {
@@ -83,3 +84,37 @@ export const addPrompt = atom(null, (get, set, promt) => {
   })
   .finally(() => set(isLoadingAtom, false));
 });
+
+/**
+ * Adds a new layer to the map
+ * 
+ */
+export const addLayerAtom = atom(
+  null, // No initial value for a write-only atom
+  (get, set, newLayer) => {
+    const layerId = newLayer?.features[0]?.id || `layer-${Date.now()}`;
+
+    // Update `mapLayersAtom`
+    set(mapLayersAtom, (prevLayers) => {
+      const existingIndex = prevLayers.findIndex(
+        (l) => (l?.features[0]?.id || null) === layerId
+      );
+
+      if (existingIndex !== -1) {
+        // Update existing layer
+        const updatedLayers = [...prevLayers];
+        updatedLayers[existingIndex] = newLayer;
+        return updatedLayers;
+      }
+
+      // Add new layer
+      return [...prevLayers, newLayer];
+    });
+
+    // Update `layerVisibilityAtom` to ensure visibility is set
+    set(layerVisibilityAtom, (prevVisibility) => ({
+      ...prevVisibility,
+      [layerId]: true, // Default visibility to true for new layers
+    }));
+  }
+);
