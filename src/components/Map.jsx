@@ -3,6 +3,8 @@ import MapGl, {
   Layer,
   Source,
   AttributionControl,
+  NavigationControl,
+  ScaleControl
 } from "react-map-gl/maplibre";
 import { config } from "../theme";
 import { useEffect, useState, useRef } from "react";
@@ -129,6 +131,8 @@ function Map() {
           );
         })};
       <AttributionControl customAttribution="Background tiles: © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>" />
+      <ScaleControl />
+      <NavigationControl showCompass={false} position="bottom-left" />
     </MapGl>
   );
 }
