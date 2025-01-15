@@ -2,6 +2,7 @@ import { useAtom } from "jotai";
 import { mapLayersAtom, layerVisibilityAtom } from "../atoms";
 import { Button } from "@chakra-ui/react";
 import { Box, Text, VStack, HStack } from "@chakra-ui/react";
+import { CollecticonEye, CollecticonEyeDisabled } from "@devseed-ui/collecticons-react";
 
 function LayerSwitcher() {
   const [mapLayers] = useAtom(mapLayersAtom);
@@ -30,9 +31,9 @@ function LayerSwitcher() {
         {mapLayers.map((layer, idx) => {
           const layerId = layer.name || idx;
           const isVisible = layerVisibility[layerId] ?? true;
-
           return (
             <HStack key={layerId} style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
+              <Text fontSize="sm" flex="1">{layer.name}</Text>
               <Button
                 onClick={() => toggleLayerVisibility(layerId)}
                 style={{
@@ -42,9 +43,8 @@ function LayerSwitcher() {
                   cursor: "pointer",
                 }}
               >
-                {isVisible ? "👁" : "🚫"}
+              { isVisible ? <CollecticonEye size={16} color="green" /> : <CollecticonEyeDisabled size={16} color="gray" /> }
               </Button>
-              <Text fontSize="sm" flex="1">{layer.name}</Text>
             </HStack>
           );
         })}

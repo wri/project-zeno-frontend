@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^3.2.1",
+    "@devseed-ui/collecticons-react": "^3.0.3",
     "@emotion/react": "^11.13.5",
     "@fontsource/ibm-plex-sans": "^5.1.0",
     "@turf/bbox": "^7.1.0",
