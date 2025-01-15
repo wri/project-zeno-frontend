@@ -2,7 +2,7 @@ import { atom } from "jotai";
 import { v4 as uuidv4 } from "uuid";
 
 export const mapLayersAtom = atom([]);
-export const highlightedLayerAtom = atom();
+export const highlightedLocationAtom = atom();
 export const confirmedLocationAtom = atom();
 export const chatHistoryAtom = atom([]);
 export const sessionIdAtom = atom(uuidv4());

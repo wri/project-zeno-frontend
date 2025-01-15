@@ -28,7 +28,7 @@ function LayerSwitcher() {
       <Text fontSize="lg" fontWeight="bold" mb="4">Layers</Text>
       <VStack spacing="2" align="stretch">
         {mapLayers.map((layer, idx) => {
-          const layerId = layer?.features[0]?.id || idx;
+          const layerId = layer.name || idx;
           const isVisible = layerVisibility[layerId] ?? true;
 
           return (
