@@ -158,7 +158,7 @@ function Map() {
         bg="whiteAlpha.600"
         boxShadow="md"
       >
-        lat, lon: {mapCenter[0].toFixed(3)}, {mapCenter[1].toFixed(3)}
+        lat, lon: {mapCenter[1].toFixed(3)}, {mapCenter[0].toFixed(3)}
       </Code>
     </MapGl>
   );
