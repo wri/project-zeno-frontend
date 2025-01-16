@@ -47,7 +47,7 @@ function LayerSwitcher() {
           marginInline="-0.5rem"
           width="calc(100% + 1rem)"
           css={{
-            "&[data-state=\"open\"][data-state=\"open\"]": {
+            "&[data-part=\"item-trigger\"][data-state=\"open\"]": {
               borderBottom: "1px solid",
               borderColor: "gray.200"
             }
