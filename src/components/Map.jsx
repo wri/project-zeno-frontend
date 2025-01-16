@@ -92,7 +92,7 @@ function Map() {
 
 
   const onMapLoad = useCallback(() => {
-    mapRef.current.on("move", () => {
+    mapRef.current.on("moveend", () => {
       setMapCenter(mapRef.current.getCenter().toArray());
     });
   }, [mapRef]);
