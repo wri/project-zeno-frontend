@@ -3,14 +3,17 @@ import MapGl, {
   Layer,
   Source,
   AttributionControl,
+  NavigationControl,
+  ScaleControl
 } from "react-map-gl/maplibre";
 import { config } from "../theme";
-import { useEffect, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import bbox from "@turf/bbox";
 import { mapLayersAtom, highlightedLocationAtom, confirmedLocationAtom, layerVisibilityAtom } from "../atoms";
 import { useAtomValue } from "jotai";
-import { Box } from "@chakra-ui/react";
 import LayerSwitcher from "./LayerSwitcher";
+import { AbsoluteCenter, Code, Box } from "@chakra-ui/react";
+import { HiOutlinePlusSmall } from "react-icons/hi2";
 
 /**
  * Map component
@@ -19,6 +22,7 @@ import LayerSwitcher from "./LayerSwitcher";
 function Map() {
   const pink500 = config.theme.tokens.colors.pink["500"];
   const blue500 = config.theme.tokens.colors.blue["500"];
+  const [mapCenter, setMapCenter] = useState([0,0]);
   const mapRef = useRef();
 
   const mapLayers = useAtomValue(mapLayersAtom);
@@ -87,6 +91,12 @@ function Map() {
   // });
 
 
+  const onMapLoad = useCallback(() => {
+    mapRef.current.on("move", () => {
+      setMapCenter(mapRef.current.getCenter().toArray());
+    });
+  }, [mapRef]);
+
   return (
     <Box position="relative" height="88vh">
     <MapGl
@@ -97,6 +107,7 @@ function Map() {
         latitude: 0,
         zoom: 0
       }}
+      onLoad={onMapLoad}
       attributionControl={false}
     >
       <Source
@@ -119,14 +130,14 @@ function Map() {
               paint={{ "fill-color": ["case", 
                 ["all",
                   ["has", "name"],
-                  ["==", ["get", "name"], highlightedLocation],
+                  ["==", ["get", "name"], highlightedLocation ?? null],
                 ], pink500, blue500
               ]
               , "fill-opacity": [
                 "case",
                 ["all",
                   ["has", "name"],
-                  ["==", ["get", "name"], highlightedLocation],
+                  ["==", ["get", "name"], highlightedLocation ?? null],
                 ], 0.5, 0.25
                 ] }}
               layout={{ visibility: isVisible ? "visible" : "none" }}
@@ -137,7 +148,7 @@ function Map() {
               paint={{ "line-color": ["case", 
                 ["all",
                   ["has", "name"],
-                  ["==", ["get", "name"], highlightedLocation],
+                  ["==", ["get", "name"], highlightedLocation ?? null],
                 ], pink500, blue500 
               ], "line-width": 2 }}
               layout={{ visibility: isVisible ? "visible" : "none" }}
@@ -147,6 +158,25 @@ function Map() {
       }
       )}
       <AttributionControl customAttribution="Background tiles: © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>" />
+      <ScaleControl />
+      <AbsoluteCenter
+        fontSize="sm"
+      >
+        <HiOutlinePlusSmall />
+      </AbsoluteCenter>
+      <NavigationControl showCompass={false} position="bottom-left" />
+      <Code
+        pos="absolute"
+        bottom="0"
+        right="0"
+        p="2"
+        borderRadius={8}
+        fontSize="10px"
+        bg="whiteAlpha.600"
+        boxShadow="md"
+      >
+        lat, lon: {mapCenter[1].toFixed(3)}, {mapCenter[0].toFixed(3)}
+      </Code>
     </MapGl>
     <LayerSwitcher />
     </Box>
