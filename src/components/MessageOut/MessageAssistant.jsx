@@ -1,10 +1,10 @@
 import T from "prop-types";
-import { Button } from "@chakra-ui/react";
 import Markdown from "react-markdown";
 
 import { useSetAtom } from "jotai";
 import { addPrompt } from "../../atoms";
 import MessageOutWrapper from "./wrapper";
+import QueryButton from "./QueryButton";
 
 function MessageAssistant({ message }) {
   const submit = useSetAtom(addPrompt);
@@ -25,17 +25,12 @@ function MessageAssistant({ message }) {
           } else {
             const { query } = JSON.parse(messagePart.partial_json);
             return (
-              <Button
-                size="xs"
-                mt="4"
+              <QueryButton
                 key={index}
-                onClick={() => submit(query)}
-                borderRadius="full"
-                colorPalette="blue"
-                type="button"
+                clickHandler={() => submit(query)}
               >
                 {messagePart.name}
-              </Button>);
+              </QueryButton>);
           }
         })}
       </MessageOutWrapper>
