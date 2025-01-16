@@ -3,12 +3,16 @@ import MapGl, {
   Layer,
   Source,
   AttributionControl,
+  NavigationControl,
+  ScaleControl
 } from "react-map-gl/maplibre";
 import { config } from "../theme";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import bbox from "@turf/bbox";
 import { mapLayersAtom, highlightedLayerAtom, confirmedLocationAtom } from "../atoms";
 import { useAtomValue } from "jotai";
+import { AbsoluteCenter, Code } from "@chakra-ui/react";
+import { HiOutlinePlusSmall } from "react-icons/hi2";
 
 /**
  * Map component
@@ -18,6 +22,7 @@ function Map() {
   const pink500 = config.theme.tokens.colors.pink["500"];
   const blue500 = config.theme.tokens.colors.blue["500"];
   const [currentFeatures, setFeatures] = useState([]);
+  const [mapCenter, setMapCenter] = useState([0,0]);
   const mapRef = useRef();
 
   const mapLayers = useAtomValue(mapLayersAtom);
@@ -89,6 +94,12 @@ function Map() {
     setFeatures(mapLayers.reduce((acc, layer) => [...acc, ...layer.features], []));
   }, [mapLayers, highlightedLayer, confirmedLocation, pink500, blue500]);
 
+  const onMapLoad = useCallback(() => {
+    mapRef.current.on("move", () => {
+      setMapCenter(mapRef.current.getCenter().toArray());
+    });
+  }, [mapRef]);
+
   return (
     <MapGl
       ref={mapRef}
@@ -97,6 +108,7 @@ function Map() {
         latitude: 0,
         zoom: 0
       }}
+      onLoad={onMapLoad}
       attributionControl={false}
     >
       <Source
@@ -128,7 +140,26 @@ function Map() {
             </Source>
           );
         })};
-      <AttributionControl customAttribution="Background tiles: © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>" />
+      <AttributionControl customAttribution="Background tiles: © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>" position="bottom-left" />
+      <ScaleControl />
+      <AbsoluteCenter
+        fontSize="sm"
+      >
+        <HiOutlinePlusSmall />
+      </AbsoluteCenter>
+      <NavigationControl showCompass={false} position="bottom-left" />
+      <Code
+        pos="absolute"
+        bottom="0"
+        right="0"
+        p="2"
+        borderRadius={8}
+        fontSize="10px"
+        bg="whiteAlpha.600"
+        boxShadow="md"
+      >
+        lat, lon: {mapCenter[1].toFixed(3)}, {mapCenter[0].toFixed(3)}
+      </Code>
     </MapGl>
   );
 }
