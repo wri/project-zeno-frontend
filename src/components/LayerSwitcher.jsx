@@ -1,8 +1,17 @@
 import { useAtom } from "jotai";
 import { mapLayersAtom, layerVisibilityAtom } from "../atoms";
-import { Button } from "@chakra-ui/react";
-import { Box, Text, VStack, HStack } from "@chakra-ui/react";
-import { CollecticonEye, CollecticonEyeDisabled } from "@devseed-ui/collecticons-react";
+import { Text, Flex, Heading, HStack, IconButton } from "@chakra-ui/react";
+import {
+  AccordionItem,
+  AccordionItemContent,
+  AccordionItemTrigger,
+  AccordionRoot,
+} from "../components/ui/accordion";
+import {
+  CollecticonEye,
+  CollecticonEyeDisabled,
+  CollecticonIsoStack,
+} from "@devseed-ui/collecticons-react";
 
 function LayerSwitcher() {
   const [mapLayers] = useAtom(mapLayersAtom);
@@ -16,40 +25,68 @@ function LayerSwitcher() {
   };
 
   return (
-    <Box
+    <AccordionRoot
       position="absolute"
-      top="10px"
-      right="10px"
+      top={4}
+      left={4}
       bg="white"
-      p="4"
+      p="2"
+      py="0"
       borderRadius="md"
+      plain
+      collapsible
       boxShadow="md"
       zIndex="1000"
+      maxW="16rem"
     >
-      <Text fontSize="lg" fontWeight="bold" mb="4">Layers</Text>
-      <VStack spacing="2" align="stretch">
-        {mapLayers.map((layer, idx) => {
-          const layerId = layer.name || idx;
-          const isVisible = layerVisibility[layerId] ?? true;
-          return (
-            <HStack key={layerId} style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
-              <Text fontSize="sm" flex="1">{layer.name}</Text>
-              <Button
-                onClick={() => toggleLayerVisibility(layerId)}
-                style={{
-                  marginRight: "10px",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-              { isVisible ? <CollecticonEye size={16} color="green" /> : <CollecticonEyeDisabled size={16} color="gray" /> }
-              </Button>
-            </HStack>
-          );
-        })}
-      </VStack>
-    </Box>
+      <AccordionItem border="none">
+        <AccordionItemTrigger
+          cursor="pointer"
+          borderRadius="0"
+          paddingInline="0.5rem"
+          marginInline="-0.5rem"
+          width="calc(100% + 1rem)"
+          css={{
+            "&[data-state=\"open\"][data-state=\"open\"]": {
+              borderBottom: "1px solid",
+              borderColor: "gray.200"
+            }
+          }}
+        >
+          <Flex gap={2} alignItems="center">
+            <CollecticonIsoStack />
+            <Heading size="sm" as="h4" m={0}>
+              Layers
+            </Heading>
+          </Flex>
+        </AccordionItemTrigger>
+        <AccordionItemContent>
+          {mapLayers.map((layer, idx) => {
+            const layerId = layer.name || idx;
+            const isVisible = layerVisibility[layerId] ?? true;
+            return (
+              <HStack key={layerId}>
+                <Text fontSize="xs" flex="1">
+                  {layer.name}
+                </Text>
+                <IconButton
+                  onClick={() => toggleLayerVisibility(layerId)}
+                  variant="plain"
+                  size="xs"
+                  minW={3}
+                >
+                  {isVisible ? (
+                    <CollecticonEye size={16} />
+                  ) : (
+                    <CollecticonEyeDisabled size={16} />
+                  )}
+                </IconButton>
+              </HStack>
+            );
+          })}
+        </AccordionItemContent>
+      </AccordionItem>
+    </AccordionRoot>
   );
 }
 

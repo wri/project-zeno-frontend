@@ -98,87 +98,87 @@ function Map() {
   }, [mapRef]);
 
   return (
-    <Box position="relative" height="88vh">
-    <MapGl
-      ref={mapRef}
-      style={{ width: "100%", height: "100%" }}
-      initialViewState={{
-        longitude: 0,
-        latitude: 0,
-        zoom: 0
-      }}
-      onLoad={onMapLoad}
-      attributionControl={false}
-    >
-      <Source
-        id="background"
-        type="raster"
-        tiles={["https://api.mapbox.com/styles/v1/devseed/cm4sj2dh6005b01s80c8t623r/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGV2c2VlZCIsImEiOiJnUi1mbkVvIn0.018aLhX0Mb0tdtaT2QNe2Q"]}
-        tileSize={256}
+    <Box position="relative" height="100%">
+      <MapGl
+        ref={mapRef}
+        style={{ width: "100%", height: "100%" }}
+        initialViewState={{
+          longitude: 0,
+          latitude: 0,
+          zoom: 0
+        }}
+        onLoad={onMapLoad}
+        attributionControl={false}
       >
-        <Layer id="background-tiles" type="raster" />
-      </Source>
-      {mapLayers?.map((layer, idx) => {
-        const layerId = layer.name || idx;
-        const isVisible = layerVisibility[layerId] ?? true;
+        <Source
+          id="background"
+          type="raster"
+          tiles={["https://api.mapbox.com/styles/v1/devseed/cm4sj2dh6005b01s80c8t623r/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGV2c2VlZCIsImEiOiJnUi1mbkVvIn0.018aLhX0Mb0tdtaT2QNe2Q"]}
+          tileSize={256}
+        >
+          <Layer id="background-tiles" type="raster" />
+        </Source>
+        {mapLayers?.map((layer, idx) => {
+          const layerId = layer.name || idx;
+          const isVisible = layerVisibility[layerId] ?? true;
 
-        return (
-          <Source id={layerId} type="geojson" data={layer} key={layerId}>
-            <Layer
-              id={`fill-layer-${layerId}`}
-              type="fill"
-              paint={{ "fill-color": ["case", 
-                ["all",
-                  ["has", "name"],
-                  ["==", ["get", "name"], highlightedLocation ?? null],
-                ], pink500, blue500
-              ]
-              , "fill-opacity": [
-                "case",
-                ["all",
-                  ["has", "name"],
-                  ["==", ["get", "name"], highlightedLocation ?? null],
-                ], 0.5, 0.25
-                ] }}
-              layout={{ visibility: isVisible ? "visible" : "none" }}
-            />
-            <Layer
-              id={`line-layer-${layerId}`}
-              type="line"
-              paint={{ "line-color": ["case", 
-                ["all",
-                  ["has", "name"],
-                  ["==", ["get", "name"], highlightedLocation ?? null],
-                ], pink500, blue500 
-              ], "line-width": 2 }}
-              layout={{ visibility: isVisible ? "visible" : "none" }}
-            />
-          </Source>
-        );
-      }
-      )}
-      <AttributionControl customAttribution="Background tiles: © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>" />
-      <ScaleControl />
-      <AbsoluteCenter
-        fontSize="sm"
-      >
-        <HiOutlinePlusSmall />
-      </AbsoluteCenter>
-      <NavigationControl showCompass={false} position="bottom-left" />
-      <Code
-        pos="absolute"
-        bottom="0"
-        right="0"
-        p="2"
-        borderRadius={8}
-        fontSize="10px"
-        bg="whiteAlpha.600"
-        boxShadow="md"
-      >
-        lat, lon: {mapCenter[1].toFixed(3)}, {mapCenter[0].toFixed(3)}
-      </Code>
-    </MapGl>
-    <LayerSwitcher />
+          return (
+            <Source id={layerId} type="geojson" data={layer} key={layerId}>
+              <Layer
+                id={`fill-layer-${layerId}`}
+                type="fill"
+                paint={{ "fill-color": ["case", 
+                  ["all",
+                    ["has", "name"],
+                    ["==", ["get", "name"], highlightedLocation ?? null],
+                  ], pink500, blue500
+                ]
+                , "fill-opacity": [
+                  "case",
+                  ["all",
+                    ["has", "name"],
+                    ["==", ["get", "name"], highlightedLocation ?? null],
+                  ], 0.5, 0.25
+                  ] }}
+                layout={{ visibility: isVisible ? "visible" : "none" }}
+              />
+              <Layer
+                id={`line-layer-${layerId}`}
+                type="line"
+                paint={{ "line-color": ["case", 
+                  ["all",
+                    ["has", "name"],
+                    ["==", ["get", "name"], highlightedLocation ?? null],
+                  ], pink500, blue500 
+                ], "line-width": 2 }}
+                layout={{ visibility: isVisible ? "visible" : "none" }}
+              />
+            </Source>
+          );
+        }
+        )}
+        <AttributionControl customAttribution="Background tiles: © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>" position="bottom-left" />
+        <ScaleControl />
+        <AbsoluteCenter
+          fontSize="sm"
+        >
+          <HiOutlinePlusSmall />
+        </AbsoluteCenter>
+        <NavigationControl showCompass={false} position="bottom-left" />
+        <Code
+          pos="absolute"
+          bottom="0"
+          right="0"
+          p="2"
+          borderRadius={8}
+          fontSize="10px"
+          bg="whiteAlpha.600"
+          boxShadow="md"
+        >
+          lat, lon: {mapCenter[1].toFixed(3)}, {mapCenter[0].toFixed(3)}
+        </Code>
+      </MapGl>
+      <LayerSwitcher />
     </Box>
   );
 }
