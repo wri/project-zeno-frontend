@@ -108,7 +108,7 @@ function Map() {
         latitude: 0,
         zoom: 0
       }}
-      onMove={onMapLoad}
+      onLoad={onMapLoad}
       attributionControl={false}
     >
       <Source
