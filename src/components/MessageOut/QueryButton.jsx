@@ -5,7 +5,6 @@ const QueryButton = ({ children, clickHandler, ...delegated }) => {
   return (
     <Button
       onClick={clickHandler}
-      props={delegated}
       size="xs"
       mt="2"
       px={4}
@@ -16,6 +15,7 @@ const QueryButton = ({ children, clickHandler, ...delegated }) => {
       background="linear-gradient({colors.white} 0 0) padding-box, radial-gradient(at 0% 0%, {colors.gray.700}, {colors.gray.200} ) border-box"
       transition="all 0.24s ease-out"
       boxShadow="xs"
+      {...delegated}
       _hover={{
         background:
           "linear-gradient({colors.white} 0 0) padding-box, radial-gradient(at 0% 0%, {colors.blue.700}, {colors.lime.400} ) border-box",

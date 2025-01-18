@@ -2,7 +2,7 @@ import T from "prop-types";
 import MessageOutWrapper from "./wrapper";
 
 import { useSetAtom } from "jotai";
-import { mapLayersAtom, chartDataAtom } from "../../atoms";
+import { chartDataAtom, addLayerAtom } from "../../atoms";
 import QueryButton from "./QueryButton";
 
 function ContextLayer({ message }) {
@@ -23,14 +23,15 @@ function LocationTool({ artifact }) {
    * message is found location
    * artifact is geojson object to render to a map
    */
-
-  const setMapLayers = useSetAtom(mapLayersAtom);
+  const addLayer = useSetAtom(addLayerAtom);
 
   const numLocations = artifact ? artifact?.features.length : 0;
 
   if (numLocations === 0) {
     return <p>No locations found.</p>;
   }
+
+  const artifactName = "Location Layer";
 
   return (
     <>
@@ -40,7 +41,7 @@ function LocationTool({ artifact }) {
           <li key={f.id}>{f.properties.name}</li>
         ))}
       </ul>
-      <QueryButton clickHandler={() => setMapLayers(() => [artifact])}>
+      <QueryButton clickHandler={() => addLayer({ ...artifact, name: artifactName })}>
         Show on map
       </QueryButton>
     </>
@@ -55,7 +56,7 @@ function DistAlertsTool({ message, artifact }) {
   // message is of the form { "location": { "category": "value"}, { "category": "value"} }
   // artifact is geojson object to render to a map
 
-  const setMapLayers = useSetAtom(mapLayersAtom);
+  const addLayer = useSetAtom(addLayerAtom);
   const setChartData = useSetAtom(chartDataAtom);
 
   const numDisturbances = artifact ? artifact?.features.length : 0;
@@ -76,7 +77,7 @@ function DistAlertsTool({ message, artifact }) {
       <p>Found {numDisturbances} disturbances in the region.</p>
       <QueryButton
         clickHandler={() => {
-          setMapLayers(() => [artifact]);
+          addLayer({ ...artifact, name: "Disturbances" });
           setChartData(data);
         }}
       >

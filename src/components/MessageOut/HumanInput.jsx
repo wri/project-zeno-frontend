@@ -2,7 +2,7 @@
 import T from "prop-types";
 import { List } from "@chakra-ui/react";
 import { useSetAtom } from "jotai";
-import { addPrompt, confirmedLocationAtom, highlightedLayerAtom } from "../../atoms";
+import { addPrompt, confirmedLocationAtom, highlightedLocationAtom } from "../../atoms";
 import MessageOutWrapper from "./wrapper";
 import QueryButton from "./QueryButton";
 
@@ -17,7 +17,7 @@ import QueryButton from "./QueryButton";
 function HumanInput({ message, options, artifact }) {
   const submit = useSetAtom(addPrompt);
   const confirmLocation = useSetAtom(confirmedLocationAtom);
-  const setHighlightedLayer = useSetAtom(highlightedLayerAtom);
+  const setHighlightedLocation = useSetAtom(highlightedLocationAtom);
 
   return (
     <MessageOutWrapper>
@@ -33,9 +33,8 @@ function HumanInput({ message, options, artifact }) {
                   submit({ query: `${index}`, queryType: "human_input" });
                   confirmLocation(feature);
                 }}
-                onMouseEnter={() => setHighlightedLayer(feature.id)}
-                onMouseLeave={() => setHighlightedLayer(null)}
-                _hover={{ bg: "pink.500" }}
+                onMouseEnter={() => setHighlightedLocation(feature.properties.name)}
+                onMouseLeave={() => setHighlightedLocation(null)}
               >
                 {feature.properties.name}
               </QueryButton>
