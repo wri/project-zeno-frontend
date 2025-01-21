@@ -18,15 +18,17 @@ function App() {
       >
         <Box bgColor="white" shadow="sm" px="8" py="4">
           <Flex gap={12} alignItems="center">
-            <Image src={logo} height="40px" />
+            <Image src={logo} height="40px" alt="WRI Land Carbon Lab logo" />
             <Text 
               fontFamily="mono"
               fontVariantNumeric="slashed-zero"
               fontFeatureSettings="'ss03'"
               letterSpacing="0.75px"
+              fontSize="sm"
               lineHeight="100%"
               textTransform="uppercase"
               fontWeight="500"
+              title="Project Zeno"
             >
               Pr0ject <br /> Zen0_
             </Text>
