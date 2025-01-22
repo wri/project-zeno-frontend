@@ -4,9 +4,28 @@ import Providers from "./Providers";
 import { ChatInput, ChatOutput, Map } from "./components";
 import { chartDataAtom } from "./atoms";
 import BarChart from "./components/BarChart";
+import FilmStrip from "./components/FilmStrip";
+import TabbedPanel from "./components/TabbedPanel";
 
 function App() {
   const chartData = useAtomValue(chartDataAtom);
+  const SecondaryWidgetTabs = [
+    {
+      value: "chart",
+      title: "Data Visualization",
+      component: chartData ? <BarChart data={chartData} /> : "Test",
+    },
+    {
+      value: "imagery",
+      title: "Recent Imagery",
+      component: <FilmStrip />,
+    },
+    {
+      value: "exports",
+      title: "Export data",
+      component: <Box />,
+    },
+  ];
   return (
     <Providers>
       <Grid
@@ -37,15 +56,11 @@ function App() {
               <ChatInput />
             </Box>
           </Grid>
-          <Grid templateRows={chartData ? "1fr 250px" : "1fr"} gap="2">
-              <Box borderRadius="lg" shadow="md" overflow="hidden">
-                <Map />
-              </Box>
-              {chartData && (
-                <Box bgColor="white" borderRadius="lg" shadow="md" overflow="hidden">
-                  <BarChart data={chartData} />
-                </Box>
-              )}
+          <Grid templateRows="1fr" gap="2">
+            <Box borderRadius="lg" shadow="md" overflow="hidden">
+              <Map />
+            </Box>
+            <TabbedPanel tabData={SecondaryWidgetTabs} />
           </Grid>
         </Grid>
       </Grid>
