@@ -7,6 +7,8 @@ import {
   AccordionRoot,
 } from "./ui/accordion";
 
+const panelHeight = "20rem";
+
 function TabbedPanel({ tabData }) {
   if (!tabData) return;
   return (
@@ -18,6 +20,7 @@ function TabbedPanel({ tabData }) {
       borderRadius="lg"
       shadow="md"
       overflow="auto"
+      maxH={panelHeight}
     >
       <Tabs.Root lazyMount unmountOnExit defaultValue="tab-1" variant="line">
         <AccordionItem
@@ -48,7 +51,7 @@ function TabbedPanel({ tabData }) {
           <AccordionItemContent p={0} pb={2}>
             {tabData.map((tab) => {
               return (
-                <Tabs.Content key={tab.value} value={tab.value} px={4}>
+                <Tabs.Content key={tab.value} value={tab.value} px={4} maxH={`calc(${panelHeight} - 6rem)`}>
                   <Heading as="h4" fontSize="sm">
                     {tab.title}
                   </Heading>
