@@ -2,12 +2,34 @@ import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import T from "prop-types";
 
+import { CollecticonDownload2 } from "@devseed-ui/collecticons-react";
+import { Button } from "@chakra-ui/react";
+
 const BarChart = ({ data }) => {
   const containerRef = useRef();
   const chartRef = useRef();
   const tooltipRef = useRef();
 
   const [ chartDimensions, setChartDimentsions ] = useState([0, 0]);
+
+  // Function to convert data to CSV
+  const downloadDataAsCSV = () => {
+    // Convert the data to CSV
+    const csvData = d3.csvFormat(data);
+
+    // Create a Blob object for the CSV data
+    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+
+    // Create a link element
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "chart-data.csv";
+
+    // Append to the DOM, click, and remove it
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   useEffect(() => {
     if (containerRef.current) {
@@ -49,10 +71,14 @@ const BarChart = ({ data }) => {
 
     // Add x-axis
     svg.append("g")
+      .attr("class", "x-axis")
       .attr("transform", `translate(0,${height - margin.bottom})`)
       .call(d3.axisBottom(x))
       .selectAll("text")
       .style("font-size", "12px");
+
+    svg.selectAll(".x-axis text")
+      .text((d) => (d.length > 10 ? `${d.slice(0, 10)}...` : d));
 
     // Add y-axis
     svg.append("g")
@@ -77,9 +103,13 @@ const BarChart = ({ data }) => {
           .text(`Category: ${d.category}, Value: ${d.value}`);
       })
       .on("mousemove", event => {
+        const containerRect = containerRef.current.getBoundingClientRect();
+        const top = event.clientY - containerRect.top + 10; // Relative to container
+        const left = event.clientX - containerRect.left + 10;
+
         tooltip
-          .style("top", `${event.pageY-100}px`)
-          .style("left", `${event.pageX-20}px`);
+          .style("top", `${top}px`)
+          .style("left", `${left}px`);
       })
       .on("mouseout", () => {
         tooltip.style("visibility", "hidden");
@@ -88,6 +118,24 @@ const BarChart = ({ data }) => {
 
   return (
     <div style={{ position: "relative" }} ref={containerRef}>
+      <Button
+        onClick={downloadDataAsCSV}
+        style={{
+          position: "absolute",
+          top: "10px",
+          right: "10px",
+          zIndex: 1000,
+          padding: "5px 10px",
+          background: "white",
+          color: "steelblue",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+        }}
+      >
+      <CollecticonDownload2 />
+      CSV
+      </Button>
       <svg
         ref={chartRef}
         width={chartDimensions[0]}
@@ -101,8 +149,9 @@ const BarChart = ({ data }) => {
           color: "white",
           padding: "5px",
           borderRadius: "4px",
-          visibility: "hidden",
-          pointerEvents: "none",
+          pointerEvents: "none", // Ensure it doesn't block mouse events
+          visibility: "hidden", // Hidden by default
+          zIndex: 1000, // Bring it to the foreground
         }}
       />
     </div>
