@@ -9,6 +9,7 @@ export const sessionIdAtom = atom(uuidv4());
 export const isLoadingAtom = atom(false);
 export const chartDataAtom = atom();
 export const layerVisibilityAtom = atom({});
+export const interruptedStateAtom = atom(false); // when we receive an interrupt from the API
 
 function makeInputMessage(query) {
   return {

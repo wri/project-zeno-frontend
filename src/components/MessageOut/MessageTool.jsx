@@ -3,8 +3,7 @@ import MessageOutWrapper from "./wrapper";
 
 import { useEffect } from "react";
 import { useSetAtom } from "jotai";
-import { chartDataAtom, addLayerAtom } from "../../atoms";
-import QueryButton from "./QueryButton";
+import { chartDataAtom, addLayerAtom, confirmedLocationAtom } from "../../atoms";
 
 function ContextLayer({ message, artifact }) {
   const addLayer = useSetAtom(addLayerAtom);
@@ -39,6 +38,7 @@ function LocationTool({ artifact }) {
    * artifact is geojson object to render to a map
    */
   const addLayer = useSetAtom(addLayerAtom);
+  const setConfirmedLocation = useSetAtom(confirmedLocationAtom);
 
   const numLocations = artifact ? artifact?.length : 0;
 
@@ -54,10 +54,11 @@ function LocationTool({ artifact }) {
       name: "Location Layer",
     };
     if (numLocations > 0) {
+      setConfirmedLocation(null);
       addLayer(layer);
     }
 
-  }, [artifact, addLayer, numLocations]);
+  }, [artifact, addLayer, numLocations, setConfirmedLocation]);
 
 
   if (numLocations === 0) {
@@ -86,39 +87,41 @@ function DistAlertsTool({ message, artifact }) {
   const addLayer = useSetAtom(addLayerAtom);
   const setChartData = useSetAtom(chartDataAtom);
 
-  const numDisturbances = artifact ? artifact?.features.length : 0;
+  useEffect(() => {
+    const json = JSON.parse(message);
+    const numDisturbances = Object.keys(json).length;
+      const data = Object.entries(json).map(([category, value]) => ({
+        category,
+        value,
+      }));
 
-  if (numDisturbances === 0) {
-    return <p>No disturbances found in the region.</p>;
-  }
+      const layer = {
+        id: "disturbances-layer",
+        type: "geojson",
+        data: artifact,
+        name: "Disturbances",
+      };
+
+
+      if (numDisturbances > 0) {
+        addLayer(layer); 
+        setChartData(data);
+      }
+  }, [message, addLayer, artifact, setChartData]);
 
   const json = JSON.parse(message);
+  const numDisturbances = Object.keys(json).length;
 
-  const data = Object.entries(json).map(([category, value]) => ({
-    category,
-    value,
-  }));
-
-  const layer = {
-    id: "disturbances-layer",
-    type: "geojson",
-    data: artifact,
-    name: "Disturbances",
-  };
-
-  return (
-    <>
-      <p>Found {numDisturbances} disturbances in the region.</p>
-      <QueryButton
-        clickHandler={() => {
-          addLayer(layer);
-          setChartData(data);
-        }}
-      >
-        Display Data
-      </QueryButton>
-    </>
-  );
+  if (numDisturbances > 0) {
+    return (
+      <>Adding alerts to the map.</>
+    );
+  }
+  else {
+    return (
+      <>No alerts found.</>
+    );
+  }
 }
 
 DistAlertsTool.propTypes = {
@@ -128,8 +131,6 @@ DistAlertsTool.propTypes = {
 
 function MessageTool({ message, toolName, artifact }) {
   let render;
-
-  console.log(message, toolName, artifact);
 
   switch (toolName) {
     case "context-layer-tool":
