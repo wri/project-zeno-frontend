@@ -6,7 +6,20 @@ import { useSetAtom } from "jotai";
 import { chartDataAtom, addLayerAtom } from "../../atoms";
 import QueryButton from "./QueryButton";
 
-function ContextLayer({ message }) {
+function ContextLayer({ message, artifact }) {
+  const addLayer = useSetAtom(addLayerAtom);
+  useEffect(() => {
+    if (artifact?.tms_url) {
+      addLayer({
+        id: "context-layer",
+        type: "TMS",
+        url: artifact.tms_url,
+        name: "Context Layer",
+        metadata: artifact.metadata
+      });
+    }
+  }, [artifact, addLayer]);
+
   return (
     <p>
       Using context layer <b>{message}</b>
@@ -16,6 +29,7 @@ function ContextLayer({ message }) {
 
 ContextLayer.propTypes = {
   message: T.string.isRequired,
+  artifact: T.object
 };
 
 function LocationTool({ artifact }) {
@@ -66,7 +80,7 @@ LocationTool.propTypes = {
 };
 
 function DistAlertsTool({ message, artifact }) {
-  // message is of the form { "location": { "category": "value"}, { "category": "value"} }
+  // message is of the form { "category1": "value", "category2": "value" }
   // artifact is geojson object to render to a map
 
   const addLayer = useSetAtom(addLayerAtom);
@@ -79,8 +93,8 @@ function DistAlertsTool({ message, artifact }) {
   }
 
   const json = JSON.parse(message);
-  const keys = Object.keys(json);
-  const data = Object.entries(json[keys[0]]).map(([category, value]) => ({
+
+  const data = Object.entries(json).map(([category, value]) => ({
     category,
     value,
   }));
@@ -101,7 +115,7 @@ function DistAlertsTool({ message, artifact }) {
           setChartData(data);
         }}
       >
-        Show on map
+        Display Data
       </QueryButton>
     </>
   );
@@ -115,7 +129,7 @@ DistAlertsTool.propTypes = {
 function MessageTool({ message, toolName, artifact }) {
   let render;
 
-  console.log("MessageTool", message, toolName, artifact);
+  console.log(message, toolName, artifact);
 
   switch (toolName) {
     case "context-layer-tool":
