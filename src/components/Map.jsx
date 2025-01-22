@@ -37,13 +37,17 @@ function Map() {
       if (!confirmedLocation) {
         const bounds = mapLayers.reduce(
           (acc, layer) => {
-            const layerBounds = bbox(layer);
-            return [
-              Math.min(acc[0], layerBounds[0]),
-              Math.min(acc[1], layerBounds[1]),
-              Math.max(acc[2], layerBounds[2]),
-              Math.max(acc[3], layerBounds[3]),
-            ];
+            if (layer.type == "geojson") {
+              const layerBounds = bbox(layer.data);
+              return [
+                Math.min(acc[0], layerBounds[0]),
+                Math.min(acc[1], layerBounds[1]),
+                Math.max(acc[2], layerBounds[2]),
+                Math.max(acc[3], layerBounds[3]),
+              ];
+            } else {
+              return acc;
+            }
           },
           [Infinity, Infinity, -Infinity, -Infinity]
         );
@@ -59,7 +63,14 @@ function Map() {
         );
       } else {
         // If the location is confirmed, fit to the bounds of the confirmed location
-        const bounds = bbox(confirmedLocation);
+        // find the location in the maplayers object
+        let confirmedLocationFeature = {};
+        mapLayers.forEach((layer) => {
+          if (layer.id === "location-layer") {
+            confirmedLocationFeature = layer.data.features.find((feature) => feature.properties.gadm_id === confirmedLocation);
+          }
+        });
+        const bounds = bbox(confirmedLocationFeature);
         mapRef.current.fitBounds(
           [
             [bounds[0], bounds[1]],
@@ -119,25 +130,26 @@ function Map() {
           <Layer id="background-tiles" type="raster" />
         </Source>
         {mapLayers?.map((layer, idx) => {
-          const layerId = layer.name || idx;
+          const layerId = layer.id || idx;
           const isVisible = layerVisibility[layerId] ?? true;
 
+          if (layer.type === "geojson") {
           return (
-            <Source id={layerId} type="geojson" data={layer} key={layerId}>
+            <Source id={layerId} type="geojson" data={layer.data} key={layerId}>
               <Layer
                 id={`fill-layer-${layerId}`}
                 type="fill"
                 paint={{ "fill-color": ["case", 
                   ["all",
-                    ["has", "name"],
-                    ["==", ["get", "name"], highlightedLocation ?? null],
+                    ["has", "gadm_id"],
+                    ["==", ["get", "gadm_id"], highlightedLocation ?? null],
                   ], pink500, blue500
                 ]
                 , "fill-opacity": [
                   "case",
                   ["all",
-                    ["has", "name"],
-                    ["==", ["get", "name"], highlightedLocation ?? null],
+                    ["has", "gadm_id"],
+                    ["==", ["get", "gadm_id"], highlightedLocation ?? null],
                   ], 0.5, 0.25
                   ] }}
                 layout={{ visibility: isVisible ? "visible" : "none" }}
@@ -147,14 +159,17 @@ function Map() {
                 type="line"
                 paint={{ "line-color": ["case", 
                   ["all",
-                    ["has", "name"],
-                    ["==", ["get", "name"], highlightedLocation ?? null],
+                    ["has", "gadm_id"],
+                    ["==", ["get", "gadm_id"], highlightedLocation ?? null],
                   ], pink500, blue500 
                 ], "line-width": 2 }}
                 layout={{ visibility: isVisible ? "visible" : "none" }}
               />
             </Source>
           );
+
+          }
+
         }
         )}
         <AttributionControl customAttribution="Background tiles: © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>" position="bottom-left" />

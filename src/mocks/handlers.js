@@ -19,7 +19,7 @@ function validLines(response) {
 }
 
 const handlers = [
-  http.post("/stream", async ({ request }) => {
+  http.post("/stream/dist_alert", async ({ request }) => {
     const query = await request.json();
 
     switch(query.query_type) {

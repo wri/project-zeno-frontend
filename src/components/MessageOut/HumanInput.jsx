@@ -14,29 +14,31 @@ import QueryButton from "./QueryButton";
  * with the selected option
  *
  */
-function HumanInput({ message, options, artifact }) {
+function HumanInput({ options }) {
   const submit = useSetAtom(addPrompt);
   const confirmLocation = useSetAtom(confirmedLocationAtom);
   const setHighlightedLocation = useSetAtom(highlightedLocationAtom);
 
   return (
     <MessageOutWrapper>
-      {message}
+      Select a location:
       <List.Root listStyle="none" pl="0">
         {options.map((option, index) => {
-          const feature = artifact.features.find((f) => f.id === `${option}`);
+
+          let gid = option[1];
+          let name = option[0];
 
           return (
             <List.Item key={option} m="0">
               <QueryButton
                 clickHandler={() => {
-                  submit({ query: `${index}`, queryType: "human_input" });
-                  confirmLocation(feature);
+                  submit({ query: `${gid}`, queryType: "human_input" });
+                  confirmLocation(gid);
                 }}
-                onMouseEnter={() => setHighlightedLocation(feature.properties.name)}
+                onMouseEnter={() => setHighlightedLocation(gid)}
                 onMouseLeave={() => setHighlightedLocation(null)}
               >
-                {feature.properties.name}
+                {name}
               </QueryButton>
             </List.Item>
           );
@@ -49,7 +51,6 @@ function HumanInput({ message, options, artifact }) {
 HumanInput.propTypes = {
   message: T.string.isRequired,
   options: T.arrayOf(T.string || T.number).isRequired,
-  artifact: T.object.isRequired
 };
 
 export default HumanInput;

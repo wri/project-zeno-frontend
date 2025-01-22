@@ -1,6 +1,7 @@
 import T from "prop-types";
 import MessageOutWrapper from "./wrapper";
 
+import { useEffect } from "react";
 import { useSetAtom } from "jotai";
 import { chartDataAtom, addLayerAtom } from "../../atoms";
 import QueryButton from "./QueryButton";
@@ -25,25 +26,37 @@ function LocationTool({ artifact }) {
    */
   const addLayer = useSetAtom(addLayerAtom);
 
-  const numLocations = artifact ? artifact?.features.length : 0;
+  const numLocations = artifact ? artifact?.length : 0;
+
+  useEffect(() => {
+    const featureCollection = {
+      type: "FeatureCollection",
+      features: artifact,
+    };
+    const layer = {
+      id: "location-layer",
+      type: "geojson",
+      data: featureCollection,
+      name: "Location Layer",
+    };
+    if (numLocations > 0) {
+      addLayer(layer);
+    }
+
+  }, [artifact, addLayer, numLocations]);
+
 
   if (numLocations === 0) {
     return <p>No locations found.</p>;
   }
-
-  const artifactName = "Location Layer";
-
   return (
     <>
       <p>Found {numLocations} Locations:</p>
       <ul>
-        {artifact?.features.map((f) => (
+        {artifact?.map((f) => (
           <li key={f.id}>{f.properties.name}</li>
         ))}
       </ul>
-      <QueryButton clickHandler={() => addLayer({ ...artifact, name: artifactName })}>
-        Show on map
-      </QueryButton>
     </>
   );
 }
@@ -72,12 +85,19 @@ function DistAlertsTool({ message, artifact }) {
     value,
   }));
 
+  const layer = {
+    id: "disturbances-layer",
+    type: "geojson",
+    data: artifact,
+    name: "Disturbances",
+  };
+
   return (
     <>
       <p>Found {numDisturbances} disturbances in the region.</p>
       <QueryButton
         clickHandler={() => {
-          addLayer({ ...artifact, name: "Disturbances" });
+          addLayer(layer);
           setChartData(data);
         }}
       >
@@ -95,9 +115,11 @@ DistAlertsTool.propTypes = {
 function MessageTool({ message, toolName, artifact }) {
   let render;
 
+  console.log("MessageTool", message, toolName, artifact);
+
   switch (toolName) {
     case "context-layer-tool":
-      render = <ContextLayer message={message} />;
+      render = <ContextLayer message={message} artifact={artifact} />;
       break;
     case "location-tool":
       render = <LocationTool message={message} artifact={artifact} />;
