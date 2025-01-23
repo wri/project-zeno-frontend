@@ -6,18 +6,22 @@ import {
   AccordionItemTrigger,
   AccordionRoot,
 } from "./ui/accordion";
+import { dataPaneOpenAtom } from "../atoms";
+import { useAtom } from "jotai";
 
 function TabbedPanel({ tabData }) {
+  const [, setDataPaneOpen] = useAtom(dataPaneOpenAtom);
   if (!tabData) return;
   return (
     <AccordionRoot
       bg="white"
       p="0"
-      plain
+      plain="true"
       collapsible
       borderRadius="lg"
       shadow="md"
       overflow="auto"
+      onValueChange={(isOpen) => setDataPaneOpen(isOpen)}
     >
       <Tabs.Root lazyMount unmountOnExit defaultValue="tab-1" variant="line">
         <AccordionItem
@@ -45,7 +49,7 @@ function TabbedPanel({ tabData }) {
               borderRadius="0"
             />
           </Flex>
-          <AccordionItemContent p={0} pb={2}>
+          <AccordionItemContent p={0} pb={2} minH="300px">
             {tabData.map((tab) => {
               return (
                 <Tabs.Content key={tab.value} value={tab.value} px={4}>
@@ -64,7 +68,7 @@ function TabbedPanel({ tabData }) {
 }
 
 TabbedPanel.propTypes = {
-  tabData: T.object,
+  tabData: T.array,
 };
 
 export default TabbedPanel;
