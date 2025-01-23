@@ -1,9 +1,8 @@
 
 import T from "prop-types";
 import { List } from "@chakra-ui/react";
-import { useEffect } from "react";
 import { useSetAtom } from "jotai";
-import { addPrompt, confirmedLocationAtom, interruptedStateAtom, highlightedLocationAtom } from "../../atoms";
+import { addPrompt, confirmedLocationAtom, highlightedLocationAtom } from "../../atoms";
 import MessageOutWrapper from "./wrapper";
 import QueryButton from "./QueryButton";
 
@@ -19,11 +18,6 @@ function HumanInput({ options }) {
   const submit = useSetAtom(addPrompt);
   const confirmLocation = useSetAtom(confirmedLocationAtom);
   const setHighlightedLocation = useSetAtom(highlightedLocationAtom);
-  const setInterruptedState = useSetAtom(interruptedStateAtom);
-
-  useEffect(() => {
-    setInterruptedState(true);
-  }, [setInterruptedState]);
 
   return (
     <MessageOutWrapper>
@@ -40,7 +34,6 @@ function HumanInput({ options }) {
                 clickHandler={() => {
                   submit({ query: `${gid}`, queryType: "human_input" });
                   confirmLocation(gid);
-                  setInterruptedState(false);
                 }}
                 onMouseEnter={() => setHighlightedLocation(gid)}
                 onMouseLeave={() => setHighlightedLocation(null)}
