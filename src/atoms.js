@@ -9,6 +9,7 @@ export const sessionIdAtom = atom(uuidv4());
 export const isLoadingAtom = atom(false);
 export const chartDataAtom = atom();
 export const layerVisibilityAtom = atom({});
+export const interruptedStateAtom = atom(false); // when we receive an interrupt from the API
 
 function makeInputMessage(query) {
   return {
@@ -25,7 +26,7 @@ export const addPrompt = atom(null, (get, set, promt) => {
     set(chatHistoryAtom, (prev => [...prev, makeInputMessage(query)]));
   }
 
-  let queryUrl = "https://api.zeno.ds.io/stream";
+  let queryUrl = "https://dev.api.zeno.ds.io/stream/dist_alert";
   if (import.meta.env.VITE_MOCK_QUERIES === "true") {
     queryUrl = "/stream";
   }
@@ -92,12 +93,12 @@ export const addPrompt = atom(null, (get, set, promt) => {
 export const addLayerAtom = atom(
   null, // No initial value for a write-only atom
   (get, set, newLayer) => {
-    const layerId = newLayer?.features[0]?.id || `layer-${Date.now()}`;
+    const layerId = newLayer.id || uuidv4();
 
     // Update `mapLayersAtom`
     set(mapLayersAtom, (prevLayers) => {
       const existingIndex = prevLayers.findIndex(
-        (l) => (l?.features[0]?.id || null) === layerId
+        (l) => (l?.id || null) === layerId
       );
 
       if (existingIndex !== -1) {
