@@ -33,7 +33,7 @@ function LayerSwitcher() {
       p="2"
       py="0"
       borderRadius="md"
-      plain
+      plain="true"
       collapsible
       boxShadow="md"
       zIndex="1000"
@@ -61,8 +61,14 @@ function LayerSwitcher() {
           </Flex>
         </AccordionItemTrigger>
         <AccordionItemContent>
-          {mapLayers.map((layer, idx) => {
-            const layerId = layer.name || idx;
+        {mapLayers.length === 0 && (
+          <Text fontSize="xs" color="gray.500">
+            No layers available
+          </Text>
+          )}
+        {mapLayers.length > 0 && (
+          mapLayers.map((layer) => {
+            const layerId = layer.id;
             const isVisible = layerVisibility[layerId] ?? true;
             return (
               <HStack key={layerId}>
@@ -83,7 +89,7 @@ function LayerSwitcher() {
                 </IconButton>
               </HStack>
             );
-          })}
+          }))}
         </AccordionItemContent>
       </AccordionItem>
     </AccordionRoot>

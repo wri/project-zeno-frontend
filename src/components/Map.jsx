@@ -15,6 +15,41 @@ import LayerSwitcher from "./LayerSwitcher";
 import { AbsoluteCenter, Code, Box } from "@chakra-ui/react";
 import { HiOutlinePlusSmall } from "react-icons/hi2";
 
+const addTMSLayer = (map, layerId, url, visibility = true) => {
+  // Check if the layer already exists (avoid duplicates)
+  if (map.getSource(layerId))  {
+    // set the visibility of the layer
+    map.setLayoutProperty(`tms-layer-${layerId}`, "visibility", visibility ? "visible" : "none");
+    return;
+  }
+
+  // Find the first GeoJSON layer ID
+  const layers = map.getStyle().layers;
+  const firstGeoJSONLayer = layers.find((layer) =>
+    layer.id.startsWith("fill-layer-")
+  );
+
+  const beforeId = firstGeoJSONLayer ? firstGeoJSONLayer.id : undefined;
+
+  // Add the TMS source
+  map.addSource(layerId, {
+    type: "raster",
+    tiles: [url],
+    tileSize: 256,
+  });
+
+  // Add the TMS layer with the calculated beforeId
+  map.addLayer(
+    {
+      id: `tms-layer-${layerId}`,
+      type: "raster",
+      source: layerId,
+      layout: { visibility: visibility ? "visible" : "none" },
+    },
+    beforeId // Insert below the first GeoJSON layer
+  );
+};
+
 /**
  * Map component
  * Children are the layers to render on the map
@@ -33,17 +68,95 @@ function Map() {
   // if there are layers, calculate the bounds
   // each layer is a feature collection, so we need to calculate the bounds of all features
   useEffect(() => {
+    if (!mapRef.current) return;
+    const map = mapRef.current.getMap();
+
     if (mapLayers.length > 0) {
+
+      // Dynamically add map layers
+      mapLayers.forEach((layer, idx) => {
+        const layerId = layer.id || idx;
+        const isVisible = layerVisibility[layerId] ?? true;
+
+        if (layer.type === "geojson") {
+          if (map.getSource(layerId)) {
+            map.getSource(layerId).setData(layer.data); // refresh the data
+          }
+          else {
+            map.addSource(layerId, {
+              type: "geojson",
+              data: layer.data,
+            });
+
+            // Add the fill layer
+            map.addLayer(
+              {
+                id: `fill-layer-${layerId}`,
+                type: "fill",
+                source: layerId,
+              },
+            );
+
+            // Add the line layer
+            map.addLayer(
+              {
+                id: `line-layer-${layerId}`,
+                type: "line",
+                source: layerId,
+                paint: {
+                  "line-width": 2
+                },
+              },
+            );
+          }
+
+            // set the visibility of the layer
+            map.setLayoutProperty(`fill-layer-${layerId}`, "visibility", isVisible ? "visible" : "none");
+            map.setLayoutProperty(`line-layer-${layerId}`, "visibility", isVisible ? "visible" : "none");
+
+            // set paint properties
+            map.setPaintProperty(`fill-layer-${layerId}`, "fill-color", ["case", 
+                    ["all",
+                      ["has", "gadm_id"],
+                      ["==", ["get", "gadm_id"], highlightedLocation ?? null],
+                    ], pink500, blue500
+                  ]);
+            map.setPaintProperty(`fill-layer-${layerId}`, "fill-opacity", [
+                    "case",
+                    ["all",
+                      ["has", "gadm_id"],
+                      ["==", ["get", "gadm_id"], highlightedLocation ?? null],
+                    ], 0.5, 0.25
+                  ]);
+            map.setPaintProperty(`line-layer-${layerId}`, "line-color", ["case",
+                    ["all",
+                      ["has", "gadm_id"],
+                      ["==", ["get", "gadm_id"], highlightedLocation ?? null],
+                    ], pink500, blue500
+                  ]
+            );
+        }
+        if (layer.type === "TMS") {
+          // Add or update TMS layer
+          addTMSLayer(map, layerId, layer.url, isVisible);
+
+        }
+      });
+
       if (!confirmedLocation) {
         const bounds = mapLayers.reduce(
           (acc, layer) => {
-            const layerBounds = bbox(layer);
-            return [
-              Math.min(acc[0], layerBounds[0]),
-              Math.min(acc[1], layerBounds[1]),
-              Math.max(acc[2], layerBounds[2]),
-              Math.max(acc[3], layerBounds[3]),
-            ];
+            if (layer.type == "geojson") {
+              const layerBounds = bbox(layer.data);
+              return [
+                Math.min(acc[0], layerBounds[0]),
+                Math.min(acc[1], layerBounds[1]),
+                Math.max(acc[2], layerBounds[2]),
+                Math.max(acc[3], layerBounds[3]),
+              ];
+            } else {
+              return acc;
+            }
           },
           [Infinity, Infinity, -Infinity, -Infinity]
         );
@@ -59,7 +172,14 @@ function Map() {
         );
       } else {
         // If the location is confirmed, fit to the bounds of the confirmed location
-        const bounds = bbox(confirmedLocation);
+        // find the location in the maplayers object
+        let confirmedLocationFeature = {};
+        mapLayers.forEach((layer) => {
+          if (layer.id === "location-layer") {
+            confirmedLocationFeature = layer.data.features.find((feature) => feature.properties.gadm_id === confirmedLocation);
+          }
+        });
+        const bounds = bbox(confirmedLocationFeature);
         mapRef.current.fitBounds(
           [
             [bounds[0], bounds[1]],
@@ -72,24 +192,7 @@ function Map() {
       }
     }
 
-  }, [mapLayers, highlightedLocation, confirmedLocation, pink500, blue500]);
-
-  // Set on mousemove and on mouseleave events on the features to match highlightedLocation
-
-  // mapLayers.forEach((layer, idx) => {
-  //   const layerId = layer.name || idx;
-  //   mapRef.current.on("mousemove", `fill-layer-${layerId}`, (e) => {
-  //     if (e.features.length > 0 && e.features[0].properties.name) {
-  //       setHighlightedLocation(e.features[0].properties.name);
-  //     }
-  //   });
-
-  //   mapRef.current.on("mouseleave", `fill-layer-${layerId}`, () =>{
-  //     setHighlightedLocation(null);
-  //   });
-
-  // });
-
+  }, [mapLayers, highlightedLocation, confirmedLocation, pink500, blue500, layerVisibility]);
 
   const onMapLoad = useCallback(() => {
     mapRef.current.on("moveend", () => {
@@ -118,45 +221,6 @@ function Map() {
         >
           <Layer id="background-tiles" type="raster" />
         </Source>
-        {mapLayers?.map((layer, idx) => {
-          const layerId = layer.name || idx;
-          const isVisible = layerVisibility[layerId] ?? true;
-
-          return (
-            <Source id={layerId} type="geojson" data={layer} key={layerId}>
-              <Layer
-                id={`fill-layer-${layerId}`}
-                type="fill"
-                paint={{ "fill-color": ["case", 
-                  ["all",
-                    ["has", "name"],
-                    ["==", ["get", "name"], highlightedLocation ?? null],
-                  ], pink500, blue500
-                ]
-                , "fill-opacity": [
-                  "case",
-                  ["all",
-                    ["has", "name"],
-                    ["==", ["get", "name"], highlightedLocation ?? null],
-                  ], 0.5, 0.25
-                  ] }}
-                layout={{ visibility: isVisible ? "visible" : "none" }}
-              />
-              <Layer
-                id={`line-layer-${layerId}`}
-                type="line"
-                paint={{ "line-color": ["case", 
-                  ["all",
-                    ["has", "name"],
-                    ["==", ["get", "name"], highlightedLocation ?? null],
-                  ], pink500, blue500 
-                ], "line-width": 2 }}
-                layout={{ visibility: isVisible ? "visible" : "none" }}
-              />
-            </Source>
-          );
-        }
-        )}
         <AttributionControl customAttribution="Background tiles: © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>" position="bottom-left" />
         <ScaleControl />
         <AbsoluteCenter

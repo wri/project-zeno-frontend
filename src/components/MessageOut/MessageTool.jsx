@@ -1,11 +1,24 @@
 import T from "prop-types";
 import MessageOutWrapper from "./wrapper";
 
+import { useEffect } from "react";
 import { useSetAtom } from "jotai";
-import { chartDataAtom, addLayerAtom } from "../../atoms";
-import QueryButton from "./QueryButton";
+import { chartDataAtom, addLayerAtom, confirmedLocationAtom } from "../../atoms";
 
-function ContextLayer({ message }) {
+function ContextLayer({ message, artifact }) {
+  const addLayer = useSetAtom(addLayerAtom);
+  useEffect(() => {
+    if (artifact?.tms_url) {
+      addLayer({
+        id: "context-layer",
+        type: "TMS",
+        url: artifact.tms_url,
+        name: "Context Layer",
+        metadata: artifact.metadata
+      });
+    }
+  }, [artifact, addLayer]);
+
   return (
     <p>
       Using context layer <b>{message}</b>
@@ -15,6 +28,7 @@ function ContextLayer({ message }) {
 
 ContextLayer.propTypes = {
   message: T.string.isRequired,
+  artifact: T.object
 };
 
 function LocationTool({ artifact }) {
@@ -24,26 +38,40 @@ function LocationTool({ artifact }) {
    * artifact is geojson object to render to a map
    */
   const addLayer = useSetAtom(addLayerAtom);
+  const setConfirmedLocation = useSetAtom(confirmedLocationAtom);
 
-  const numLocations = artifact ? artifact?.features.length : 0;
+  const numLocations = artifact ? artifact?.length : 0;
+
+  useEffect(() => {
+    const featureCollection = {
+      type: "FeatureCollection",
+      features: artifact,
+    };
+    const layer = {
+      id: "location-layer",
+      type: "geojson",
+      data: featureCollection,
+      name: "Location Layer",
+    };
+    if (numLocations > 0) {
+      setConfirmedLocation(null);
+      addLayer(layer);
+    }
+
+  }, [artifact, addLayer, numLocations, setConfirmedLocation]);
+
 
   if (numLocations === 0) {
     return <p>No locations found.</p>;
   }
-
-  const artifactName = "Location Layer";
-
   return (
     <>
       <p>Found {numLocations} Locations:</p>
       <ul>
-        {artifact?.features.map((f) => (
+        {artifact?.map((f) => (
           <li key={f.id}>{f.properties.name}</li>
         ))}
       </ul>
-      <QueryButton clickHandler={() => addLayer({ ...artifact, name: artifactName })}>
-        Show on map
-      </QueryButton>
     </>
   );
 }
@@ -53,38 +81,47 @@ LocationTool.propTypes = {
 };
 
 function DistAlertsTool({ message, artifact }) {
-  // message is of the form { "location": { "category": "value"}, { "category": "value"} }
+  // message is of the form { "category1": "value", "category2": "value" }
   // artifact is geojson object to render to a map
 
   const addLayer = useSetAtom(addLayerAtom);
   const setChartData = useSetAtom(chartDataAtom);
 
-  const numDisturbances = artifact ? artifact?.features.length : 0;
+  useEffect(() => {
+    const json = JSON.parse(message);
+    const numDisturbances = Object.keys(json).length;
+      const data = Object.entries(json).map(([category, value]) => ({
+        category,
+        value,
+      }));
 
-  if (numDisturbances === 0) {
-    return <p>No disturbances found in the region.</p>;
-  }
+      const layer = {
+        id: "disturbances-layer",
+        type: "geojson",
+        data: artifact,
+        name: "Disturbances",
+      };
+
+
+      if (numDisturbances > 0) {
+        addLayer(layer); 
+        setChartData(data);
+      }
+  }, [message, addLayer, artifact, setChartData]);
 
   const json = JSON.parse(message);
-  const keys = Object.keys(json);
-  const data = Object.entries(json[keys[0]]).map(([category, value]) => ({
-    category,
-    value,
-  }));
+  const numDisturbances = Object.keys(json).length;
 
-  return (
-    <>
-      <p>Found {numDisturbances} disturbances in the region.</p>
-      <QueryButton
-        clickHandler={() => {
-          addLayer({ ...artifact, name: "Disturbances" });
-          setChartData(data);
-        }}
-      >
-        Show on map
-      </QueryButton>
-    </>
-  );
+  if (numDisturbances > 0) {
+    return (
+      <>Adding alerts to the map.</>
+    );
+  }
+  else {
+    return (
+      <>No alerts found.</>
+    );
+  }
 }
 
 DistAlertsTool.propTypes = {
@@ -97,7 +134,7 @@ function MessageTool({ message, toolName, artifact }) {
 
   switch (toolName) {
     case "context-layer-tool":
-      render = <ContextLayer message={message} />;
+      render = <ContextLayer message={message} artifact={artifact} />;
       break;
     case "location-tool":
       render = <LocationTool message={message} artifact={artifact} />;

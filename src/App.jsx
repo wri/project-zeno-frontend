@@ -1,4 +1,4 @@
-import { Box, Grid, Text } from "@chakra-ui/react";
+import { Box, Flex, Grid, Image, Text } from "@chakra-ui/react";
 import { useAtomValue } from "jotai";
 import Providers from "./Providers";
 import { ChatInput, ChatOutput, Map } from "./components";
@@ -6,6 +6,7 @@ import { chartDataAtom } from "./atoms";
 import BarChart from "./components/BarChart";
 import FilmStrip from "./components/FilmStrip";
 import TabbedPanel from "./components/TabbedPanel";
+import logo from "/logo.svg";
 
 function App() {
   const chartData = useAtomValue(chartDataAtom);
@@ -32,13 +33,27 @@ function App() {
         maxH="vh"
         h="vh"
         templateRows="min-content minmax(0, 1fr)"
-        bg="blue.900/15"
-        bgImage="linear-gradient({colors.lime.50}, transparent)"
+        bg="gray.50"
       >
-        <Box bgColor="blue.50" shadow="sm" px="8" py="4">
-          <Text as="h1" color="blue.900" fontWeight="700">Land Carbon Lab - Zeno</Text>
+        <Box bgColor="white" shadow="sm" px="8" py="4">
+          <Flex gap={12} alignItems="center">
+            <Image src={logo} height="40px" alt="WRI Land Carbon Lab logo" />
+            <Text 
+              fontFamily="mono"
+              fontVariantNumeric="slashed-zero"
+              fontFeatureSettings="'ss03'"
+              letterSpacing="0.75px"
+              fontSize="sm"
+              lineHeight="100%"
+              textTransform="uppercase"
+              fontWeight="500"
+              title="Project Zeno"
+            >
+              Pr0ject <br /> Zen0_
+            </Text>
+          </Flex>
         </Box>
-        <Grid templateColumns="350px 1fr" p="8" gap="2">
+        <Grid templateColumns="350px 1fr" p="6" gap="2">
           <Grid
             gap="4"
             templateRows="1fr max-content"

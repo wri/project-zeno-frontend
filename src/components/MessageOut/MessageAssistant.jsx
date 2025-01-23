@@ -23,6 +23,7 @@ function MessageAssistant({ message }) {
           if (type === "text") {
             return <Markdown key={index}>{messagePart.text}</Markdown>;
           } else {
+            if (messagePart?.partial_json != undefined) {
             const { query } = JSON.parse(messagePart.partial_json);
             return (
               <QueryButton
@@ -31,7 +32,7 @@ function MessageAssistant({ message }) {
               >
                 {messagePart.name}
               </QueryButton>);
-          }
+          }}
         })}
       </MessageOutWrapper>
     );
@@ -39,17 +40,17 @@ function MessageAssistant({ message }) {
 }
 
 const TextMessageType = T.shape({
-  index: T.number.isRequired,
+  index: T.number,
   type: "text",
   text: T.string.isRequired
 });
 
 const ToolUseMessageType = T.shape({
   id: T.string.isRequired,
-  index: T.number.isRequired,
+  index: T.number,
   input: T.object,
   name: T.string.isRequired,
-  partial_json: T.string.isRequired,
+  partial_json: T.string,
   type: "tool_use"
 });
 
@@ -58,7 +59,8 @@ MessageAssistant.propTypes = {
     T.string,
     T.arrayOf(T.oneOfType([
       TextMessageType,
-      ToolUseMessageType
+      ToolUseMessageType,
+      T.object
     ]))
   ]).isRequired
 };
