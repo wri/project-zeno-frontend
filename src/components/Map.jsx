@@ -19,6 +19,7 @@ const addTMSLayer = (map, layerId, url, visibility = true) => {
   // Check if the layer already exists (avoid duplicates)
   if (map.getSource(layerId))  {
     // set the visibility of the layer
+    map.getSource(layerId).tiles = [url];
     map.setLayoutProperty(`tms-layer-${layerId}`, "visibility", visibility ? "visible" : "none");
     return;
   }

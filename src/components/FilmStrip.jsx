@@ -9,13 +9,25 @@ import {
   ListItem,
   Skeleton,
 } from "@chakra-ui/react";
+import { recentImageryAtom, addLayerAtom } from "../atoms";
+import { useAtomValue, useSetAtom } from "jotai";
+
+const titiler = (id) => 
+  `https://titiler.xyz/stac/tiles/WebMercatorQuad/{z}/{x}/{y}@1x?url=https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/${id}&assets=red&assets=green&assets=blue&rescale=0%2C2000`;
 
 function ImageItem({ id }) {
+  const addLayer = useSetAtom(addLayerAtom);
+  const layer = {
+    "id": "satellite-layer",
+    "type": "TMS",
+    "url": `${titiler(id)}`,
+    "name": "Sentinel-2",
+  };
   return (
-    <Card.Root borderRadius="lg" overflow="hidden" width="12rem">
-      <LinkOverlay href="#">
+    <Card.Root borderRadius="lg" overflow="hidden" width="12rem" height="8rem" role="button">
+      <LinkOverlay onClick={() => addLayer(layer)} cursor="pointer">
       <Image
-        src={`https://picsum.photos/id/${id}/500/300`}
+        src={`https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/${id}/thumbnail`}
         alt="satellite image"
       />
       <Box
@@ -28,7 +40,7 @@ function ImageItem({ id }) {
         left={0}
       >
         <Card.Title left={2} pos="relative" color="white" fontSize="sm">
-          20{id.toString().slice(0, 2)}
+          {id}
         </Card.Title>
       </Box>
       </LinkOverlay>
@@ -37,12 +49,11 @@ function ImageItem({ id }) {
 }
 
 ImageItem.propTypes = {
-  id: T.number,
+  id: T.string,
 };
 
-const demoImages = [122, 433, 123, 453, 342, 541, 652, 345];
-
 function FilmStrip() {
+  const recentImages = useAtomValue(recentImageryAtom);
   return (
     <List.Root display="flex" listStyle="none" flexDir="row" my={2} mx={-4} gap={4} overflowX="scroll">
       <Suspense
@@ -56,10 +67,10 @@ function FilmStrip() {
           </>
         }
       >
-        {demoImages.map((id) => {
+        {recentImages.map((id) => {
           return (
             <List.Item key={id}>
-              <ImageItem id={id} alt={id} />
+                <ImageItem id={id} alt={id} />
             </List.Item>
           );
         })}
