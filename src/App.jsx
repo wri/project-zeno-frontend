@@ -1,20 +1,18 @@
 import { Box, Flex, Grid, Image, Text } from "@chakra-ui/react";
-import { useAtomValue } from "jotai";
 import Providers from "./Providers";
 import { ChatInput, ChatOutput, Map } from "./components";
-import { chartDataAtom } from "./atoms";
 import BarChart from "./components/BarChart";
 import FilmStrip from "./components/FilmStrip";
 import TabbedPanel from "./components/TabbedPanel";
 import logo from "/logo.svg";
+import ExportPane from "./components/ExportPane";
 
 function App() {
-  const chartData = useAtomValue(chartDataAtom);
   const SecondaryWidgetTabs = [
     {
       value: "chart",
       title: "Data Visualization",
-      component: chartData ? <BarChart data={chartData} /> : "Test",
+      component: <BarChart />,
     },
     {
       value: "imagery",
@@ -24,7 +22,7 @@ function App() {
     {
       value: "exports",
       title: "Export data",
-      component: <Box />,
+      component: <ExportPane />,
     },
   ];
   return (
