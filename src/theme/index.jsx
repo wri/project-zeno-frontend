@@ -6,8 +6,9 @@ export const config = defineConfig({
   theme: {
     tokens: {
       fonts: {
-        body: { value: "IBM Plex Sans" },
-        heading: { value: "IBM Plex Sans" },
+        body: { value: "IBM Plex Sans, sans-serif" },
+        mono: { value: "IBM Plex Mono, monospace"},
+        heading: { value: "IBM Plex Sans, sans-serif" },
       },
       colors: {
         blue: {
