@@ -54,6 +54,7 @@ function LocationTool({ artifact }) {
       name: "Location Layer",
     };
     if (numLocations > 0) {
+      setConfirmedLocation(null);
       addLayer(layer);
     }
 
