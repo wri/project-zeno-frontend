@@ -80,11 +80,9 @@ function Map() {
 
         if (layer.type === "geojson") {
           if (map.getSource(layerId)) {
-            // set the visibility of the layer
-            map.setLayoutProperty(`fill-layer-${layerId}`, "visibility", isVisible ? "visible" : "none");
-            map.setLayoutProperty(`line-layer-${layerId}`, "visibility", isVisible ? "visible" : "none");
+            map.getSource(layerId).setData(layer.data); // refresh the data
           }
-          if (!map.getSource(layerId)) {
+          else {
             map.addSource(layerId, {
               type: "geojson",
               data: layer.data,
@@ -96,21 +94,6 @@ function Map() {
                 id: `fill-layer-${layerId}`,
                 type: "fill",
                 source: layerId,
-                paint: {
-                  "fill-color": ["case", 
-                    ["all",
-                      ["has", "gadm_id"],
-                      ["==", ["get", "gadm_id"], highlightedLocation ?? null],
-                    ], pink500, blue500
-                  ],
-                  "fill-opacity": [
-                    "case",
-                    ["all",
-                      ["has", "gadm_id"],
-                      ["==", ["get", "gadm_id"], highlightedLocation ?? null],
-                    ], 0.5, 0.25
-                  ]
-                },
               },
             );
 
@@ -121,17 +104,37 @@ function Map() {
                 type: "line",
                 source: layerId,
                 paint: {
-                  "line-color": ["case", 
-                    ["all",
-                      ["has", "gadm_id"],
-                      ["==", ["get", "gadm_id"], highlightedLocation ?? null],
-                    ], pink500, blue500
-                  ],
                   "line-width": 2
                 },
               },
             );
           }
+
+            // set the visibility of the layer
+            map.setLayoutProperty(`fill-layer-${layerId}`, "visibility", isVisible ? "visible" : "none");
+            map.setLayoutProperty(`line-layer-${layerId}`, "visibility", isVisible ? "visible" : "none");
+
+            // set paint properties
+            map.setPaintProperty(`fill-layer-${layerId}`, "fill-color", ["case", 
+                    ["all",
+                      ["has", "gadm_id"],
+                      ["==", ["get", "gadm_id"], highlightedLocation ?? null],
+                    ], pink500, blue500
+                  ]);
+            map.setPaintProperty(`fill-layer-${layerId}`, "fill-opacity", [
+                    "case",
+                    ["all",
+                      ["has", "gadm_id"],
+                      ["==", ["get", "gadm_id"], highlightedLocation ?? null],
+                    ], 0.5, 0.25
+                  ]);
+            map.setPaintProperty(`line-layer-${layerId}`, "line-color", ["case",
+                    ["all",
+                      ["has", "gadm_id"],
+                      ["==", ["get", "gadm_id"], highlightedLocation ?? null],
+                    ], pink500, blue500
+                  ]
+            );
         }
         if (layer.type === "TMS") {
           // Add or update TMS layer
@@ -190,22 +193,6 @@ function Map() {
     }
 
   }, [mapLayers, highlightedLocation, confirmedLocation, pink500, blue500, layerVisibility]);
-
-  // Set on mousemove and on mouseleave events on the features to match highlightedLocation
-
-  // mapLayers.forEach((layer, idx) => {
-  //   const layerId = layer.name || idx;
-  //   mapRef.current.on("mousemove", `fill-layer-${layerId}`, (e) => {
-  //     if (e.features.length > 0 && e.features[0].properties.name) {
-  //       setHighlightedLocation(e.features[0].properties.name);
-  //     }
-  //   });
-
-  //   mapRef.current.on("mouseleave", `fill-layer-${layerId}`, () =>{
-  //     setHighlightedLocation(null);
-  //   });
-  // });
-
 
   const onMapLoad = useCallback(() => {
     mapRef.current.on("moveend", () => {
