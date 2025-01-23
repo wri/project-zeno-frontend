@@ -9,6 +9,8 @@ import {
 import { dataPaneOpenAtom } from "../atoms";
 import { useAtom } from "jotai";
 
+const panelHeight = "20rem";
+
 function TabbedPanel({ tabData }) {
   const [, setDataPaneOpen] = useAtom(dataPaneOpenAtom);
   if (!tabData) return;
@@ -21,6 +23,7 @@ function TabbedPanel({ tabData }) {
       borderRadius="lg"
       shadow="md"
       overflow="auto"
+      maxH={panelHeight}
       onValueChange={(isOpen) => setDataPaneOpen(isOpen)}
     >
       <Tabs.Root lazyMount unmountOnExit defaultValue="tab-1" variant="line">
@@ -52,7 +55,7 @@ function TabbedPanel({ tabData }) {
           <AccordionItemContent p={0} pb={2} minH="300px">
             {tabData.map((tab) => {
               return (
-                <Tabs.Content key={tab.value} value={tab.value} px={4}>
+                <Tabs.Content key={tab.value} value={tab.value} px={4} maxH={`calc(${panelHeight} - 6rem)`}>
                   <Heading as="h4" fontSize="sm">
                     {tab.title}
                   </Heading>
