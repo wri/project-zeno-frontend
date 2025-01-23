@@ -42,10 +42,10 @@ function ChatOutput() {
               return null;
             }
             return <MessageTool key={msg.timestamp} message={msg.content} toolName={msg.tool_name} artifact={msg.artifact} />;
+          case "interrupted":
+            return <HumanInput key={msg.timestamp} type={msg.type} options={JSON.parse(msg.payload)} />;
           case "update":
             return <MessageAssistant key={msg.timestamp} message={msg.content} />;
-          case "human_input":
-            return <HumanInput key={msg.timestamp} message={msg.question} artifact={msg.artifact} options={msg.options} />;
           default:
             return <MessageDefault key={msg.timestamp} type={msg.type} message={JSON.stringify(msg)} />;
         }

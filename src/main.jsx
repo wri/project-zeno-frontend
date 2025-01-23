@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "@fontsource/ibm-plex-sans/index.css";
+import "@fontsource/ibm-plex-mono/index.css";
 
 const isMock = import.meta.env.VITE_MOCK_QUERIES === "true";
 

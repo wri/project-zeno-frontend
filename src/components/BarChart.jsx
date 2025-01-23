@@ -1,20 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import T from "prop-types";
+import { dataPaneOpenAtom, chartDataAtom } from "../atoms";
+import { useAtomValue } from "jotai";
 
-const BarChart = ({ data }) => {
+const BarChart = () => {
   const containerRef = useRef();
   const chartRef = useRef();
   const tooltipRef = useRef();
 
-  const [ chartDimensions, setChartDimentsions ] = useState([0, 0]);
+  const [ chartDimensions, setChartDimensions ] = useState([0, 0]);
+  const dataPaneOpen = useAtomValue(dataPaneOpenAtom);
+  const data = useAtomValue(chartDataAtom);
 
   useEffect(() => {
-    if (containerRef.current) {
+    if (dataPaneOpen && containerRef.current) {
       const observer = new ResizeObserver(entries => {
         const e = entries[0];
         const parentElement = e.target.parentElement;
-        setChartDimentsions([parentElement.clientWidth, parentElement.clientHeight]);
+        const newDimensions = [parentElement.clientWidth, parentElement.clientHeight];
+        if (parentElement.clientHeight <= 300) {
+          setChartDimensions(newDimensions);
+        }
       });
       observer.observe(containerRef.current);
 
@@ -22,11 +28,12 @@ const BarChart = ({ data }) => {
         observer.disconnect();
       };
     }
-  }, []);
+  }, [dataPaneOpen]);
 
   useEffect(() => {
     // Exit effect if at least one dimesion is 0
     if (!chartDimensions.every(x => !!x)) return;
+    if (!data) return;
 
     const svg = d3.select(chartRef.current);
     svg.selectAll("*").remove();
@@ -49,10 +56,14 @@ const BarChart = ({ data }) => {
 
     // Add x-axis
     svg.append("g")
+      .attr("class", "x-axis")
       .attr("transform", `translate(0,${height - margin.bottom})`)
       .call(d3.axisBottom(x))
       .selectAll("text")
       .style("font-size", "12px");
+
+    svg.selectAll(".x-axis text")
+      .text((d) => (d.length > 10 ? `${d.slice(0, 10)}...` : d));
 
     // Add y-axis
     svg.append("g")
@@ -77,9 +88,13 @@ const BarChart = ({ data }) => {
           .text(`Category: ${d.category}, Value: ${d.value}`);
       })
       .on("mousemove", event => {
+        const containerRect = containerRef.current.getBoundingClientRect();
+        const top = event.clientY - containerRect.top + 10; // Relative to container
+        const left = event.clientX - containerRect.left + 10;
+
         tooltip
-          .style("top", `${event.pageY-100}px`)
-          .style("left", `${event.pageX-20}px`);
+          .style("top", `${top}px`)
+          .style("left", `${left}px`);
       })
       .on("mouseout", () => {
         tooltip.style("visibility", "hidden");
@@ -101,18 +116,13 @@ const BarChart = ({ data }) => {
           color: "white",
           padding: "5px",
           borderRadius: "4px",
-          visibility: "hidden",
-          pointerEvents: "none",
+          pointerEvents: "none", // Ensure it doesn't block mouse events
+          visibility: "hidden", // Hidden by default
+          zIndex: 1000, // Bring it to the foreground
         }}
       />
     </div>
   );
 };
 
-BarChart.propTypes = {
-  data: T.arrayOf(T.shape({
-    category: T.string,
-    value: T.number
-  })).isRequired
-};
 export default BarChart;
