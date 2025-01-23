@@ -34,7 +34,7 @@ function App() {
             </Text>
           </Flex>
         </Box>
-        <Grid templateColumns="350px 1fr" p="6" gap="2">
+        <Grid templateColumns="28rem 1fr" p="6" gap="2">
           <Grid
             gap="4"
             templateRows="1fr max-content"
