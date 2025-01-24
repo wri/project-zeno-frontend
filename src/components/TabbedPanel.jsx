@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import T from "prop-types";
 import { Tabs, Flex, Heading } from "@chakra-ui/react";
 import {
@@ -6,13 +7,19 @@ import {
   AccordionItemTrigger,
   AccordionRoot,
 } from "./ui/accordion";
-import { dataPaneOpenAtom } from "../atoms";
+import { dataPaneTabAtom } from "../atoms";
 import { useAtom } from "jotai";
 
 const panelHeight = "20rem";
 
 function TabbedPanel({ tabData }) {
-  const [, setDataPaneOpen] = useAtom(dataPaneOpenAtom);
+  const [dataPaneTab, setDataPaneTab] = useAtom(dataPaneTabAtom);
+  const [isOpen, setIsOpen] = useState(true);
+
+  useEffect(() => {
+    setIsOpen(!!dataPaneTab);
+  }, [dataPaneTab]);
+
   if (!tabData) return;
   return (
     <AccordionRoot
@@ -24,9 +31,10 @@ function TabbedPanel({ tabData }) {
       shadow="md"
       overflow="auto"
       maxH={panelHeight}
-      onValueChange={(isOpen) => setDataPaneOpen(isOpen)}
+      value={isOpen ? ["widget-list"] : []}
+      onValueChange={({ value }) => setIsOpen(value.length !== 0)}
     >
-      <Tabs.Root lazyMount unmountOnExit defaultValue="tab-1" variant="line">
+      <Tabs.Root lazyMount unmountOnExit value={dataPaneTab} onValueChange={(e) => setDataPaneTab(e.value)} variant="line">
         <AccordionItem
           css={{
             "&[data-scope=\"accordion\"][data-state=\"closed\"]  [data-scope=\"tabs\"]":
@@ -34,6 +42,7 @@ function TabbedPanel({ tabData }) {
             "&[data-scope=\"accordion\"][data-state=\"closed\"] [data-scope=\"tabs\"][aria-selected=true][data-selected][data-orientation=horizontal]":
               {"--indicator-color": "transparent" },
           }}
+          value="widget-list"
         >
           <Flex>
             <Tabs.List flex="1">
