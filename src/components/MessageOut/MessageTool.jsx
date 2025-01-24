@@ -3,7 +3,13 @@ import MessageOutWrapper from "./wrapper";
 
 import { useEffect } from "react";
 import { useSetAtom } from "jotai";
-import { chartDataAtom, addLayerAtom, confirmedLocationAtom } from "../../atoms";
+import {
+  chartDataAtom,
+  dataPaneTabAtom,
+  addLayerAtom,
+  confirmedLocationAtom,
+  recentImageryAtom
+} from "../../atoms";
 
 function ContextLayer({ message, artifact }) {
   const addLayer = useSetAtom(addLayerAtom);
@@ -86,6 +92,7 @@ function DistAlertsTool({ message, artifact }) {
 
   const addLayer = useSetAtom(addLayerAtom);
   const setChartData = useSetAtom(chartDataAtom);
+  const setDataPaneTab = useSetAtom(dataPaneTabAtom);
 
   useEffect(() => {
     const json = JSON.parse(message);
@@ -104,10 +111,11 @@ function DistAlertsTool({ message, artifact }) {
 
 
       if (numDisturbances > 0) {
-        addLayer(layer); 
+        addLayer(layer);
         setChartData(data);
+        setDataPaneTab("chart");
       }
-  }, [message, addLayer, artifact, setChartData]);
+  }, [message, addLayer, artifact, setChartData, setDataPaneTab]);
 
   const json = JSON.parse(message);
   const numDisturbances = Object.keys(json).length;
@@ -129,6 +137,29 @@ DistAlertsTool.propTypes = {
   artifact: T.object,
 };
 
+/**
+ * Takes in a STAC message for recent satellite imagery
+ *
+ */
+function StacTool({ message }) {
+  const recentImageryArray = JSON.parse(message);
+  const setRecentImagery = useSetAtom(recentImageryAtom);
+  const setDataPaneTab = useSetAtom(dataPaneTabAtom);
+
+  let render = <div>No Recent Imagery</div>;
+  if (recentImageryArray.length > 0) {
+    setRecentImagery(recentImageryArray);
+    setDataPaneTab("imagery");
+    render = <div>Added Recent Imagery to Data Pane</div>;
+  }
+
+  return render;
+}
+
+StacTool.propTypes = {
+  message: T.string.isRequired
+};
+
 function MessageTool({ message, toolName, artifact }) {
   let render;
 
@@ -141,6 +172,9 @@ function MessageTool({ message, toolName, artifact }) {
       break;
     case "dist-alerts-tool":
       render = <DistAlertsTool message={message} artifact={artifact} />;
+      break;
+    case "stac-tool":
+      render = <StacTool message={message} artifact={artifact} />;
       break;
     default:
       render = message;
@@ -156,6 +190,7 @@ MessageTool.propTypes = {
     "context-layer-tool",
     "location-tool",
     "dist-alerts-tool",
+    "stac-tool",
     "retrieve_blog_posts",
   ]),
   artifact: T.object,

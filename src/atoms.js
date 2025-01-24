@@ -10,6 +10,8 @@ export const isLoadingAtom = atom(false);
 export const chartDataAtom = atom();
 export const layerVisibilityAtom = atom({});
 export const interruptedStateAtom = atom(false); // when we receive an interrupt from the API
+export const dataPaneTabAtom = atom("");
+export const recentImageryAtom = atom([]);
 
 function makeInputMessage(query) {
   return {
@@ -88,7 +90,7 @@ export const addPrompt = atom(null, (get, set, promt) => {
 
 /**
  * Adds a new layer to the map
- * 
+ *
  */
 export const addLayerAtom = atom(
   null, // No initial value for a write-only atom

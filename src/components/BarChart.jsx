@@ -1,42 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import T from "prop-types";
+import { chartDataAtom, dataPaneTabAtom } from "../atoms";
+import { useAtomValue } from "jotai";
 
-import { CollecticonDownload2 } from "@devseed-ui/collecticons-react";
-import { Button } from "@chakra-ui/react";
-
-const BarChart = ({ data }) => {
+const BarChart = () => {
   const containerRef = useRef();
   const chartRef = useRef();
   const tooltipRef = useRef();
 
-  const [ chartDimensions, setChartDimentsions ] = useState([0, 0]);
-
-  // Function to convert data to CSV
-  const downloadDataAsCSV = () => {
-    // Convert the data to CSV
-    const csvData = d3.csvFormat(data);
-
-    // Create a Blob object for the CSV data
-    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
-
-    // Create a link element
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "chart-data.csv";
-
-    // Append to the DOM, click, and remove it
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  const [ chartDimensions, setChartDimensions ] = useState([0, 0]);
+  // const dataPaneOpen = useAtomValue(dataPaneOpenAtom);
+  const dataPaneTab = useAtomValue(dataPaneTabAtom);
+  const data = useAtomValue(chartDataAtom);
 
   useEffect(() => {
-    if (containerRef.current) {
+    if (dataPaneTab && containerRef.current) {
       const observer = new ResizeObserver(entries => {
         const e = entries[0];
         const parentElement = e.target.parentElement;
-        setChartDimentsions([parentElement.clientWidth, parentElement.clientHeight]);
+        const newDimensions = [parentElement.clientWidth, parentElement.clientHeight];
+        if (parentElement.clientHeight <= 300) {
+          setChartDimensions(newDimensions);
+        }
       });
       observer.observe(containerRef.current);
 
@@ -44,11 +29,12 @@ const BarChart = ({ data }) => {
         observer.disconnect();
       };
     }
-  }, []);
+  }, [dataPaneTab]);
 
   useEffect(() => {
     // Exit effect if at least one dimesion is 0
     if (!chartDimensions.every(x => !!x)) return;
+    if (!data) return;
 
     const svg = d3.select(chartRef.current);
     svg.selectAll("*").remove();
@@ -118,24 +104,6 @@ const BarChart = ({ data }) => {
 
   return (
     <div style={{ position: "relative" }} ref={containerRef}>
-      <Button
-        onClick={downloadDataAsCSV}
-        style={{
-          position: "absolute",
-          top: "10px",
-          right: "10px",
-          zIndex: 1000,
-          padding: "5px 10px",
-          background: "white",
-          color: "steelblue",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-        }}
-      >
-      <CollecticonDownload2 />
-      CSV
-      </Button>
       <svg
         ref={chartRef}
         width={chartDimensions[0]}
@@ -158,10 +126,4 @@ const BarChart = ({ data }) => {
   );
 };
 
-BarChart.propTypes = {
-  data: T.arrayOf(T.shape({
-    category: T.string,
-    value: T.number
-  })).isRequired
-};
 export default BarChart;
