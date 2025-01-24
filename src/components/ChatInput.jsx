@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Button, Input } from "@chakra-ui/react";
+import { Box, Button, Textarea } from "@chakra-ui/react";
 import { MdChevronRight } from "react-icons/md";
 import { useAtomValue, useSetAtom } from "jotai";
 import { addPrompt, interruptedStateAtom } from "../atoms";
@@ -25,10 +25,12 @@ function ChatInput() {
 
   return (
     <Box position="relative">
-      <Input
+      <Textarea
         aria-label="Ask a question"
         placeholder={interruptedStateValue? "Confirm your location" : "Ask a question"}
         fontSize="sm"
+        autoresize
+        maxH="10lh" 
         pr="12"
         shadow="md"
         border="0"
@@ -40,7 +42,7 @@ function ChatInput() {
       <Button
         position="absolute"
         right="2"
-        top="50%"
+        bottom="0"
         transform="translateY(-50%)"
         padding="0"
         {...(interruptedStateValue && { disabled: true })}

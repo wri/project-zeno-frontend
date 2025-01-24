@@ -1,11 +1,9 @@
-import { Box, Flex, Grid, Image, Text } from "@chakra-ui/react";
-import { useAtomValue } from "jotai";
+import { Box, Grid } from "@chakra-ui/react";
 import Providers from "./Providers";
 import { ChatInput, ChatOutput, Map } from "./components";
 import BarChart from "./components/BarChart";
 import FilmStrip from "./components/FilmStrip";
 import TabbedPanel from "./components/TabbedPanel";
-import logo from "/logo.svg";
 import ExportPane from "./components/ExportPane";
 import GlobalHeader from "./components/globalheader";
 
@@ -36,7 +34,7 @@ function App() {
         bg="gray.50"
       >
         <GlobalHeader />
-        <Grid templateColumns="350px 1fr" p="6" gap="2">
+        <Grid templateColumns="28rem 1fr" p="6" gap="2">
           <Grid
             gap="4"
             templateRows="1fr max-content"

@@ -28,6 +28,7 @@ function MessageAssistant({ message }) {
             return (
               <QueryButton
                 key={index}
+                mt="2"
                 clickHandler={() => submit(query)}
               >
                 {messagePart.name}
