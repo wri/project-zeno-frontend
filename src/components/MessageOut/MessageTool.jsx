@@ -3,7 +3,7 @@ import MessageOutWrapper from "./wrapper";
 
 import { useEffect } from "react";
 import { useSetAtom } from "jotai";
-import { chartDataAtom, addLayerAtom, confirmedLocationAtom } from "../../atoms";
+import { chartDataAtom, addLayerAtom, confirmedLocationAtom, recentImageryAtom } from "../../atoms";
 
 function ContextLayer({ message, artifact }) {
   const addLayer = useSetAtom(addLayerAtom);
@@ -129,6 +129,26 @@ DistAlertsTool.propTypes = {
   artifact: T.object,
 };
 
+/**
+ * Takes in a STAC message for recent satellite imagery
+ * 
+ */
+function StacTool({ message }) {
+  const recentImageryArray = JSON.parse(message);
+  const setRecentImagery = useSetAtom(recentImageryAtom);
+  let render = <div>No Recent Imagery</div>;
+  if (recentImageryArray.length > 0) {
+    setRecentImagery(recentImageryArray);
+    render = <div>Added Recent Imagery to Data Pane</div>;
+  }
+
+  return render;
+}
+
+StacTool.propTypes = {
+  message: T.string.isRequired
+};
+
 function MessageTool({ message, toolName, artifact }) {
   let render;
 
@@ -141,6 +161,9 @@ function MessageTool({ message, toolName, artifact }) {
       break;
     case "dist-alerts-tool":
       render = <DistAlertsTool message={message} artifact={artifact} />;
+      break;
+    case "stac-tool":
+      render = <StacTool message={message} artifact={artifact} />;
       break;
     default:
       render = message;
@@ -156,6 +179,7 @@ MessageTool.propTypes = {
     "context-layer-tool",
     "location-tool",
     "dist-alerts-tool",
+    "stac-tool",
     "retrieve_blog_posts",
   ]),
   artifact: T.object,

@@ -10,6 +10,8 @@ export const isLoadingAtom = atom(false);
 export const chartDataAtom = atom();
 export const layerVisibilityAtom = atom({});
 export const interruptedStateAtom = atom(false); // when we receive an interrupt from the API
+export const dataPaneOpenAtom = atom(false);
+export const recentImageryAtom = atom([]);
 
 function makeInputMessage(query) {
   return {
