@@ -6,7 +6,6 @@ const QueryButton = ({ children, clickHandler, ...delegated }) => {
     <Button
       onClick={clickHandler}
       size="xs"
-      mt="2"
       px={4}
       borderRadius="full"
       type="button"

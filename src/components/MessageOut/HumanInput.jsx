@@ -28,7 +28,7 @@ function HumanInput({ options }) {
   return (
     <MessageOutWrapper>
       Select a location:
-      <List.Root listStyle="none" pl="0">
+      <List.Root listStyle="none" pl="0" display="flex" flexDir="row" flexWrap="wrap" gap="2">
         {options.map((option) => {
 
           let gid = option[1];
