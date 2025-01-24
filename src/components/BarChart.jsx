@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import { dataPaneOpenAtom, chartDataAtom } from "../atoms";
+import { chartDataAtom, dataPaneTabAtom } from "../atoms";
 import { useAtomValue } from "jotai";
 
 const BarChart = () => {
@@ -9,11 +9,12 @@ const BarChart = () => {
   const tooltipRef = useRef();
 
   const [ chartDimensions, setChartDimensions ] = useState([0, 0]);
-  const dataPaneOpen = useAtomValue(dataPaneOpenAtom);
+  // const dataPaneOpen = useAtomValue(dataPaneOpenAtom);
+  const dataPaneTab = useAtomValue(dataPaneTabAtom);
   const data = useAtomValue(chartDataAtom);
 
   useEffect(() => {
-    if (dataPaneOpen && containerRef.current) {
+    if (dataPaneTab && containerRef.current) {
       const observer = new ResizeObserver(entries => {
         const e = entries[0];
         const parentElement = e.target.parentElement;
@@ -28,7 +29,7 @@ const BarChart = () => {
         observer.disconnect();
       };
     }
-  }, [dataPaneOpen]);
+  }, [dataPaneTab]);
 
   useEffect(() => {
     // Exit effect if at least one dimesion is 0
