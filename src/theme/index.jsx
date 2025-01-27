@@ -47,6 +47,8 @@ export const config = defineConfig({
         yellow: { 500: "#FFD80B" },
         mint: { 500: "#00DCA7" },
         green: { 500: "#00A651" },
+        berenjena: { 500: "#895277" },
+        
       },
     },
   },
