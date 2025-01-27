@@ -162,6 +162,8 @@ function Map() {
 
   const onMapLoad = useCallback(() => {
     mapRef.current.on("moveend", () => {
+      if (!mapRef.current) return;
+      if (!mapRef.current.getCenter) return;
       setMapCenter(mapRef.current.getCenter().toArray());
     });
   }, [mapRef]);

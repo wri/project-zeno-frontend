@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Box } from "@chakra-ui/react";
 import { useAtom } from "jotai";
+import { Alert } from "./ui/alert";
 
 import { MessageIn, MessageTool, MessageAssistant, MessageDefault, HumanInput, Loading } from ".";
 import { chatHistoryAtom, isLoadingAtom } from "../atoms";
@@ -43,7 +44,17 @@ function ChatOutput() {
             }
             return <MessageTool key={msg.timestamp} message={msg.content} toolName={msg.tool_name} artifact={msg.artifact} />;
           case "interrupted":
-            return <HumanInput key={msg.timestamp} type={msg.type} options={JSON.parse(msg.payload)} />;
+          { let options;
+          try {
+            options = JSON.parse(msg.payload);
+          } catch (e) {
+            return (
+              <Alert status="error" title="Error">
+                There was a problem processing your request. Please try again or try another prompt;
+              </Alert>
+            );
+          }
+          return <HumanInput key={msg.timestamp} type={msg.type} options={options} />; }
           case "update":
             return <MessageAssistant key={msg.timestamp} message={msg.content} />;
           default:

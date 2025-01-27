@@ -12,7 +12,7 @@ export const layerVisibilityAtom = atom({});
 export const interruptedStateAtom = atom(false); // when we receive an interrupt from the API
 export const dataPaneTabAtom = atom("");
 export const recentImageryAtom = atom([]);
-export const mapBoundsAtom = atom([0, 0, 0, 0]);
+export const mapBoundsAtom = atom([-180, -90, 180, 90]);
 
 function makeInputMessage(query) {
   return {
