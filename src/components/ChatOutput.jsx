@@ -31,8 +31,14 @@ function ChatOutput() {
     }
   }, []);
 
+  const message = `
+  Hi! I'm Land & Carbon Lab's alert explorer. I can help you find and investigate disturbances in your area of interest using the Land Disturbance Alert Classification System and other contextual data. 
+  \nStart by asking me what I can do.
+  `;
+
   return (
     <Box ref={containerRef} fontSize="sm">
+    <MessageAssistant message={message} />
       {chatHistory.map((msg) => {
         switch (msg.type) {
           case "in":
@@ -47,6 +53,7 @@ function ChatOutput() {
           { let options;
           try {
             options = JSON.parse(msg.payload);
+          // eslint-disable-next-line no-unused-vars
           } catch (e) {
             return (
               <Alert status="error" title="Error">
