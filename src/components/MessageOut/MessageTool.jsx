@@ -18,7 +18,7 @@ function ContextLayer({ message, artifact }) {
         id: "context-layer",
         type: "TMS",
         url: artifact.tms_url,
-        name: "Context Layer",
+        name: artifact?.name,
         metadata: artifact.metadata
       });
     }
