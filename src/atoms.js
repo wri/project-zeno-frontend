@@ -121,7 +121,7 @@ export const addLayerAtom = atom(
       [layerId]: true, // Default visibility to true for new layers
     }));
   
-    set(mapBoundsAtom, calculateNewBounds(get(mapLayersAtom)));
+    set(mapBoundsAtom, (prevBounds) => calculateNewBounds(get(mapLayersAtom), prevBounds));
   }
   
 );
@@ -163,11 +163,12 @@ export const confirmLocationAtom = atom(
       return updatedLayers;
     });
 
-    set(mapBoundsAtom, calculateNewBounds(get(mapLayersAtom)));
+    set(mapBoundsAtom, (prevBounds) => calculateNewBounds(get(mapLayersAtom), prevBounds));
   }
 );
 
-function calculateNewBounds(mapLayers) {
+function calculateNewBounds(mapLayers, prevBounds) {
+  try {
   return mapLayers.reduce(
     (acc, layer) => {
       if (layer.type == "geojson") {
@@ -184,4 +185,9 @@ function calculateNewBounds(mapLayers) {
     },
     [Infinity, Infinity, -Infinity, -Infinity]
   );
+
+  } catch (e) {
+    console.error("Failed to calculate new bounds", e);
+    return prevBounds;
+  }
 }
