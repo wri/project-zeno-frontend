@@ -8,8 +8,7 @@ import MapGl, {
 } from "react-map-gl/maplibre";
 import { config } from "../theme";
 import { useEffect, useState, useRef, useCallback } from "react";
-import bbox from "@turf/bbox";
-import { mapLayersAtom, highlightedLocationAtom, confirmedLocationAtom, layerVisibilityAtom } from "../atoms";
+import { mapLayersAtom, highlightedLocationAtom, layerVisibilityAtom, mapBoundsAtom } from "../atoms";
 import { useAtomValue } from "jotai";
 import LayerSwitcher from "./LayerSwitcher";
 import { AbsoluteCenter, Code, Box } from "@chakra-ui/react";
@@ -63,8 +62,8 @@ function Map() {
 
   const mapLayers = useAtomValue(mapLayersAtom);
   const highlightedLocation = useAtomValue(highlightedLocationAtom);
-  const confirmedLocation = useAtomValue(confirmedLocationAtom);
   const layerVisibility = useAtomValue(layerVisibilityAtom);
+  const mapBounds = useAtomValue(mapBoundsAtom);
 
   // if there are layers, calculate the bounds
   // each layer is a feature collection, so we need to calculate the bounds of all features
@@ -144,56 +143,22 @@ function Map() {
         }
       });
 
-      if (!confirmedLocation) {
-        const bounds = mapLayers.reduce(
-          (acc, layer) => {
-            if (layer.type == "geojson") {
-              const layerBounds = bbox(layer.data);
-              return [
-                Math.min(acc[0], layerBounds[0]),
-                Math.min(acc[1], layerBounds[1]),
-                Math.max(acc[2], layerBounds[2]),
-                Math.max(acc[3], layerBounds[3]),
-              ];
-            } else {
-              return acc;
-            }
-          },
-          [Infinity, Infinity, -Infinity, -Infinity]
-        );
-
-        mapRef.current.fitBounds(
-          [
-            [bounds[0], bounds[1]],
-            [bounds[2], bounds[3]],
-          ],
-          {
-            padding: 100,
-          }
-        );
-      } else {
-        // If the location is confirmed, fit to the bounds of the confirmed location
-        // find the location in the maplayers object
-        let confirmedLocationFeature = {};
-        mapLayers.forEach((layer) => {
-          if (layer.id === "location-layer") {
-            confirmedLocationFeature = layer.data.features.find((feature) => feature.properties.gadm_id === confirmedLocation);
-          }
-        });
-        const bounds = bbox(confirmedLocationFeature);
-        mapRef.current.fitBounds(
-          [
-            [bounds[0], bounds[1]],
-            [bounds[2], bounds[3]],
-          ],
-          {
-            padding: 100,
-          }
-        );
-      }
     }
 
-  }, [mapLayers, highlightedLocation, confirmedLocation, pink500, blue500, layerVisibility]);
+  }, [mapLayers, highlightedLocation, pink500, blue500, layerVisibility]);
+
+  useEffect(() => {
+    if (!mapRef.current) return;
+    mapRef.current.fitBounds(
+      [
+        [mapBounds[0], mapBounds[1]],
+        [mapBounds[2], mapBounds[3]],
+      ],
+      {
+        padding: 100,
+      }
+    );
+  }, [mapBounds]);
 
   const onMapLoad = useCallback(() => {
     mapRef.current.on("moveend", () => {

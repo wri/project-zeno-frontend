@@ -1,9 +1,9 @@
+import bbox from "@turf/bbox";
 import { atom } from "jotai";
 import { v4 as uuidv4 } from "uuid";
 
 export const mapLayersAtom = atom([]);
 export const highlightedLocationAtom = atom();
-export const confirmedLocationAtom = atom();
 export const chatHistoryAtom = atom([]);
 export const sessionIdAtom = atom(uuidv4());
 export const isLoadingAtom = atom(false);
@@ -12,6 +12,7 @@ export const layerVisibilityAtom = atom({});
 export const interruptedStateAtom = atom(false); // when we receive an interrupt from the API
 export const dataPaneTabAtom = atom("");
 export const recentImageryAtom = atom([]);
+export const mapBoundsAtom = atom([0, 0, 0, 0]);
 
 function makeInputMessage(query) {
   return {
@@ -119,5 +120,68 @@ export const addLayerAtom = atom(
       ...prevVisibility,
       [layerId]: true, // Default visibility to true for new layers
     }));
+  
+    set(mapBoundsAtom, calculateNewBounds(get(mapLayersAtom)));
+  }
+  
+);
+
+/**
+ * Confirming a location takes a gid
+ * and sets the location layer featurecollection in the mapLayers atom to only have one
+ * feature with that gid
+ */
+export const confirmLocationAtom = atom(
+  null,
+  (get, set, gid) => {
+    const locationLayer = get(mapLayersAtom).find((l) => l.id === "location-layer");
+
+    if (!locationLayer) {
+      console.error("No location layer found");
+      return;
+    }
+
+    const feature = locationLayer?.data.features.find((f) => f.properties.gadm_id === gid);
+
+    if (!feature) {
+      console.error("No feature found with gid", gid);
+      return;
+    }
+
+    const newLayer = {
+      ...locationLayer,
+      data: {
+        type: "FeatureCollection",
+        features: [feature],
+      },
+    };
+
+    set(mapLayersAtom, (prevLayers) => {
+      const locationLayerIndex = prevLayers.findIndex((l) => l.id === "location-layer");
+      const updatedLayers = [...prevLayers];
+      updatedLayers[locationLayerIndex] = newLayer;
+      return updatedLayers;
+    });
+
+    set(mapBoundsAtom, calculateNewBounds(get(mapLayersAtom)));
   }
 );
+
+function calculateNewBounds(mapLayers) {
+  return mapLayers.reduce(
+    (acc, layer) => {
+      if (layer.type == "geojson") {
+        const layerBounds = bbox(layer.data);
+        return [
+          Math.min(acc[0], layerBounds[0]),
+          Math.min(acc[1], layerBounds[1]),
+          Math.max(acc[2], layerBounds[2]),
+          Math.max(acc[3], layerBounds[3]),
+        ];
+      } else {
+        return acc;
+      }
+    },
+    [Infinity, Infinity, -Infinity, -Infinity]
+  );
+}
