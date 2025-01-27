@@ -29,7 +29,7 @@ export const addPrompt = atom(null, (get, set, promt) => {
     set(chatHistoryAtom, (prev => [...prev, makeInputMessage(query)]));
   }
 
-  let queryUrl = "https://dev.api.zeno.ds.io/stream/dist_alert";
+  let queryUrl = "https://api.zeno.ds.io/stream/dist_alert";
   if (import.meta.env.VITE_MOCK_QUERIES === "true") {
     queryUrl = "/stream";
   }
