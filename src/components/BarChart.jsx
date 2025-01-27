@@ -101,7 +101,7 @@ const BarChart = () => {
       .attr("dy", "1em")
       .style("text-anchor", "middle")
       .style("font-size", "12px")
-      .text("area (ha)");
+      .text("alerts (count)");
 
 
     // Add bars
