@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import { chartDataAtom, dataPaneTabAtom } from "../atoms";
+import { chartDataAtom, dataPaneTabAtom, mapLayersAtom } from "../atoms";
 import { useAtomValue } from "jotai";
 
 const BarChart = () => {
@@ -9,9 +9,29 @@ const BarChart = () => {
   const tooltipRef = useRef();
 
   const [ chartDimensions, setChartDimensions ] = useState([0, 0]);
+  const [ colorMapping, setColorMapping ] = useState({});
   // const dataPaneOpen = useAtomValue(dataPaneOpenAtom);
   const dataPaneTab = useAtomValue(dataPaneTabAtom);
   const data = useAtomValue(chartDataAtom);
+
+  const mapLayers = useAtomValue(mapLayersAtom);
+
+  useEffect(() => {
+    try {
+      let colors = {};
+      const contextLayer = mapLayers.find((l) => l.id === "context-layer");
+      const contextLayerMetadata = contextLayer?.metadata;
+      const metadata = JSON.parse(contextLayerMetadata);
+      metadata.value_mappings.forEach(({ description, color_hexcode }) => {
+        colors[description] = color_hexcode;
+      });
+      setColorMapping(colors);
+    // eslint-disable-next-line no-unused-vars
+    } catch (e) {
+      // do nothing
+    }
+  }, [mapLayers]);
+
 
   useEffect(() => {
     if (dataPaneTab && containerRef.current) {
@@ -73,6 +93,17 @@ const BarChart = () => {
       .selectAll("text")
       .style("font-size", "12px");
 
+    // Add y-axis label
+    svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .style("font-size", "12px")
+      .text("area (ha)");
+
+
     // Add bars
     svg.append("g")
       .selectAll("rect")
@@ -82,7 +113,7 @@ const BarChart = () => {
       .attr("y", d => y(d.value))
       .attr("height", d => y(0) - y(d.value))
       .attr("width", x.bandwidth())
-      .attr("fill", "steelblue")
+      .attr("fill", d => colorMapping[d.category] || "steelblue") 
       .on("mouseover", (event, d) => {
         tooltip
           .style("visibility", "visible")
