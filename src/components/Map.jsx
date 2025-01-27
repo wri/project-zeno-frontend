@@ -58,6 +58,7 @@ const addTMSLayer = (map, layerId, url, visibility = true) => {
 function Map() {
   const pink500 = config.theme.tokens.colors.pink["500"];
   const blue500 = config.theme.tokens.colors.blue["500"];
+  const berenjena500 = config.theme.tokens.colors.berenjena["500"];
   const [mapCenter, setMapCenter] = useState([0,0]);
   const mapRef = useRef();
 
@@ -73,11 +74,11 @@ function Map() {
     const map = mapRef.current.getMap();
 
     if (mapLayers.length > 0) {
-
       // Dynamically add map layers
       mapLayers.forEach((layer, idx) => {
         const layerId = layer.id || idx;
         const isVisible = layerVisibility[layerId] ?? true;
+        console.log('layerId', layerId)
 
         if (layer.type === "geojson") {
           if (map.getSource(layerId)) {
@@ -136,6 +137,12 @@ function Map() {
                     ], pink500, blue500
                   ]
             );
+        }
+        // set different paint properties for the disturbances layer
+        if (layer.id === "disturbances-layer") {
+          map.setPaintProperty(`fill-layer-disturbances-layer`, "fill-color", berenjena500);
+          map.setPaintProperty(`fill-layer-disturbances-layer`, "fill-opacity", 0.5, 0.25);
+          map.setPaintProperty(`line-layer-disturbances-layer`, "line-color", berenjena500);
         }
         if (layer.type === "TMS") {
           // Add or update TMS layer
