@@ -78,7 +78,6 @@ function Map() {
       mapLayers.forEach((layer, idx) => {
         const layerId = layer.id || idx;
         const isVisible = layerVisibility[layerId] ?? true;
-        console.log('layerId', layerId)
 
         if (layer.type === "geojson") {
           if (map.getSource(layerId)) {
@@ -140,9 +139,9 @@ function Map() {
         }
         // set different paint properties for the disturbances layer
         if (layer.id === "disturbances-layer") {
-          map.setPaintProperty(`fill-layer-disturbances-layer`, "fill-color", berenjena500);
-          map.setPaintProperty(`fill-layer-disturbances-layer`, "fill-opacity", 0.5, 0.25);
-          map.setPaintProperty(`line-layer-disturbances-layer`, "line-color", berenjena500);
+          map.setPaintProperty("fill-layer-disturbances-layer", "fill-color", berenjena500);
+          map.setPaintProperty("fill-layer-disturbances-layer", "fill-opacity", 0.5, 0.25);
+          map.setPaintProperty("line-layer-disturbances-layer", "line-color", berenjena500);
         }
         if (layer.type === "TMS") {
           // Add or update TMS layer
