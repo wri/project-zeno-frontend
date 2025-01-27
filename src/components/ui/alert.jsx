@@ -22,16 +22,16 @@ export const Alert = React.forwardRef(function Alert(props, ref) {
           <ChakraAlert.Description>{children}</ChakraAlert.Description>
         </ChakraAlert.Content>
       ) : (
-        <ChakraAlert.Title flex='1'>{title}</ChakraAlert.Title>
+        <ChakraAlert.Title flex="1">{title}</ChakraAlert.Title>
       )}
       {endElement}
       {closable && (
         <CloseButton
-          size='sm'
-          pos='relative'
-          top='-2'
-          insetEnd='-2'
-          alignSelf='flex-start'
+          size="sm"
+          pos="relative"
+          top="-2"
+          insetEnd="-2"
+          alignSelf="flex-start"
           onClick={onClose}
         />
       )}

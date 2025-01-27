@@ -7,7 +7,6 @@ import {
   chartDataAtom,
   dataPaneTabAtom,
   addLayerAtom,
-  confirmedLocationAtom,
   recentImageryAtom
 } from "../../atoms";
 
@@ -19,7 +18,7 @@ function ContextLayer({ message, artifact }) {
         id: "context-layer",
         type: "TMS",
         url: artifact.tms_url,
-        name: "Context Layer",
+        name: artifact?.name,
         metadata: artifact.metadata
       });
     }
@@ -44,7 +43,6 @@ function LocationTool({ artifact }) {
    * artifact is geojson object to render to a map
    */
   const addLayer = useSetAtom(addLayerAtom);
-  const setConfirmedLocation = useSetAtom(confirmedLocationAtom);
 
   const numLocations = artifact ? artifact?.length : 0;
 
@@ -60,11 +58,10 @@ function LocationTool({ artifact }) {
       name: "Location Layer",
     };
     if (numLocations > 0) {
-      setConfirmedLocation(null);
       addLayer(layer);
     }
 
-  }, [artifact, addLayer, numLocations, setConfirmedLocation]);
+  }, [artifact, addLayer, numLocations]);
 
 
   if (numLocations === 0) {

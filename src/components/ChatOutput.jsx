@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Box } from "@chakra-ui/react";
 import { useAtom } from "jotai";
+import { Alert } from "./ui/alert";
 
 import { MessageIn, MessageTool, MessageAssistant, MessageDefault, HumanInput, Loading } from ".";
 import { chatHistoryAtom, isLoadingAtom } from "../atoms";
@@ -30,8 +31,14 @@ function ChatOutput() {
     }
   }, []);
 
+  const message = `
+  Hi! I'm Land & Carbon Lab's alert explorer. I can help you find and investigate disturbances in your area of interest using the Land Disturbance Alert Classification System and other contextual data. 
+  \nStart by asking me what I can do.
+  `;
+
   return (
     <Box ref={containerRef} fontSize="sm">
+    <MessageAssistant message={message} />
       {chatHistory.map((msg) => {
         switch (msg.type) {
           case "in":
@@ -43,7 +50,18 @@ function ChatOutput() {
             }
             return <MessageTool key={msg.timestamp} message={msg.content} toolName={msg.tool_name} artifact={msg.artifact} />;
           case "interrupted":
-            return <HumanInput key={msg.timestamp} type={msg.type} options={JSON.parse(msg.payload)} />;
+          { let options;
+          try {
+            options = JSON.parse(msg.payload);
+          // eslint-disable-next-line no-unused-vars
+          } catch (e) {
+            return (
+              <Alert status="error" title="Error">
+                There was a problem processing your request. Please try again or try another prompt;
+              </Alert>
+            );
+          }
+          return <HumanInput key={msg.timestamp} type={msg.type} options={options} />; }
           case "update":
             return <MessageAssistant key={msg.timestamp} message={msg.content} />;
           default:

@@ -2,7 +2,7 @@
 import T from "prop-types";
 import { List } from "@chakra-ui/react";
 import { useSetAtom } from "jotai";
-import { addPrompt, confirmedLocationAtom, highlightedLocationAtom } from "../../atoms";
+import { addPrompt, confirmLocationAtom, highlightedLocationAtom } from "../../atoms";
 import MessageOutWrapper from "./wrapper";
 import QueryButton from "./QueryButton";
 
@@ -16,7 +16,7 @@ import QueryButton from "./QueryButton";
  */
 function HumanInput({ options }) {
   const submit = useSetAtom(addPrompt);
-  const confirmLocation = useSetAtom(confirmedLocationAtom);
+  const confirmLocation = useSetAtom(confirmLocationAtom);
   const setHighlightedLocation = useSetAtom(highlightedLocationAtom);
 
   return (
