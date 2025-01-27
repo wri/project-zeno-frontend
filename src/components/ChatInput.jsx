@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { Box, Button, Textarea } from "@chakra-ui/react";
 import { MdChevronRight } from "react-icons/md";
-import { useAtomValue, useSetAtom } from "jotai";
-import { addPrompt, interruptedStateAtom } from "../atoms";
+import { useSetAtom } from "jotai";
+import { addPrompt } from "../atoms";
 
 function ChatInput() {
   const [ inputValue, setInputValue ] = useState("");
-
-  const interruptedStateValue = useAtomValue(interruptedStateAtom);
 
   const submit = useSetAtom(addPrompt);
 
@@ -17,7 +15,7 @@ function ChatInput() {
   };
 
   const handleKeyUp = (e) => {
-    if(e.keyCode === 13) {
+    if(e.keyCode === 13 && inputValue?.trim().length > 0) {
       e.preventDefault();
       submitPrompt();
     }
@@ -27,14 +25,13 @@ function ChatInput() {
     <Box position="relative">
       <Textarea
         aria-label="Ask a question"
-        placeholder={interruptedStateValue? "Confirm your location" : "Ask a question"}
+        placeholder="Ask a question"
         fontSize="sm"
         autoresize
         maxH="10lh" 
         pr="12"
         shadow="md"
         border="0"
-        {...(interruptedStateValue && { disabled: true })}
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyUp={handleKeyUp}
@@ -45,7 +42,7 @@ function ChatInput() {
         bottom="0"
         transform="translateY(-50%)"
         padding="0"
-        {...(interruptedStateValue && { disabled: true })}
+        {...(inputValue?.trim().length == 0 && { disabled: true })}
         borderRadius="full"
         colorPalette="blue"
         type="button"
