@@ -13,7 +13,6 @@ const BarChart = () => {
   // const dataPaneOpen = useAtomValue(dataPaneOpenAtom);
   const dataPaneTab = useAtomValue(dataPaneTabAtom);
   const data = useAtomValue(chartDataAtom);
-
   const mapLayers = useAtomValue(mapLayersAtom);
 
   useEffect(() => {
@@ -31,7 +30,6 @@ const BarChart = () => {
       // do nothing
     }
   }, [mapLayers]);
-
 
   useEffect(() => {
     if (dataPaneTab && containerRef.current) {
@@ -52,9 +50,17 @@ const BarChart = () => {
   }, [dataPaneTab]);
 
   useEffect(() => {
-    // Exit effect if at least one dimesion is 0
-    if (!chartDimensions.every(x => !!x)) return;
-    if (!data) return;
+    // Exit effect if at least one dimension is 0
+    if (!chartDimensions.every((x) => !!x) || !data) return;
+
+    const getScaleAndLabel = (maxValue) => {
+      if (maxValue >= 1e6) return { scale: 1e6, label: "millions" };
+      if (maxValue >= 1e3) return { scale: 1e3, label: "thousands" };
+      return { scale: 1, label: "count" };
+    };
+
+    const maxValue = d3.max(data, d => d.value);
+    const { scale, label } = getScaleAndLabel(maxValue);
 
     const svg = d3.select(chartRef.current);
     svg.selectAll("*").remove();
@@ -71,7 +77,7 @@ const BarChart = () => {
       .padding(0.1);
 
     const y = d3.scaleLinear()
-      .domain([0, d3.max(data, d => d.value)])
+      .domain([0, maxValue / scale])
       .nice()
       .range([height - margin.bottom, margin.top]);
 
@@ -101,8 +107,7 @@ const BarChart = () => {
       .attr("dy", "1em")
       .style("text-anchor", "middle")
       .style("font-size", "12px")
-      .text("alerts (count)");
-
+      .text(`alerts (${label})`);
 
     // Add bars
     svg.append("g")
@@ -110,8 +115,8 @@ const BarChart = () => {
       .data(data)
       .enter().append("rect")
       .attr("x", d => x(d.category))
-      .attr("y", d => y(d.value))
-      .attr("height", d => y(0) - y(d.value))
+      .attr("y", d => y(d.value / scale))
+      .attr("height", d => y(0) - y(d.value / scale))
       .attr("width", x.bandwidth())
       .attr("fill", d => colorMapping[d.category] || "steelblue")
       .on("mouseover", (event, d) => {
