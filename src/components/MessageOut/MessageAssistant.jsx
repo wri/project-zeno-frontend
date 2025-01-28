@@ -11,7 +11,7 @@ function MessageAssistant({ message }) {
   const submit = useSetAtom(addPrompt);
   const showAudioButtons = useAtomValue(showAudioButtonsAtom);
 
-  const audioUrl = `https://dev.api.zeno.ds.io/stream/voice?query=${encodeURIComponent(
+  const audioUrl = `https://api.zeno.ds.io/stream/voice?query=${encodeURIComponent(
     message
   )}`;
 
