@@ -68,14 +68,19 @@ function LocationTool({ artifact }) {
   if (numLocations === 0) {
     return <p>No locations found.</p>;
   }
+
   return (
     <>
       <p>Found {numLocations} Locations:</p>
-      <ul>
-        {artifact?.map((f) => (
-          <li key={f.id}>{f.properties.name}</li>
-        ))}
-      </ul>
+      <ol>
+        {artifact?.map((f) => {
+          const regionName = f.properties?.mapbox_context?.region?.name
+          const adminLevel = f.properties?.admin_level ? ` (${f.properties.admin_level})` : ""
+          const locationName = f.properties.name
+          // dont show repeated region name if it is the same as location name and use admin level to disambiguate
+          return <li key={f.id}>{regionName && locationName !== regionName ? `${locationName}, ${regionName}` : `${locationName}${adminLevel}`}</li>
+        })}
+      </ol>
     </>
   );
 }
