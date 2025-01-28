@@ -1,18 +1,41 @@
 import T from "prop-types";
 import Markdown from "react-markdown";
-
-import { useSetAtom } from "jotai";
+import { useSetAtom, useAtomValue } from "jotai";
 import { addPrompt } from "../../atoms";
 import MessageOutWrapper from "./wrapper";
 import QueryButton from "./QueryButton";
+import AudioPlayButton from "../AudioButton";
+import { showAudioButtonsAtom } from "../../atoms";
 
 function MessageAssistant({ message }) {
   const submit = useSetAtom(addPrompt);
+  const showAudioButtons = useAtomValue(showAudioButtonsAtom);
+
+  const audioUrl = `https://dev.api.zeno.ds.io/stream/voice?query=${encodeURIComponent(
+    message
+  )}`;
 
   if (typeof message === "string" || message instanceof String) {
     return (
-      <MessageOutWrapper>
+      <MessageOutWrapper
+      style={{
+        flexDirection: "column",
+        display: "flex",
+      }}
+      >
         <Markdown>{message}</Markdown>
+        {
+          showAudioButtons && 
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+        <AudioPlayButton audioUrl={audioUrl} />
+        </div>
+        }
       </MessageOutWrapper>
     );
   } else {
@@ -32,7 +55,8 @@ function MessageAssistant({ message }) {
                 clickHandler={() => submit(query)}
               >
                 {messagePart.name}
-              </QueryButton>);
+              </QueryButton>
+            );
           }}
         })}
       </MessageOutWrapper>
