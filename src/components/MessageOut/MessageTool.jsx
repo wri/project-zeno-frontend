@@ -2,6 +2,7 @@ import T from "prop-types";
 import MessageOutWrapper from "./wrapper";
 
 import { useEffect, useState } from "react";
+import { Alert }  from "../ui/alert";
 import { useSetAtom } from "jotai";
 import {
   chartDataAtom,
@@ -92,6 +93,7 @@ function DistAlertsTool({ message, artifact }) {
   const setDataPaneTab = useSetAtom(dataPaneTabAtom);
 
   useEffect(() => {
+    try {
     const json = JSON.parse(message);
     const numDisturbances = Object.keys(json).length;
       const data = Object.entries(json).map(([category, value]) => ({
@@ -112,19 +114,33 @@ function DistAlertsTool({ message, artifact }) {
         setChartData(data);
         setDataPaneTab("chart");
       }
+
+    } catch (e) {
+      console.error("Failed to parse message", e);
+    }
   }, [message, addLayer, artifact, setChartData, setDataPaneTab]);
 
-  const json = JSON.parse(message);
-  const numDisturbances = Object.keys(json).length;
+  try {
+    const json = JSON.parse(message);
+    const numDisturbances = Object.keys(json).length;
 
-  if (numDisturbances > 0) {
+    if (numDisturbances > 0) {
+      return (
+        <>Adding alerts to the map.</>
+      );
+    }
+    else {
+      return (
+        <>No alerts found.</>
+      );
+    }
+
+  // eslint-disable-next-line no-unused-vars
+  } catch (e) {
     return (
-      <>Adding alerts to the map.</>
-    );
-  }
-  else {
-    return (
-      <>No alerts found.</>
+      <Alert status="error" title="Error">
+        There was a problem processing your request. Please try again or try another prompt;
+      </Alert>
     );
   }
 }
