@@ -31,10 +31,12 @@ function ImageItem({ id }) {
       const year = dateStr.slice(0, 4); // YYYY
       const month = dateStr.slice(4, 6); // MM
       const day = dateStr.slice(6, 8); // DD
+      const instrument = str.split("_")[0]; // e.g., 'S2A'
+      const instrumentSring = instrument === 'S2A' || instrument === 'S2B' ? `(${instrument}) ` : ''
   
       // Create a Date object and format it
       const date = new Date(`${year}-${month}-${day}`);
-      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); // e.g., "August 27, 2023"
+      return instrumentSring + date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); // e.g., "August 27, 2023"
     }
     return str; // Return original id match is found
   };
