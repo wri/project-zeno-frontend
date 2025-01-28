@@ -1,4 +1,5 @@
 import { Box, Grid } from "@chakra-ui/react";
+import { useEffect } from "react";
 import Providers from "./Providers";
 import { ChatInput, ChatOutput, Map } from "./components";
 import BarChart from "./components/BarChart";
@@ -6,8 +7,23 @@ import FilmStrip from "./components/FilmStrip";
 import TabbedPanel from "./components/TabbedPanel";
 import ExportPane from "./components/ExportPane";
 import GlobalHeader from "./components/globalheader";
+import { showAudioButtonsAtom } from "./atoms";
+import { useSetAtom } from "jotai";
 
 function App() {
+
+  const setShowAudioButtons = useSetAtom(showAudioButtonsAtom);
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "y") {
+        setShowAudioButtons((prev) => !prev);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [setShowAudioButtons]);
+
   const SecondaryWidgetTabs = [
     {
       value: "chart",

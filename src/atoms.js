@@ -13,6 +13,7 @@ export const interruptedStateAtom = atom(false); // when we receive an interrupt
 export const dataPaneTabAtom = atom("");
 export const recentImageryAtom = atom([]);
 export const mapBoundsAtom = atom([-180, -90, 180, 90]);
+export const showAudioButtonsAtom = atom(false);
 
 function makeInputMessage(query) {
   return {
