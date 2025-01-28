@@ -25,6 +25,7 @@ const BarChart = () => {
         colors[description] = color_hexcode;
       });
       setColorMapping(colors);
+    // eslint-disable-next-line no-unused-vars
     } catch (e) {
       // do nothing
     }
