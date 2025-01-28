@@ -1,14 +1,9 @@
 import { useEffect, useState } from "react";
 import T from "prop-types";
-import { Tabs, Flex, Heading } from "@chakra-ui/react";
-import {
-  AccordionItem,
-  AccordionItemContent,
-  AccordionItemTrigger,
-  AccordionRoot,
-} from "./ui/accordion";
-import { dataPaneTabAtom } from "../atoms";
+import { Collapsible, Tabs, Flex, Heading, Icon } from "@chakra-ui/react";
+import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { useAtom } from "jotai";
+import { dataPaneTabAtom } from "../atoms";
 
 const panelHeight = "20rem";
 
@@ -22,60 +17,59 @@ function TabbedPanel({ tabData }) {
 
   if (!tabData) return;
   return (
-    <AccordionRoot
+    <Collapsible.Root
       bg="white"
       p="0"
       plain="true"
-      collapsible
       borderRadius="lg"
       shadow="md"
-      overflow="auto"
       maxH={panelHeight}
-      value={isOpen ? ["widget-list"] : []}
-      onValueChange={({ value }) => setIsOpen(value.length !== 0)}
+      open={isOpen}
+      onOpenChange={() => setIsOpen(prev => !prev)}
     >
-      <Tabs.Root lazyMount unmountOnExit value={dataPaneTab} onValueChange={(e) => setDataPaneTab(e.value)} variant="line">
-        <AccordionItem
-          css={{
-            "&[data-scope=\"accordion\"][data-state=\"closed\"]  [data-scope=\"tabs\"]":
-              { borderColor: "transparent", borderWidth: "0" },
-            "&[data-scope=\"accordion\"][data-state=\"closed\"] [data-scope=\"tabs\"][aria-selected=true][data-selected][data-orientation=horizontal]":
-              {"--indicator-color": "transparent" },
-          }}
-          value="widget-list"
+      <Tabs.Root
+        display={isOpen ? "grid" : "block"}
+        gridTemplateRows="max-content 300px"
+        lazyMount
+        unmountOnExit
+        value={dataPaneTab}
+        onValueChange={(e) => setDataPaneTab(e.value)}
+        variant="line"
+      >
+        <Flex
+          borderBottomStyle="solid"
+          borderBottomColor="gray.300"
+          borderBottomWidth={isOpen ? "1px" : "0"}
         >
-          <Flex>
-            <Tabs.List flex="1">
-              {tabData.map((tab) => {
-                return (
-                  <Tabs.Trigger key={tab.value} value={tab.value}>
-                    {tab.title}
-                  </Tabs.Trigger>
-                );
-              })}
-            </Tabs.List>
-            <AccordionItemTrigger
-              px={4}
-              maxW="fit-content"
-              cursor="pointer"
-              borderRadius="0"
-            />
-          </Flex>
-          <AccordionItemContent p={0} pb={2} minH="300px">
+          <Tabs.List flex="1" borderBottom="0">
             {tabData.map((tab) => {
               return (
-                <Tabs.Content key={tab.value} value={tab.value} px={4} maxH={`calc(${panelHeight} - 6rem)`}>
-                  <Heading as="h4" fontSize="sm">
-                    {tab.title}
-                  </Heading>
-                  {tab.component}
-                </Tabs.Content>
+                <Tabs.Trigger key={tab.value} value={tab.value}>
+                  {tab.title}
+                </Tabs.Trigger>
               );
             })}
-          </AccordionItemContent>
-        </AccordionItem>
+          </Tabs.List>
+          <Collapsible.Trigger px="4" cursor="pointer">
+            <Icon>
+              {isOpen ? <MdExpandMore title="Close" /> : <MdExpandLess title="Open" />}
+            </Icon>
+          </Collapsible.Trigger>
+        </Flex>
+        <Collapsible.Content p={0} pb={2}>
+          {tabData.map((tab) => {
+            return (
+              <Tabs.Content key={tab.value} value={tab.value} px={4} maxH={`calc(${panelHeight} - 6rem)`}>
+                <Heading as="h4" fontSize="sm">
+                  {tab.title}
+                </Heading>
+                {tab.component}
+              </Tabs.Content>
+            );
+          })}
+        </Collapsible.Content>
       </Tabs.Root>
-    </AccordionRoot>
+    </Collapsible.Root>
   );
 }
 

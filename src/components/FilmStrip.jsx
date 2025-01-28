@@ -12,7 +12,7 @@ import {
 import { recentImageryAtom, addLayerAtom } from "../atoms";
 import { useAtomValue, useSetAtom } from "jotai";
 
-const titiler = (id) => 
+const titiler = (id) =>
   `https://titiler.xyz/stac/tiles/WebMercatorQuad/{z}/{x}/{y}@1x?url=https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/${id}&assets=red&assets=green&assets=blue&rescale=0%2C2000`;
 
 function ImageItem({ id }) {
@@ -55,7 +55,7 @@ ImageItem.propTypes = {
 function FilmStrip() {
   const recentImages = useAtomValue(recentImageryAtom);
   return (
-    <List.Root display="flex" listStyle="none" flexDir="row" my={2} mx={-4} gap={4} overflowX="scroll">
+    <List.Root display="flex" listStyle="none" flexDir="row" px="0" mt="2" pb="2" gap={4} overflowX="scroll">
       <Suspense
         fallback={
           <>
@@ -70,7 +70,7 @@ function FilmStrip() {
         {recentImages.map((id) => {
           return (
             <List.Item key={id}>
-                <ImageItem id={id} alt={id} />
+              <ImageItem id={id} alt={id} />
             </List.Item>
           );
         })}
