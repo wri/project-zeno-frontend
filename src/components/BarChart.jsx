@@ -38,7 +38,7 @@ const BarChart = () => {
       const observer = new ResizeObserver(entries => {
         const e = entries[0];
         const parentElement = e.target.parentElement;
-        const newDimensions = [parentElement.clientWidth, parentElement.clientHeight];
+        const newDimensions = [parentElement.clientWidth - 32, parentElement.clientHeight];
         if (parentElement.clientHeight <= 300) {
           setChartDimensions(newDimensions);
         }
@@ -61,7 +61,7 @@ const BarChart = () => {
 
     const tooltip = d3.select(tooltipRef.current);
 
-    const margin = { top: 24, right: 12, bottom: 36, left: 60 };
+    const margin = { top: 12, right: 1, bottom: 24, left: 60 };
     const width = chartDimensions[0];
     const height = chartDimensions[1];
 
@@ -113,7 +113,7 @@ const BarChart = () => {
       .attr("y", d => y(d.value))
       .attr("height", d => y(0) - y(d.value))
       .attr("width", x.bandwidth())
-      .attr("fill", d => colorMapping[d.category] || "steelblue") 
+      .attr("fill", d => colorMapping[d.category] || "steelblue")
       .on("mouseover", (event, d) => {
         tooltip
           .style("visibility", "visible")
