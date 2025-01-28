@@ -23,6 +23,23 @@ function ImageItem({ id }) {
     "url": `${titiler(id)}`,
     "name": "Sentinel-2",
   };
+  const parseDateFromId = (str) => {
+    // Extract the date from the STAC id (YYYYMMDD) using a regex
+    const match = str.match(/\d{8}/);
+    if (match) {
+      const dateStr = match[0]; // e.g., '20230827'
+      const year = dateStr.slice(0, 4); // YYYY
+      const month = dateStr.slice(4, 6); // MM
+      const day = dateStr.slice(6, 8); // DD
+      const instrument = str.split("_")[0]; // e.g., 'S2A'
+      const instrumentSring = instrument === 'S2A' || instrument === 'S2B' ? `(${instrument}) ` : ''
+  
+      // Create a Date object and format it
+      const date = new Date(`${year}-${month}-${day}`);
+      return instrumentSring + date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); // e.g., "August 27, 2023"
+    }
+    return str; // Return original id match is found
+  };
   return (
     <Card.Root borderRadius="lg" overflow="hidden" width="12rem" height="8rem" role="button">
       <LinkOverlay onClick={() => addLayer(layer)} cursor="pointer">
@@ -40,7 +57,7 @@ function ImageItem({ id }) {
         left={0}
       >
         <Card.Title left={2} pos="relative" color="white" fontSize="sm">
-          {id}
+          {parseDateFromId(id)}
         </Card.Title>
       </Box>
       </LinkOverlay>
