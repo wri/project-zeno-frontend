@@ -1,7 +1,7 @@
 import T from "prop-types";
 import MessageOutWrapper from "./wrapper";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSetAtom } from "jotai";
 import {
   chartDataAtom,
@@ -139,16 +139,21 @@ DistAlertsTool.propTypes = {
  *
  */
 function StacTool({ message }) {
-  const recentImageryArray = JSON.parse(message);
+  const [render, setRender] = useState("");
   const setRecentImagery = useSetAtom(recentImageryAtom);
   const setDataPaneTab = useSetAtom(dataPaneTabAtom);
 
-  let render = <div>No Recent Imagery</div>;
-  if (recentImageryArray.length > 0) {
-    setRecentImagery(recentImageryArray);
-    setDataPaneTab("imagery");
-    render = <div>Added Recent Imagery to Data Pane</div>;
-  }
+  useEffect(() => {
+    const recentImageryArray = JSON.parse(message);
+    if (recentImageryArray.length > 0) {
+      setRecentImagery(recentImageryArray);
+      setDataPaneTab("imagery");
+      setRender(<div>Added Recent Imagery to Data Pane</div>);
+    } else {
+      setRender(<div>No Recent Imagery</div>);
+    }
+
+  }, [message, setDataPaneTab, setRecentImagery]);
 
   return render;
 }
