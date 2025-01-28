@@ -23,7 +23,7 @@ function HumanInput({ options }) {
     <MessageOutWrapper>
       Select a location:
       <List.Root listStyle="none" pl="0" display="flex" flexDir="row" flexWrap="wrap" gap="2">
-        {options.map((option) => {
+        {options.map((option, i) => {
 
           let gid = option[1];
           let name = option[0];
@@ -38,7 +38,7 @@ function HumanInput({ options }) {
                 onMouseEnter={() => setHighlightedLocation(gid)}
                 onMouseLeave={() => setHighlightedLocation(null)}
               >
-                {name}
+                {i+1}. {name}
               </QueryButton>
             </List.Item>
           );
