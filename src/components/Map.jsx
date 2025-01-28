@@ -15,14 +15,6 @@ import { AbsoluteCenter, Code, Box } from "@chakra-ui/react";
 import { HiOutlinePlusSmall } from "react-icons/hi2";
 
 const addTMSLayer = (map, layerId, url, visibility = true) => {
-  // Check if the layer already exists (avoid duplicates)
-  if (map.getSource(layerId))  {
-    // set the visibility of the layer
-    map.getSource(layerId).tiles = [url];
-    map.setLayoutProperty(`tms-layer-${layerId}`, "visibility", visibility ? "visible" : "none");
-    return;
-  }
-
   // Find the first GeoJSON layer ID
   const layers = map.getStyle().layers;
   const firstGeoJSONLayer = layers.find((layer) =>
@@ -144,8 +136,12 @@ function Map() {
         }
         if (layer.type === "TMS") {
           // Add or update TMS layer
+          // Check if the layer already exists (avoid duplicates)
+          if (map.getLayer(`tms-layer-${layerId}`)) {
+            map.removeLayer(`tms-layer-${layerId}`);
+            map.removeSource(layerId);
+          }
           addTMSLayer(map, layerId, layer.url, isVisible);
-
         }
       });
 
