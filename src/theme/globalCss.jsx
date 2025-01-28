@@ -14,6 +14,12 @@ export default {
     listStyleType: "disc",
     paddingLeft: 4
   },
+  ol: {
+    marginTop: 4,
+    marginBottom: 4,
+    listStyleType: "decimal",
+    paddingLeft: 4,
+  },
   p: {
     marginTop: 4,
     marginBottom: 4,
