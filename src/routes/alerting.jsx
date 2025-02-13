@@ -12,7 +12,6 @@ import { showAudioButtonsAtom } from "../atoms";
 import { useSetAtom } from "jotai";
 
 function Alerting() {
-
   const setShowAudioButtons = useSetAtom(showAudioButtonsAtom);
   useEffect(() => {
     const handleKeyDown = (event) => {

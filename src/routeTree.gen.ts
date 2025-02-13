@@ -11,9 +11,16 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as MonitoringImport } from './routes/monitoring'
 import { Route as AlertingImport } from './routes/alerting'
 
 // Create/Update Routes
+
+const MonitoringRoute = MonitoringImport.update({
+  id: '/monitoring',
+  path: '/monitoring',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AlertingRoute = AlertingImport.update({
   id: '/alerting',
@@ -32,6 +39,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AlertingImport
       parentRoute: typeof rootRoute
     }
+    '/monitoring': {
+      id: '/monitoring'
+      path: '/monitoring'
+      fullPath: '/monitoring'
+      preLoaderRoute: typeof MonitoringImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -39,32 +53,37 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/alerting': typeof AlertingRoute
+  '/monitoring': typeof MonitoringRoute
 }
 
 export interface FileRoutesByTo {
   '/alerting': typeof AlertingRoute
+  '/monitoring': typeof MonitoringRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/alerting': typeof AlertingRoute
+  '/monitoring': typeof MonitoringRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/alerting'
+  fullPaths: '/alerting' | '/monitoring'
   fileRoutesByTo: FileRoutesByTo
-  to: '/alerting'
-  id: '__root__' | '/alerting'
+  to: '/alerting' | '/monitoring'
+  id: '__root__' | '/alerting' | '/monitoring'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   AlertingRoute: typeof AlertingRoute
+  MonitoringRoute: typeof MonitoringRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   AlertingRoute: AlertingRoute,
+  MonitoringRoute: MonitoringRoute,
 }
 
 export const routeTree = rootRoute
@@ -77,11 +96,15 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.jsx",
       "children": [
-        "/alerting"
+        "/alerting",
+        "/monitoring"
       ]
     },
     "/alerting": {
       "filePath": "alerting.jsx"
+    },
+    "/monitoring": {
+      "filePath": "monitoring.jsx"
     }
   }
 }

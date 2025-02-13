@@ -1,3 +1,4 @@
+import { atomWithLocation } from "jotai-location";
 import bbox from "@turf/bbox";
 import { atom } from "jotai";
 import { v4 as uuidv4 } from "uuid";
@@ -15,6 +16,19 @@ export const recentImageryAtom = atom([]);
 export const mapBoundsAtom = atom([-180, -90, 180, 90]);
 export const showAudioButtonsAtom = atom(false);
 
+const currentLocationAtom = atomWithLocation();
+export const currentAppTypeAtom = atom((get) => {
+  const location = get(currentLocationAtom);
+  switch (location.pathname) {
+    case "/alerting":
+      return "alerting";
+    case "/monitoring":
+      return "monitoring";
+    default:
+      return "monitoring";
+  }
+});
+
 function makeInputMessage(query) {
   return {
     type: "in",
@@ -23,14 +37,16 @@ function makeInputMessage(query) {
   };
 }
 
-export const addPrompt = atom(null, (get, set, promt) => {
-  const { queryType, query } = promt;
+export const addPrompt = atom(null, (get, set, prompt) => {
+  const appType = get(currentAppTypeAtom);
+  const { queryType, query} = prompt;
 
   if (queryType === "query") {
     set(chatHistoryAtom, (prev => [...prev, makeInputMessage(query)]));
   }
 
-  let queryUrl = "https://api.zeno.ds.io/stream/dist_alert";
+  let queryUrl = appType === "alerting" ? "https://api.zeno.ds.io/stream/dist_alert" : "https://api.zeno.ds.io/stream/kba";
+
   if (import.meta.env.VITE_MOCK_QUERIES === "true") {
     queryUrl = "/stream";
   }
