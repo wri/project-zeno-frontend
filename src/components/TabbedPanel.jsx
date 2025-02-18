@@ -4,13 +4,14 @@ import { Collapsible, Tabs, Flex, Heading, Icon } from "@chakra-ui/react";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { useAtom } from "jotai";
 import { dataPaneTabAtom } from "../atoms";
+import { useColorModeValue } from "./ui/color-mode";
 
 const panelHeight = "20rem";
 
 function TabbedPanel({ tabData }) {
   const [dataPaneTab, setDataPaneTab] = useAtom(dataPaneTabAtom);
   const [isOpen, setIsOpen] = useState(true);
-
+  const panelBg = useColorModeValue("bg.panel", "bg.emphasized");
   useEffect(() => {
     setIsOpen(!!dataPaneTab);
   }, [dataPaneTab]);
@@ -18,7 +19,7 @@ function TabbedPanel({ tabData }) {
   if (!tabData) return;
   return (
     <Collapsible.Root
-      bg="white"
+      bg={panelBg}
       p="0"
       plain="true"
       borderRadius="lg"
@@ -38,7 +39,7 @@ function TabbedPanel({ tabData }) {
       >
         <Flex
           borderBottomStyle="solid"
-          borderBottomColor="gray.300"
+          borderBottomColor="border.muted"
           borderBottomWidth={isOpen ? "1px" : "0"}
         >
           <Tabs.List flex="1" borderBottom="0">

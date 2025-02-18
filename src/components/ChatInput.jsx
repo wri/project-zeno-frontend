@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Box, Button, Textarea } from "@chakra-ui/react";
-import { MdChevronRight } from "react-icons/md";
+import { MdKeyboardArrowUp } from "react-icons/md";
 import { useSetAtom } from "jotai";
 import { addPrompt } from "../atoms";
 
@@ -22,7 +22,7 @@ function ChatInput() {
   };
 
   return (
-    <Box position="relative">
+    <Box position="relative" m={0} p={0}>
       <Textarea
         aria-label="Ask a question"
         placeholder="Ask a question"
@@ -30,7 +30,7 @@ function ChatInput() {
         autoresize
         maxH="10lh" 
         pr="12"
-        shadow="md"
+        bg="bg.subtle"
         border="0"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
@@ -49,7 +49,7 @@ function ChatInput() {
         size="xs"
         onClick={submitPrompt}
       >
-        <MdChevronRight />
+        <MdKeyboardArrowUp />
       </Button>
     </Box>
   );

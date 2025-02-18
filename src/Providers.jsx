@@ -1,12 +1,15 @@
 import T from "prop-types";
 import { ChakraProvider } from "@chakra-ui/react";
+import { ColorModeProvider } from "./components/ui/color-mode";
 
 import theme from "./theme";
 
 function Providers({ children }) {
   return (
     <ChakraProvider value={theme}>
-      {children}
+      <ColorModeProvider>
+        {children}
+      </ColorModeProvider>
     </ChakraProvider>
   );
 }

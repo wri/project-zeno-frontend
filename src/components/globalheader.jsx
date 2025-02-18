@@ -1,12 +1,13 @@
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
-import logo from "/logo.svg";
-import BEFLogo from "/BEF_logo.png";
-import WRILogo from "/WRI_logo_K.png";
+import { Box, Flex, Text } from "@chakra-ui/react";
+import { LclLogo } from ".";
+import WRILogo from "./WRIlogo";
+import BEFLogo from "./BEFLogo";
+import { ColorModeButton } from "./ui/color-mode";
 
 function GlobalHeader() {
   return (
     <Box
-      bgColor="white"
+      bg="bg.panel"
       shadow="sm"
       px="8"
       py="4"
@@ -14,7 +15,7 @@ function GlobalHeader() {
       justifyContent="space-between"
     >
       <Flex gap={12} alignItems="center">
-        <Image src={logo} height="40px" alt="WRI Land Carbon Lab logo" />
+        <LclLogo width="80" />
         <Text
           fontFamily="mono"
           fontVariantNumeric="slashed-zero"
@@ -30,8 +31,13 @@ function GlobalHeader() {
         </Text>
       </Flex>
       <Flex gap={12} alignItems="center">
-        <Image src={BEFLogo} height="40px" alt="Bezos Earth Fund logo" />
-        <Image src={WRILogo} height="40px" alt="World Resources Institute logo" />
+        <ColorModeButton />
+        <a href="https://www.bezosearthfund.org/" target="_blank" rel="noreferrer" title="Bezos Earth Fund Logo">
+          <BEFLogo width="92" />
+        </a>
+        <a href="https://www.wri.org/" target="_blank" rel="noreferrer" title="WRI Logo">
+          <WRILogo width="120" />
+        </a>
       </Flex>
     </Box>
   );
