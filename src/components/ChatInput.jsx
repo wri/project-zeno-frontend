@@ -5,7 +5,7 @@ import { useSetAtom } from "jotai";
 import { addPrompt } from "../atoms";
 
 function ChatInput() {
-  const [ inputValue, setInputValue ] = useState("");
+  const [inputValue, setInputValue] = useState("");
 
   const submit = useSetAtom(addPrompt);
 
@@ -15,7 +15,7 @@ function ChatInput() {
   };
 
   const handleKeyUp = (e) => {
-    if(e.keyCode === 13 && inputValue?.trim().length > 0) {
+    if (e.keyCode === 13 && inputValue?.trim().length > 0) {
       e.preventDefault();
       submitPrompt();
     }
@@ -28,10 +28,9 @@ function ChatInput() {
         placeholder="Ask a question"
         fontSize="sm"
         autoresize
-        maxH="10lh" 
+        maxH="10lh"
         pr="12"
         bg="bg.subtle"
-        border="0"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyUp={handleKeyUp}
@@ -45,6 +44,9 @@ function ChatInput() {
         {...(inputValue?.trim().length == 0 && { disabled: true })}
         borderRadius="full"
         colorPalette="blue"
+        _disabled={{
+          opacity: 0.75,
+        }}
         type="button"
         size="xs"
         onClick={submitPrompt}

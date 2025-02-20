@@ -10,7 +10,7 @@ const QueryButton = ({ children, clickHandler, ...delegated }) => {
       borderRadius="full"
       type="button"
       borderWidth="1px"
-      color="fg.muted"
+      color="fg"
       background="linear-gradient({colors.bg} 0 0) padding-box, radial-gradient(at 0% 0%, {colors.gray.700}, {colors.gray.200} ) border-box"
       transition="all 0.24s ease-out"
       boxShadow="xs"
