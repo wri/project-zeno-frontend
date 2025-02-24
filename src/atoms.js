@@ -3,6 +3,7 @@ import bbox from "@turf/bbox";
 import { atom } from "jotai";
 import { v4 as uuidv4 } from "uuid";
 
+
 export const mapLayersAtom = atom([]);
 export const highlightedLocationAtom = atom();
 export const chatHistoryAtom = atom([]);
@@ -15,6 +16,7 @@ export const dataPaneTabAtom = atom("");
 export const recentImageryAtom = atom([]);
 export const mapBoundsAtom = atom([-180, -90, 180, 90]);
 export const showAudioButtonsAtom = atom(false);
+export const currentUserPersonaAtom = atom("");
 
 const currentLocationAtom = atomWithLocation();
 export const currentAppTypeAtom = atom((get) => {
@@ -39,7 +41,9 @@ function makeInputMessage(query) {
 
 export const addPrompt = atom(null, (get, set, prompt) => {
   const appType = get(currentAppTypeAtom);
-  const { queryType, query} = prompt;
+  const userPersona = get(currentUserPersonaAtom);
+  const { queryType, query } = prompt;
+
 
   if (queryType === "query") {
     set(chatHistoryAtom, (prev => [...prev, makeInputMessage(query)]));
@@ -51,11 +55,20 @@ export const addPrompt = atom(null, (get, set, prompt) => {
     queryUrl = "/stream";
   }
 
+  let queryToSend = {
+    query,
+    query_type: queryType,
+    thread_id: get(sessionIdAtom),
+  };
+  if (userPersona) {
+    queryToSend.user_persona = userPersona;
+  }
+
   set(isLoadingAtom, true);
   fetch(queryUrl, {
     method: "POST",
     headers:{"content-type": "application/json"},
-    body: JSON.stringify({ query, query_type: queryType, thread_id: get(sessionIdAtom) })
+    body: JSON.stringify(queryToSend)
   }).then(async (response) => {
     const utf8Decoder = new TextDecoder("utf-8");
     const reader = response.body.getReader();

@@ -3,8 +3,9 @@ import { Box } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 import { Alert } from "./ui/alert";
 
-import { MessageIn, MessageTool, MessageAssistant, MessageDefault, HumanInput, Loading } from ".";
+import { MessageIn, MessageTool, MessageAssistant, MessageDefault, LocationSelect, Loading } from ".";
 import { chatHistoryAtom, isLoadingAtom, currentAppTypeAtom } from "../atoms";
+import PersonaSelect from "./MessageOut/PersonaSelect";
 
 function ChatOutput() {
   const [ chatHistory ] = useAtom(chatHistoryAtom);
@@ -42,6 +43,7 @@ function ChatOutput() {
   return (
     <Box ref={containerRef} fontSize="sm">
     <MessageAssistant message={message} />
+    { appType === "monitoring" && <PersonaSelect /> /* only show persona select in monitoring application */} 
       {chatHistory.map((msg) => {
         switch (msg.type) {
           case "in":
@@ -64,7 +66,7 @@ function ChatOutput() {
               </Alert>
             );
           }
-          return <HumanInput key={msg.timestamp} type={msg.type} options={options} />; }
+          return <LocationSelect key={msg.timestamp} type={msg.type} options={options} />; }
           case "update":
             return <MessageAssistant key={msg.timestamp} message={msg.content} />;
           default:
