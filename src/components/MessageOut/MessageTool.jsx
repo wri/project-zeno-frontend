@@ -2,7 +2,7 @@ import T from "prop-types";
 import MessageOutWrapper from "./wrapper";
 
 import { useEffect, useState } from "react";
-import { Alert }  from "../ui/alert";
+import { Alert } from "../ui/alert";
 import { useSetAtom } from "jotai";
 import {
   chartDataAtom,
@@ -10,6 +10,7 @@ import {
   addLayerAtom,
   recentImageryAtom
 } from "../../atoms";
+import InsightsSelect from "./InsightsSelect";
 
 function ContextLayer({ message, artifact }) {
   const addLayer = useSetAtom(addLayerAtom);
@@ -74,11 +75,11 @@ function LocationTool({ artifact }) {
       <p>Found {numLocations} Locations:</p>
       <ol>
         {artifact?.map((f) => {
-          const regionName = f.properties?.mapbox_context?.region?.name
-          const adminLevel = f.properties?.admin_level ? ` (${f.properties.admin_level})` : ""
-          const locationName = f.properties.name
+          const regionName = f.properties?.mapbox_context?.region?.name;
+          const adminLevel = f.properties?.admin_level ? ` (${f.properties.admin_level})` : "";
+          const locationName = f.properties.name;
           // dont show repeated region name if it is the same as location name and use admin level to disambiguate
-          return <li key={f.id}>{regionName && locationName !== regionName ? `${locationName}, ${regionName}` : `${locationName}${adminLevel}`}</li>
+          return <li key={f.id}>{regionName && locationName !== regionName ? `${locationName}, ${regionName}` : `${locationName}${adminLevel}`}</li>;
         })}
       </ol>
     </>
@@ -99,8 +100,8 @@ function DistAlertsTool({ message, artifact }) {
 
   useEffect(() => {
     try {
-    const json = JSON.parse(message);
-    const numDisturbances = Object.keys(json).length;
+      const json = JSON.parse(message);
+      const numDisturbances = Object.keys(json).length;
       const data = Object.entries(json).map(([category, value]) => ({
         category,
         value,
@@ -140,7 +141,7 @@ function DistAlertsTool({ message, artifact }) {
       );
     }
 
-  // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line no-unused-vars
   } catch (e) {
     return (
       <Alert status="error" title="Error">
@@ -185,6 +186,7 @@ StacTool.propTypes = {
 
 function MessageTool({ message, toolName, artifact }) {
   let render;
+  console.log("toolName", toolName, message, artifact);
 
   switch (toolName) {
     case "context-layer-tool":
@@ -198,6 +200,10 @@ function MessageTool({ message, toolName, artifact }) {
       break;
     case "stac-tool":
       render = <StacTool message={message} artifact={artifact} />;
+      break;
+    case "kba-timeseries-tool":
+    case "kba-insights-tool":
+      render = <InsightsSelect data={message} artifact={artifact} />;
       break;
     default:
       render = message;
@@ -215,6 +221,7 @@ MessageTool.propTypes = {
     "dist-alerts-tool",
     "stac-tool",
     "retrieve_blog_posts",
+    "kba-insights-tool"
   ]),
   artifact: T.object,
 };
