@@ -17,6 +17,7 @@ export const recentImageryAtom = atom([]);
 export const mapBoundsAtom = atom([-180, -90, 180, 90]);
 export const showAudioButtonsAtom = atom(false);
 export const currentUserPersonaAtom = atom("");
+export const sidePanelContentAtom = atom(null);
 
 const currentLocationAtom = atomWithLocation();
 export const currentAppTypeAtom = atom((get) => {
@@ -67,7 +68,7 @@ export const addPrompt = atom(null, (get, set, prompt) => {
   set(isLoadingAtom, true);
   fetch(queryUrl, {
     method: "POST",
-    headers:{"content-type": "application/json"},
+    headers: { "content-type": "application/json" },
     body: JSON.stringify(queryToSend)
   }).then(async (response) => {
     const utf8Decoder = new TextDecoder("utf-8");
@@ -116,7 +117,7 @@ export const addPrompt = atom(null, (get, set, prompt) => {
       }
     }
   })
-  .finally(() => set(isLoadingAtom, false));
+    .finally(() => set(isLoadingAtom, false));
 });
 
 /**
@@ -150,10 +151,10 @@ export const addLayerAtom = atom(
       ...prevVisibility,
       [layerId]: true, // Default visibility to true for new layers
     }));
-  
+
     set(mapBoundsAtom, (prevBounds) => calculateNewBounds(get(mapLayersAtom), prevBounds));
   }
-  
+
 );
 
 /**
@@ -199,22 +200,22 @@ export const confirmLocationAtom = atom(
 
 function calculateNewBounds(mapLayers, prevBounds) {
   try {
-  return mapLayers.reduce(
-    (acc, layer) => {
-      if (layer.type == "geojson") {
-        const layerBounds = bbox(layer.data);
-        return [
-          Math.min(acc[0], layerBounds[0]),
-          Math.min(acc[1], layerBounds[1]),
-          Math.max(acc[2], layerBounds[2]),
-          Math.max(acc[3], layerBounds[3]),
-        ];
-      } else {
-        return acc;
-      }
-    },
-    [Infinity, Infinity, -Infinity, -Infinity]
-  );
+    return mapLayers.reduce(
+      (acc, layer) => {
+        if (layer.type == "geojson") {
+          const layerBounds = bbox(layer.data);
+          return [
+            Math.min(acc[0], layerBounds[0]),
+            Math.min(acc[1], layerBounds[1]),
+            Math.max(acc[2], layerBounds[2]),
+            Math.max(acc[3], layerBounds[3]),
+          ];
+        } else {
+          return acc;
+        }
+      },
+      [Infinity, Infinity, -Infinity, -Infinity]
+    );
 
   } catch (e) {
     console.error("Failed to calculate new bounds", e);

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Box, Grid } from "@chakra-ui/react";
 import Providers from "../Providers";
-import { ChatInput, ChatOutput } from "../components";
+import { ChatInput, ChatOutput, SidePanelWidget } from "../components";
 import GlobalHeader from "../components/globalheader";
 
 function Monitoring() {
@@ -33,7 +33,9 @@ function Monitoring() {
             </Box>
           </Grid>
           <Grid templateRows="1fr" gap="2">
-            <Box borderRadius="lg" shadow="md" overflow="hidden" />
+            <Box borderRadius="lg" shadow="md" overflow="hidden">
+              <SidePanelWidget />
+            </Box>
           </Grid>
         </Grid>
       </Grid>
