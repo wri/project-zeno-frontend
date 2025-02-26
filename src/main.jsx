@@ -19,17 +19,22 @@ async function deferRender() {
 import { routeTree } from "./routeTree.gen";
 
 // Create a new router instance
-const router = createRouter({ routeTree });
+const router = createRouter({
+  routeTree,
+  onLoad: () => {
+    router.navigate("/alerting");
+  }
+});
 
 // Render the app
 const rootElement = document.getElementById("root");
 if (!rootElement.innerHTML) {
-deferRender().then(() => {
-  const root = ReactDOM.createRoot(rootElement);
-  root.render(
-    <StrictMode>
-      <RouterProvider router={router} />
-    </StrictMode>,
-  );
-});
+  deferRender().then(() => {
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(
+      <StrictMode>
+        <RouterProvider router={router} />
+      </StrictMode>,
+    );
+  });
 }
