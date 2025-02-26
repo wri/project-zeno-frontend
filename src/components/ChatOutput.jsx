@@ -3,13 +3,15 @@ import { Box } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 import { Alert } from "./ui/alert";
 
-import { MessageIn, MessageTool, MessageAssistant, MessageDefault, HumanInput, Loading } from ".";
-import { chatHistoryAtom, isLoadingAtom } from "../atoms";
+import { MessageIn, MessageTool, MessageAssistant, MessageDefault, LocationSelect, Loading } from ".";
+import { chatHistoryAtom, isLoadingAtom, currentAppTypeAtom } from "../atoms";
+import PersonaSelect from "./MessageOut/PersonaSelect";
 
 function ChatOutput() {
   const [ chatHistory ] = useAtom(chatHistoryAtom);
   const [ isLoading ] = useAtom(isLoadingAtom);
   const containerRef = useRef();
+  const [ appType ] = useAtom(currentAppTypeAtom);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -31,14 +33,17 @@ function ChatOutput() {
     }
   }, []);
 
-  const message = `
+  const message = appType === "alerting" ?`
   Hi! I'm Land & Carbon Lab's alert explorer. I can help you find and investigate disturbances in your area of interest using the Land Disturbance Alert Classification System and other contextual data. 
   \nStart by asking me what I can do.
-  `;
+  ` : `
+  Hi! I'm Land & Carbon Lab's monitoring assistant. I can help you find answer your queries about KBAs.
+  \nStart by asking me what I can do.`;
 
   return (
     <Box ref={containerRef} fontSize="sm">
     <MessageAssistant message={message} />
+    { appType === "monitoring" && <PersonaSelect /> /* only show persona select in monitoring application */} 
       {chatHistory.map((msg) => {
         switch (msg.type) {
           case "in":
@@ -61,7 +66,7 @@ function ChatOutput() {
               </Alert>
             );
           }
-          return <HumanInput key={msg.timestamp} type={msg.type} options={options} />; }
+          return <LocationSelect key={msg.timestamp} type={msg.type} options={options} />; }
           case "update":
             return <MessageAssistant key={msg.timestamp} message={msg.content} />;
           default:

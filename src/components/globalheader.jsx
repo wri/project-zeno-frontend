@@ -1,10 +1,29 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "@tanstack/react-router";
+import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
+import {
+  MenuContent,
+  MenuRadioItemGroup,
+  MenuRadioItem,
+  MenuRoot,
+  MenuTrigger,
+} from "./ui/menu";
 import { LclLogo } from ".";
 import WRILogo from "./WRIlogo";
 import BEFLogo from "./BEFLogo";
 import { ColorModeButton } from "./ui/color-mode";
+import { CollecticonChevronDownSmall } from "@devseed-ui/collecticons-react";
 
 function GlobalHeader() {
+  const location = useLocation();
+  const [selectedMenuItem, setSelectedMenuItem] = useState("alerting");
+  useEffect(() => {
+    const path = location.pathname.substring(1);
+    if (path) {
+      setSelectedMenuItem(path);
+    }
+  }, [location]);
+
   return (
     <Box
       bg="bg.panel"
@@ -29,6 +48,41 @@ function GlobalHeader() {
         >
           Pr0ject <br /> Zen0_
         </Text>
+        <MenuRoot size="sm">
+          <MenuTrigger>
+            <Button
+              variant="outline"
+              size="sm"
+              fontFamily="mono"
+              fontSize="xs"
+              textTransform="uppercase"
+              fontWeight="light"
+              textAlign="left"
+              lineHeight="1"
+            >
+              Mode:
+              <br />
+              {selectedMenuItem}
+              <CollecticonChevronDownSmall />
+            </Button>
+          </MenuTrigger>
+          <MenuContent
+            fontFamily="mono"
+            fontSize="xs"
+            textTransform="uppercase"
+            fontWeight="light"
+            textAlign="left"
+          >
+            <MenuRadioItemGroup value={selectedMenuItem} onValueChange={(e) => setSelectedMenuItem(e.value)}>
+              <MenuRadioItem value="alerting" navigate={() => setSelectedMenuItem("alerting")}>
+                <Link to="/alerting">Alerting</Link>
+              </MenuRadioItem>
+              <MenuRadioItem value="monitoring" navigate={() => setSelectedMenuItem("monitoring")}>
+                <Link to="/monitoring">Monitoring</Link>
+              </MenuRadioItem>
+            </MenuRadioItemGroup>
+          </MenuContent>
+        </MenuRoot>
       </Flex>
       <Flex gap={12} alignItems="center">
         <ColorModeButton />

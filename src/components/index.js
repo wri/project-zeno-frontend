@@ -5,7 +5,8 @@ import Map from "./Map";
 import MessageIn from "./MessageIn";
 import MessageTool from "./MessageOut/MessageTool";
 import MessageAssistant from "./MessageOut/MessageAssistant";
-import HumanInput from "./MessageOut/HumanInput";
+import LocationSelect from "./MessageOut/LocationSelect";
+import PersonaSelect from "./MessageOut/PersonaSelect";
 import MessageDefault from "./MessageOut/MessageDefault";
 import Loading from "./MessageOut/Loading";
 
@@ -18,6 +19,7 @@ export {
   MessageTool,
   MessageAssistant,
   MessageDefault,
-  HumanInput,
+  LocationSelect,
+  PersonaSelect,
   Loading
 };
