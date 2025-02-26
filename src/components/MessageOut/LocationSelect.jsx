@@ -8,13 +8,13 @@ import QueryButton from "./QueryButton";
 
 /**
  *
- * Human Input component
+ * Location Select component
  * Takes options and presents them to the user
  * Once an option is selected, create a POST to the server
  * with the selected option
  *
  */
-function HumanInput({ options }) {
+function LocationSelect({ options }) {
   const submit = useSetAtom(addPrompt);
   const confirmLocation = useSetAtom(confirmLocationAtom);
   const setHighlightedLocation = useSetAtom(highlightedLocationAtom);
@@ -48,8 +48,8 @@ function HumanInput({ options }) {
   );
 }
 
-HumanInput.propTypes = {
+LocationSelect.propTypes = {
   options: T.arrayOf(T.string || T.number).isRequired,
 };
 
-export default HumanInput;
+export default LocationSelect;

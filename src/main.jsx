@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import App from "./App";
+import ReactDOM from "react-dom/client";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
 import "@fontsource/ibm-plex-sans/index.css";
 import "@fontsource/ibm-plex-mono/index.css";
 
@@ -15,11 +15,26 @@ async function deferRender() {
   }
 }
 
-deferRender().then(() => {
-  createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-  );
+// Import the generated route tree
+import { routeTree } from "./routeTree.gen";
+
+// Create a new router instance
+const router = createRouter({
+  routeTree,
+  onLoad: () => {
+    router.navigate("/alerting");
+  }
 });
 
+// Render the app
+const rootElement = document.getElementById("root");
+if (!rootElement.innerHTML) {
+  deferRender().then(() => {
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(
+      <StrictMode>
+        <RouterProvider router={router} />
+      </StrictMode>,
+    );
+  });
+}
