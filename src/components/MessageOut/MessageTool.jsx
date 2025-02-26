@@ -202,6 +202,8 @@ function MessageTool({ message, toolName, artifact }) {
       render = <StacTool message={message} artifact={artifact} />;
       break;
     case "kba-timeseries-tool":
+      render = <InsightsSelect data={`{"insights": [{ "title": "Time Series", "data": ${message}, "type": "time_series"}]}`} />;
+      break;
     case "kba-insights-tool":
       render = <InsightsSelect data={message} artifact={artifact} />;
       break;

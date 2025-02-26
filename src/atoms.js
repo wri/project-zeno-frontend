@@ -50,7 +50,7 @@ export const addPrompt = atom(null, (get, set, prompt) => {
     set(chatHistoryAtom, (prev => [...prev, makeInputMessage(query)]));
   }
 
-  let queryUrl = appType === "alerting" ? "https://api.zeno.ds.io/stream/dist_alert" : "https://api.zeno.ds.io/stream/kba";
+  let queryUrl = appType === "alerting" ? "https://dev.api.zeno.ds.io/stream/dist_alert" : "https://dev.api.zeno.ds.io/stream/kba";
 
   if (import.meta.env.VITE_MOCK_QUERIES === "true") {
     queryUrl = "/stream";

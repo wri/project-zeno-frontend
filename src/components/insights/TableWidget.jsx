@@ -13,7 +13,7 @@ export default function TableWidget({ title, data, description }) {
       <Table.Root variant="line">
         <Table.Header>
           <Table.Row>
-            {data && data[0] && Object.keys(data[0]).map((key) => <Table.ColumnHeader key={key}>{key}</Table.ColumnHeader>)}
+            {data && data[0] && Object.keys(data[0]).map((key) => <Table.ColumnHeader key={key}><b>{key}</b></Table.ColumnHeader>)}
           </Table.Row>
         </Table.Header>
         <Table.Body>

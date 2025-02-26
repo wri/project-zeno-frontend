@@ -4,7 +4,7 @@ import { List } from "@chakra-ui/react";
 
 function InsightsSelect({ data }) {
   try {
-    let { insights } = JSON.parse(data);
+    let { insights } = JSON.parse(data.replace(/\bNaN\b/g, "null")); // replace NaN with null
     if (!insights) {
       return <div />;
     }
