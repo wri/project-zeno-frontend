@@ -1,6 +1,6 @@
 import { Button, HStack, Text, Box } from "@chakra-ui/react";
 import { Tooltip } from "../ui/tooltip";
-import { FaChartPie, FaChartLine, FaFont, FaTable } from "react-icons/fa";
+import { FaChartPie, FaChartLine, FaFont, FaTable, FaChartBar } from "react-icons/fa";
 import { sidePanelContentAtom } from "../../atoms";
 import { useAtom } from "jotai";
 import T from "prop-types";
@@ -9,9 +9,10 @@ const iconMap = {
   text: FaFont,
   chart: {
     pie: FaChartPie,
-    bar: FaChartLine,
+    bar: FaChartBar,
     line: FaChartLine,
   },
+  trend: FaChartLine,
   time_series: FaChartLine,
   table: FaTable,
 };
@@ -36,6 +37,7 @@ export default function WidgetButton({ data }) {
         variant="outline"
         justifyContent="start"
         onClick={() => {
+          setSidePanelContent(null);
           setSidePanelContent(data);
         }}
       >

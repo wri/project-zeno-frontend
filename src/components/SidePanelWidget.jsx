@@ -6,6 +6,9 @@ import { sidePanelContentAtom } from "../atoms";
 import TextWidget from "./insights/TextWidget";
 import TableWidget from "./insights/TableWidget";
 import { useAtom } from "jotai";
+import PieChartWidget from "./insights/PieChartWidget";
+import BarChartWidget from "./insights/BarChartWidget";
+import TimeSeriesWidget from "./insights/TimeSeriesWidget";
 
 export default function SidePanelWidget() {
   const [sidePanelContent] = useAtom(sidePanelContentAtom);
@@ -21,6 +24,22 @@ export default function SidePanelWidget() {
       break;
     case "table":
       WidgetComponent = TableWidget;
+      break;
+    case "trend":
+    case "time_series":
+      WidgetComponent = TimeSeriesWidget;
+      break;
+    case "chart":
+      switch (sidePanelContent.chart_type) {
+        case "pie":
+          WidgetComponent = PieChartWidget;
+          break;
+        case "bar":
+          WidgetComponent = BarChartWidget;
+          break;
+        default:
+          WidgetComponent = BarChartWidget;
+      }
       break;
     default:
       WidgetComponent = TextWidget;
