@@ -1,4 +1,4 @@
-import { Button, HStack, Text, Box } from "@chakra-ui/react";
+import { ButtonGroup, Button, IconButton, Text } from "@chakra-ui/react";
 import { Tooltip } from "../ui/tooltip";
 import { FaChartLine, FaFont, FaTable, FaChartBar } from "react-icons/fa";
 import { sidePanelContentAtom } from "../../atoms";
@@ -27,36 +27,34 @@ export default function WidgetButton({ data }) {
 
   return (
     <Tooltip content={title} showArrow>
-      <Button
+      <ButtonGroup
         w="full"
-        h="50px"
-        variant="outline"
-        justifyContent="start"
+        size="sm"
+        attached
+        _groupHover={{ colorPalette: "blue" }}
         onClick={() => {
           setSidePanelContent(data);
         }}
       >
-        <HStack spacing={3} w="full" align="center">
-          <Box display="flex" alignItems="center" justifyContent="center" minW={5}>
-            <IconComponent size={20} />
-          </Box>
+        <IconButton variant="solid" size="xl" bg="gray.500">
+          <IconComponent />
+        </IconButton>
+        <Button variant="outline" py="6" flex="1" justifyContent="start">
           <Text
-            maxW="200px"
             isTruncated
             noOfLines={1}
             whiteSpace="nowrap"
             overflow="hidden"
             textOverflow="ellipsis"
-            textAlign="left"
           >
             {title}
           </Text>
-        </HStack>
-      </Button>
+        </Button>
+      </ButtonGroup>
     </Tooltip>
   );
 }
 
 WidgetButton.propTypes = {
-  data: T.object.isRequired
+  data: T.object.isRequired,
 };

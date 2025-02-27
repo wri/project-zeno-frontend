@@ -13,11 +13,11 @@ function InsightsSelect({ data }) {
         <Text fontSize="xs" fontFamily="mono" mb="2" letterSpacing="0.5px" textTransform="uppercase">
           Zeno Generated Insights
         </Text>
-        <List.Root listStyle="none" pl="0" display="flex" flexDir="row" flexWrap="wrap" gap="2">
+        <List.Root listStyle="none" pl="0" display="flex" flexDir="column" gap="3">
           {
             insights && insights.map((insight) => {
               return (
-                <List.Item key={insight?.title} m="0" w="100%">
+                <List.Item key={insight?.title} m="0">
                   <WidgetButton data={insight} />
                 </List.Item>
               );

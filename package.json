@@ -13,7 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@chakra-ui/react": "^3.2.1",
+    "@chakra-ui/react": "^3.8.1",
     "@devseed-ui/collecticons-react": "^3.0.3",
     "@emotion/react": "^11.13.5",
     "@fontsource/ibm-plex-mono": "^5.1.1",
