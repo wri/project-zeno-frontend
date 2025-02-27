@@ -172,7 +172,39 @@ function Map() {
   }, [mapRef]);
 
   return (
-    <Box position="relative" height="100%">
+    <Box
+      position="relative"
+      height="100%"
+      css={{
+        _dark: {
+          "& .maplibregl-ctrl-scale": {
+            bgColor: "black/20",
+            color: "fg",
+            borderColor: "bg.muted",
+          },
+          "& .maplibregl-ctrl.maplibregl-ctrl-attrib": {
+            bgColor: "black/40",
+            "& a": { color: "fg" },
+          },
+          "& .maplibregl-ctrl-group": {
+            bg: "bg",
+            color: "fg",
+            boxShadow: "lg",
+            boxShadowColor: "white",
+            "& button": {
+              "&+button": { borderColor: "border.emphasized" },
+              "&:not(:disabled):hover": {
+                bgColor: "bg.emphasized",
+                color: "fg",
+              },
+              "& .maplibregl-ctrl-icon": {
+                filter: "invert(1)",
+              }
+            },
+          },
+        },
+      }}
+    >
       <MapGl
         ref={mapRef}
         style={{ width: "100%", height: "100%" }}
@@ -197,9 +229,7 @@ function Map() {
         </Source>
         <AttributionControl customAttribution="Background tiles: © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>" position="bottom-left" />
         <ScaleControl />
-        <AbsoluteCenter
-          fontSize="sm"
-        >
+        <AbsoluteCenter fontSize="sm">
           <HiOutlinePlusSmall />
         </AbsoluteCenter>
         <NavigationControl showCompass={false} position="bottom-left" />
