@@ -42,6 +42,7 @@ export default function WidgetButton({ data }) {
         <Button variant="outline" py="6" flex="1" justifyContent="start">
           <Text
             isTruncated
+            fontWeight="bold"
             noOfLines={1}
             whiteSpace="nowrap"
             overflow="hidden"
