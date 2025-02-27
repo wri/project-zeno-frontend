@@ -14,28 +14,26 @@ function Monitoring() {
         bg="gray.50"
       >
         <GlobalHeader />
-        <Grid templateColumns="28rem 1fr" p="6" gap="2">
+        <Grid templateColumns="1fr" p="6" gap="2">
           <Grid
             gap="4"
             templateRows="1fr max-content"
+            templateColumns="minmax(28rem, 1fr)"
             borderRadius="lg"
             shadow="md"
+            justifyItems="center"
             p="4"
             height="0"
             minH="100%"
             bgColor="white"
           >
-            <Box overflowY="auto" height="100%" mx="-4" px="4">
+            <Box overflowY="auto" height="100%" mx="-4" px="4" maxW="2xl" w="100%">
               <ChatOutput />
             </Box>
-            <Box>
+            <Box gridColumn="1" maxW="2xl" w="100%">
               <ChatInput />
             </Box>
-          </Grid>
-          <Grid templateRows="1fr" gap="2">
-            <Box borderRadius="lg" shadow="md" overflow="hidden">
-              <SidePanelWidget />
-            </Box>
+            <SidePanelWidget />
           </Grid>
         </Grid>
       </Grid>

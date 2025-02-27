@@ -1,6 +1,6 @@
 import T from "prop-types";
 import WidgetButton from "../insights/WidgetButton";
-import { List } from "@chakra-ui/react";
+import { Box, List, Text } from "@chakra-ui/react";
 
 function InsightsSelect({ data }) {
   try {
@@ -9,20 +9,22 @@ function InsightsSelect({ data }) {
       return <div />;
     }
     return (
-      <div>
-        <h1>Generated Insights</h1>
+      <Box>
+        <Text fontSize="xs" fontFamily="mono" mb="2" letterSpacing="0.5px" textTransform="uppercase">
+          Zeno Generated Insights
+        </Text>
         <List.Root listStyle="none" pl="0" display="flex" flexDir="row" flexWrap="wrap" gap="2">
           {
             insights && insights.map((insight) => {
               return (
-                <List.Item key={insight?.title} m="0">
+                <List.Item key={insight?.title} m="0" w="100%">
                   <WidgetButton data={insight} />
                 </List.Item>
               );
             })
           }
         </List.Root>
-      </div>
+      </Box>
     );
   } catch (e) {
     // eslint-disable-next-line no-console

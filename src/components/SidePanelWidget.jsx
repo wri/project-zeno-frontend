@@ -36,7 +36,7 @@ export default function SidePanelWidget() {
   }
 
   return (
-    <Box p="20" h="100%" borderRadius="md" border="1px solid" borderColor="blackAlpha.200">
+    <Box gridColumn="2" gridRow="1 / -1" p="12" h="100%" borderRadius="lg" border="1px solid" borderColor="border" bg="bg.subtle">
       <WidgetComponent {...sidePanelContent} />
     </Box>
   );
