@@ -101,12 +101,12 @@ function Monitoring() {
               </Collapsible.Trigger>
               <Collapsible.Content>
                 <Box overflow={reportContent.length > 1 ? "auto" : "visible"} maxH="100%">
-                  <List.Root>
-                    <List.Item>
-                      {reportContent.map((data) => (
-                        <ReportContentWidget key={data.title} {...data} />
-                      ))}
-                    </List.Item>
+                  <List.Root listStyle="none" p="0" mt="4" mb="0">
+                    {reportContent.map((data) => (
+                      <List.Item key={data.title}>
+                        <ReportContentWidget {...data} />
+                      </List.Item>
+                    ))}
                   </List.Root>
                 </Box>
               </Collapsible.Content>
