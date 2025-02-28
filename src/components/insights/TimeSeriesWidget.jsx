@@ -58,9 +58,9 @@ export default function TimeSeriesWidget(data) {
     // Cursor, Tooltip, and Dashed Line
     const tooltip = d3.select(tooltipRef.current)
       .style("position", "absolute")
-      .style("background", "white")
+      .style("background", "var(--chakra-colors-bg)")
       .style("padding", "8px")
-      .style("border", "1px solid #ccc")
+      .style("border", "1px solid var(--chakra-colors-border)")
       .style("border-radius", "4px")
       .style("display", "none");
 

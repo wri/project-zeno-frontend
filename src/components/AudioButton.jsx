@@ -40,12 +40,7 @@ const AudioPlayButton = ({ audioUrl }) => {
   return (
     <Button
       onClick={() => toggleAudio(audioUrl)}
-      style={{
-        background: "none",
-        border: "none",
-        cursor: "pointer",
-        color: "#007BFF",
-      }}
+      colorPalette="blue"
       title={isPlaying ? "Pause Sound" : "Play Sound"}
     >
       {isPlaying ? <MdStopCircle size={24} /> : <MdVolumeUp size={24} />}

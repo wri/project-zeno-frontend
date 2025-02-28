@@ -58,9 +58,9 @@ export default function ChartWidget({ data, title, description }) {
 
       const tooltip = d3.select(tooltipRef.current)
         .style("position", "absolute")
-        .style("background", "white")
+        .style("background", "var(--chakra-colors-bg)")
         .style("padding", "8px")
-        .style("border", "1px solid #ccc")
+        .style("border", "1px solid var(--chakra-colors-border)")
         .style("border-radius", "4px")
         .style("display", "none");
 
@@ -100,7 +100,7 @@ export default function ChartWidget({ data, title, description }) {
         .append("path")
         .attr("d", arc)
         .attr("fill", (d, i) => color(i))
-        .style("stroke", "#fff")
+        .style("stroke", "var(--chakra-colors-border-emphasized)")
         .style("stroke-width", "2px")
         .on("mouseover", (event, d) => {
           tooltip.style("visibility", "visible").text(`${d.data.name}: ${d.data.value}`);
@@ -117,13 +117,15 @@ export default function ChartWidget({ data, title, description }) {
   }, [data, chartType]);
 
   return (
-    <Box ref={containerRef} style={{ position: "relative" }}>
+    <Box ref={containerRef} style={{ position: "relative" }} padding="0">
       <Heading>{title}</Heading>
       <IconButton
         onClick={() => setChartType(chartType === "bar" ? "pie" : "bar")}
         aria-label="Toggle Chart Type"
-        m={2}
-        p={2}
+        mt={2}
+        px={2}
+        variant="surface"
+        size="xs"
       >
         Toggle {chartType === "bar" ? <FaChartPie /> : <FaChartBar />}
       </IconButton>
