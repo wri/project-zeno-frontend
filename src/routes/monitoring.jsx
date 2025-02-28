@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Box, Collapsible, Grid, Heading } from "@chakra-ui/react";
+import { Box, Collapsible, Grid, Heading, List } from "@chakra-ui/react";
 import Providers from "../Providers";
 import { ChatInput, ChatOutput, SidePanelWidget } from "../components";
 import GlobalHeader from "../components/globalheader";
+import { reportContentAtom } from "../atoms";
 import { CollecticonClipboard, CollecticonSpeechBalloon } from "@devseed-ui/collecticons-react";
+import { useAtom } from "jotai";
+import ReportContentWidget from "../components/ReportContentWidget";
 
 function Monitoring() {
   const [isReportOpen, setIsReportOpen] = useState(false);
-  const reportContent = true;
+  const [reportContent] = useAtom(reportContentAtom);
 
   return (
     <Providers>
@@ -64,48 +67,51 @@ function Monitoring() {
               <SidePanelWidget />}
           </Grid>
           {reportContent &&
-          <Collapsible.Root
-            minH="100%"
-            bgColor="white"
-            p="4"
-            gridColumn="2"
-            borderRadius="lg"
-            shadow="md"
-            isOpen={open}
-            onOpenChange={() => setIsReportOpen((prev) => !prev)}
-            display="flex"
-            flexDir="column"
-            gap="4"
-          >
-            <Collapsible.Trigger cursor="pointer">
-              <Box
-                m="-4"
-                display="flex"
-                gap="2"
-                justifyContent="start"
-                alignItems="center"
-                px="4"
-                py="3"
-                border="1"
-                borderBottomWidth="1px"
-              >
-                <CollecticonClipboard size="24" />
-                {isReportOpen && (
-                  <Heading size="sm" m="0">
-                    Report
-                  </Heading>
-                )}
-              </Box>
-            </Collapsible.Trigger>
-            <Collapsible.Content>
-              <Box>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industrys standard dummy text
-                ever since the 1500s, when an unknown printer took a galley of
-                type and scrambled it to make a type specimen book.
-              </Box>
-            </Collapsible.Content>
-          </Collapsible.Root>}
+            <Collapsible.Root
+              minH="100%"
+              bgColor="white"
+              p="4"
+              gridColumn="2"
+              borderRadius="lg"
+              shadow="md"
+              isOpen={isReportOpen}
+              onOpenChange={() => setIsReportOpen((prev) => !prev)}
+              display="flex"
+              flexDir="column"
+              gap="4"
+            >
+              <Collapsible.Trigger cursor="pointer">
+                <Box
+                  m="-4"
+                  display="flex"
+                  gap="2"
+                  justifyContent="start"
+                  alignItems="center"
+                  px="4"
+                  py="3"
+                  border="1"
+                  borderBottomWidth="1px"
+                >
+                  <CollecticonClipboard size="24" />
+                  {isReportOpen && (
+                    <Heading size="sm" m="0">
+                      Report
+                    </Heading>
+                  )}
+                </Box>
+              </Collapsible.Trigger>
+              <Collapsible.Content>
+                <Box overflow={reportContent.length > 1 ? "auto" : "visible"} maxH="100%">
+                  <List.Root>
+                    <List.Item>
+                      {reportContent.map((data) => (
+                        <ReportContentWidget key={data.title} {...data} />
+                      ))}
+                    </List.Item>
+                  </List.Root>
+                </Box>
+              </Collapsible.Content>
+            </Collapsible.Root>}
         </Grid>
       </Grid>
     </Providers>

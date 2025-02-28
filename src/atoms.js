@@ -18,6 +18,16 @@ export const mapBoundsAtom = atom([-180, -90, 180, 90]);
 export const showAudioButtonsAtom = atom(false);
 export const currentUserPersonaAtom = atom("");
 export const sidePanelContentAtom = atom(null);
+export const reportContentAtom = atom([]);
+
+export const addToReportAtom = atom(
+  (get) => get(reportContentAtom), (get, set, data) => {
+    set(reportContentAtom, (prev) => [...prev, data]);
+  });
+
+export const deleteFromReportAtom = atom(null, (get, set, title) => {
+  set(reportContentAtom, (prev) => prev.filter((item) => item.title !== title));
+});
 
 const currentLocationAtom = atomWithLocation();
 export const currentAppTypeAtom = atom((get) => {
