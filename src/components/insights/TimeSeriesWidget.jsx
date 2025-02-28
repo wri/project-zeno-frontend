@@ -5,6 +5,7 @@ import T from "prop-types";
 
 export default function TimeSeriesWidget(data) {
   const chartRef = useRef();
+  const containerRef = useRef();
   const tooltipRef = useRef();
   const colors = d3.schemeCategory10; // Use D3's color scheme
 
@@ -83,9 +84,10 @@ export default function TimeSeriesWidget(data) {
             .attr("x1", x(year))
             .attr("x2", x(year));
 
-          tooltip.style("display", "block")
-            .style("left", `${event.pageX + 10}px`)
-            .style("top", `${event.pageY + 10}px`)
+          const containerBounds = containerRef.current.getBoundingClientRect();
+          tooltip.style("display", "block");
+          tooltip.style("left", `${event.clientX - containerBounds.left + 10}px`)
+            .style("top", `${event.clientY - containerBounds.top + 10}px`)
             .html(
               `<strong>Year: ${year}</strong><br>` +
               keys.map(key => `${key}: ${yearData[key] || 0}`).join("<br>")
@@ -99,7 +101,7 @@ export default function TimeSeriesWidget(data) {
   }, [data, colors]);
 
   return (
-    <Box>
+    <Box ref={containerRef} position="relative">
       <Text fontSize="lg" fontWeight="bold">{data.title}</Text>
       <svg ref={chartRef} />
       <div ref={tooltipRef} />

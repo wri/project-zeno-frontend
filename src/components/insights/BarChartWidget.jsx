@@ -56,6 +56,14 @@ export default function ChartWidget({ data, title, description }) {
         .selectAll("text")
         .style("font-size", "12px");
 
+      const tooltip = d3.select(tooltipRef.current)
+        .style("position", "absolute")
+        .style("background", "white")
+        .style("padding", "8px")
+        .style("border", "1px solid #ccc")
+        .style("border-radius", "4px")
+        .style("display", "none");
+
       svg.append("g")
         .selectAll("rect")
         .data(data.values.map((d, i) => ({ value: d, category: data.categories[i] })))
@@ -69,7 +77,10 @@ export default function ChartWidget({ data, title, description }) {
           tooltip.style("visibility", "visible").text(`${d.category}, ${d.value}`);
         })
         .on("mousemove", event => {
-          tooltip.style("top", `${event.clientY + 10}px`).style("left", `${event.clientX + 10}px`);
+          const containerBounds = containerRef.current.getBoundingClientRect();
+          tooltip.style("display", "block")
+            .style("left", `${event.clientX - containerBounds.left + 10}px`)
+            .style("top", `${event.clientY - containerBounds.top + 10}px`);
         })
         .on("mouseout", () => {
           tooltip.style("visibility", "hidden");
@@ -95,7 +106,9 @@ export default function ChartWidget({ data, title, description }) {
           tooltip.style("visibility", "visible").text(`${d.data.name}: ${d.data.value}`);
         })
         .on("mousemove", event => {
-          tooltip.style("top", `${event.clientY + 10}px`).style("left", `${event.clientX + 10}px`);
+          const containerBounds = containerRef.current.getBoundingClientRect();
+          tooltip.style("left", `${event.clientX - containerBounds.left + 10}px`)
+            .style("top", `${event.clientY - containerBounds.top + 10}px`);
         })
         .on("mouseout", () => {
           tooltip.style("visibility", "hidden");
@@ -104,7 +117,7 @@ export default function ChartWidget({ data, title, description }) {
   }, [data, chartType]);
 
   return (
-    <Box>
+    <Box ref={containerRef} style={{ position: "relative" }}>
       <Heading>{title}</Heading>
       <IconButton
         onClick={() => setChartType(chartType === "bar" ? "pie" : "bar")}
@@ -114,22 +127,8 @@ export default function ChartWidget({ data, title, description }) {
       >
         Toggle {chartType === "bar" ? <FaChartPie /> : <FaChartBar />}
       </IconButton>
-      <div ref={containerRef}>
-        <svg ref={chartRef} width={500} height={500} />
-        <div
-          ref={tooltipRef}
-          style={{
-            position: "absolute",
-            background: "rgba(0, 0, 0, 0.7)",
-            color: "white",
-            padding: "5px",
-            borderRadius: "4px",
-            pointerEvents: "none",
-            visibility: "hidden",
-            zIndex: 1000,
-          }}
-        />
-      </div>
+      <svg ref={chartRef} width={500} height={500} />
+      <div ref={tooltipRef} />
       <Text>{description}</Text>
     </Box>
   );
