@@ -223,7 +223,8 @@ MessageTool.propTypes = {
     "dist-alerts-tool",
     "stac-tool",
     "retrieve_blog_posts",
-    "kba-insights-tool"
+    "kba-insights-tool",
+    "kba-timeseries-tool"
   ]),
   artifact: T.object,
 };

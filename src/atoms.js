@@ -40,6 +40,11 @@ function makeInputMessage(query) {
   };
 }
 
+const appURLs = {
+  "alerting": "https://dev.api.zeno.ds.io/stream/dist_alert",
+  "monitoring": "https://dev.api.zeno.ds.io/stream/kba"
+};
+
 export const addPrompt = atom(null, (get, set, prompt) => {
   const appType = get(currentAppTypeAtom);
   const userPersona = get(currentUserPersonaAtom);
@@ -50,7 +55,7 @@ export const addPrompt = atom(null, (get, set, prompt) => {
     set(chatHistoryAtom, (prev => [...prev, makeInputMessage(query)]));
   }
 
-  let queryUrl = appType === "alerting" ? "https://dev.api.zeno.ds.io/stream/dist_alert" : "https://dev.api.zeno.ds.io/stream/kba";
+  let queryUrl = appURLs[appType];
 
   if (import.meta.env.VITE_MOCK_QUERIES === "true") {
     queryUrl = "/stream";

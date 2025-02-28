@@ -1,10 +1,12 @@
 import T from "prop-types";
 import WidgetButton from "../insights/WidgetButton";
 import { Box, List, Text } from "@chakra-ui/react";
+import JSON5 from "json5";
+
 
 function InsightsSelect({ data }) {
   try {
-    let { insights } = JSON.parse(data.replace(/\bNaN\b/g, "null")); // replace NaN with null
+    let { insights } = JSON5.parse(data);
     if (!insights) {
       return <div />;
     }

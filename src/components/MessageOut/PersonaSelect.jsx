@@ -1,6 +1,7 @@
 import { List } from "@chakra-ui/react";
 import { useSetAtom } from "jotai";
-import { addPrompt, currentUserPersonaAtom } from "../../atoms";
+import { currentUserPersonaAtom } from "../../atoms";
+import { useState } from "react";
 import MessageOutWrapper from "./wrapper";
 import QueryButton from "./QueryButton";
 
@@ -40,20 +41,23 @@ export const personas = [
  *
  */
 function PersonaSelect() {
-  const submit = useSetAtom(addPrompt);
   const setUserPersona = useSetAtom(currentUserPersonaAtom);
+  const [selectedTitle, setSelectedTitle] = useState(null);
   return (
 
     <MessageOutWrapper>
-      Give me a brief description of your role:
+      Start by selecting a role that best describes you:
       <List.Root listStyle="none" pl="0" display="flex" flexDir="row" flexWrap="wrap" gap="2">
         {personas.map(({ title, text }) => {
           return (
             <List.Item key={title} m="0">
               <QueryButton
+                fontWeight={selectedTitle === title ? "bold" : "normal"}
+                background={selectedTitle === title ? "blue.200" : "white"}
+                selected={selectedTitle === title}
                 clickHandler={() => {
+                  setSelectedTitle(title);
                   setUserPersona(text);
-                  submit({ query: text, userPersona: text, queryType: "query" });
                 }}
               >
                 {title}
