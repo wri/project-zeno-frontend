@@ -8,7 +8,7 @@ function MessageOutWrapper({ children }) {
       <Box shadow="sm" px="11px" py="10px" borderRadius="full">
         <LclLogo />
       </Box>
-      <Box mb="4" p="2" bgColor="gray.100" borderRadius="md" shadow="md" flexGrow="1">
+      <Box mb="4" p="2" bgColor="gray.100" borderRadius="md" shadow="md" flexGrow="1" overflow="hidden">
         {children}
       </Box>
     </Box>

@@ -9,6 +9,7 @@ import LocationSelect from "./MessageOut/LocationSelect";
 import PersonaSelect from "./MessageOut/PersonaSelect";
 import MessageDefault from "./MessageOut/MessageDefault";
 import Loading from "./MessageOut/Loading";
+import SidePanelWidget from "./SidePanelWidget";
 
 export {
   ChatInput,
@@ -21,5 +22,6 @@ export {
   MessageDefault,
   LocationSelect,
   PersonaSelect,
-  Loading
+  Loading,
+  SidePanelWidget
 };
