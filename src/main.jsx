@@ -1,4 +1,5 @@
 import { StrictMode } from "react";
+import Providers from "./Providers";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter, createHashHistory } from "@tanstack/react-router";
 import "@fontsource/ibm-plex-sans/index.css";
@@ -37,7 +38,9 @@ if (!rootElement.innerHTML) {
     const root = ReactDOM.createRoot(rootElement);
     root.render(
       <StrictMode>
-        <RouterProvider router={router} />
+        <Providers>
+          <RouterProvider router={router} />
+        </Providers>
       </StrictMode>,
     );
   });

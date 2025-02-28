@@ -41,7 +41,7 @@ export default function SidePanelWidget() {
   const isInReport = reportContent.some((item) => item.title === sidePanelContent.title);
 
   return (
-    <Box position="relative" gridColumn="2" gridRow="2 / -1" my="4" p="12" h="100%" borderRadius="lg" border="1px solid" borderColor="border" bg="bg.subtle" justifySelf="stretch" overflowY="scroll">
+    <Box position="relative" gridColumn="2" gridRow="2 / -1" my="4" mb="1" p="12" borderRadius="lg" border="1px solid" borderColor="border" bg="bg.subtle" justifySelf="stretch" overflowY="scroll">
       <ButtonGroup
         position="absolute"
         top="10px"

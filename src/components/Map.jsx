@@ -13,6 +13,7 @@ import { useAtomValue } from "jotai";
 import LayerSwitcher from "./LayerSwitcher";
 import { AbsoluteCenter, Code, Box } from "@chakra-ui/react";
 import { HiOutlinePlusSmall } from "react-icons/hi2";
+import { useColorModeValue } from "./ui/color-mode";
 
 const addTMSLayer = (map, layerId, url, visibility = true) => {
   // Find the first GeoJSON layer ID
@@ -171,7 +172,39 @@ function Map() {
   }, [mapRef]);
 
   return (
-    <Box position="relative" height="100%">
+    <Box
+      position="relative"
+      height="100%"
+      css={{
+        _dark: {
+          "& .maplibregl-ctrl-scale": {
+            bgColor: "black/20",
+            color: "fg",
+            borderColor: "bg.muted",
+          },
+          "& .maplibregl-ctrl.maplibregl-ctrl-attrib": {
+            bgColor: "black/40",
+            "& a": { color: "fg" },
+          },
+          "& .maplibregl-ctrl-group": {
+            bg: "bg",
+            color: "fg",
+            boxShadow: "lg",
+            boxShadowColor: "white",
+            "& button": {
+              "&+button": { borderColor: "border.emphasized" },
+              "&:not(:disabled):hover": {
+                bgColor: "bg.emphasized",
+                color: "fg",
+              },
+              "& .maplibregl-ctrl-icon": {
+                filter: "invert(1)",
+              }
+            },
+          },
+        },
+      }}
+    >
       <MapGl
         ref={mapRef}
         style={{ width: "100%", height: "100%" }}
@@ -186,16 +219,17 @@ function Map() {
         <Source
           id="background"
           type="raster"
-          tiles={["https://api.mapbox.com/styles/v1/devseed/cm4sj2dh6005b01s80c8t623r/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGV2c2VlZCIsImEiOiJnUi1mbkVvIn0.018aLhX0Mb0tdtaT2QNe2Q"]}
+          tiles={useColorModeValue(
+            ["https://api.mapbox.com/styles/v1/devseed/cm4sj2dh6005b01s80c8t623r/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGV2c2VlZCIsImEiOiJnUi1mbkVvIn0.018aLhX0Mb0tdtaT2QNe2Q"],
+            ["https://api.mapbox.com/styles/v1/devseed/clz35cbi302l701qo2snhdx9x/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGV2c2VlZCIsImEiOiJnUi1mbkVvIn0.018aLhX0Mb0tdtaT2QNe2Q"]
+          )}
           tileSize={256}
         >
           <Layer id="background-tiles" type="raster" />
         </Source>
         <AttributionControl customAttribution="Background tiles: © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>" position="bottom-left" />
         <ScaleControl />
-        <AbsoluteCenter
-          fontSize="sm"
-        >
+        <AbsoluteCenter fontSize="sm">
           <HiOutlinePlusSmall />
         </AbsoluteCenter>
         <NavigationControl showCompass={false} position="bottom-left" />
@@ -206,7 +240,7 @@ function Map() {
           p="2"
           borderRadius={8}
           fontSize="10px"
-          bg="whiteAlpha.600"
+          bg={useColorModeValue("whiteAlpha.600", "blackAlpha.600")}
           boxShadow="md"
         >
           lat, lon: {mapCenter[1].toFixed(3)}, {mapCenter[0].toFixed(3)}

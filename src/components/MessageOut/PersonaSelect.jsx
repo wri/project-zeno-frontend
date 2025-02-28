@@ -53,7 +53,7 @@ function PersonaSelect() {
             <List.Item key={title} m="0">
               <QueryButton
                 fontWeight={selectedTitle === title ? "bold" : "normal"}
-                background={selectedTitle === title ? "blue.200" : "white"}
+                background={selectedTitle === title ? "bg.info" : "initial"}
                 selected={selectedTitle === title}
                 clickHandler={() => {
                   setSelectedTitle(title);

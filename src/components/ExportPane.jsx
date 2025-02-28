@@ -30,14 +30,11 @@ export default function ExportPane() {
     <Button
       onClick={downloadDataAsCSV}
       _disabled={data?.length === 0}
-      style={{
-        padding: "5px 10px",
-        background: "white",
-        color: "steelblue",
-        border: "none",
-        borderRadius: "4px",
-        cursor: "pointer",
-      }}
+      p={4}
+      size="sm"
+      colorPalette="blue"
+      variant="surface"
+      cursor="pointer"
     >
     <CollecticonDownload2 />
     Download CSV Data

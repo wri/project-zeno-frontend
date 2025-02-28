@@ -3,7 +3,7 @@ import { Box } from "@chakra-ui/react";
 
 function MessageIn({ message }) {
   return (
-    <Box mb="4" p="2" borderRadius="md" border="1px solid" borderColor="blackAlpha.200">
+    <Box mb="4" p="2" borderRadius="md" border="1px solid" borderColor="border.muted">
       {message}
     </Box>
   );

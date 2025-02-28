@@ -12,6 +12,7 @@ import {
   CollecticonEyeDisabled,
   CollecticonIsoStack,
 } from "@devseed-ui/collecticons-react";
+import { useColorModeValue } from "./ui/color-mode";
 
 function LayerSwitcher() {
   const [mapLayers] = useAtom(mapLayersAtom);
@@ -29,7 +30,7 @@ function LayerSwitcher() {
       position="absolute"
       top={4}
       left={4}
-      bg="white"
+      bg={useColorModeValue("bg.panel", "bg.emphasized")}
       p="2"
       py="0"
       borderRadius="md"
@@ -49,7 +50,7 @@ function LayerSwitcher() {
           css={{
             "&[data-part=\"item-trigger\"][data-state=\"open\"]": {
               borderBottom: "1px solid",
-              borderColor: "gray.200"
+              borderColor: useColorModeValue("bg.emphasized", "bg.panel"),
             }
           }}
         >
@@ -62,7 +63,7 @@ function LayerSwitcher() {
         </AccordionItemTrigger>
         <AccordionItemContent>
         {mapLayers.length === 0 && (
-          <Text fontSize="xs" color="gray.500">
+          <Text fontSize="xs" color="fg.muted">
             No layers available
           </Text>
           )}
