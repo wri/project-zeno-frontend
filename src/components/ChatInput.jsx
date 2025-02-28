@@ -38,7 +38,7 @@ function ChatInput() {
       <Button
         position="absolute"
         right="2"
-        bottom="0"
+        bottom="0.5"
         transform="translateY(-50%)"
         padding="0"
         {...(inputValue?.trim().length == 0 && { disabled: true })}

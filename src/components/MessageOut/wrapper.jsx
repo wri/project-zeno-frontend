@@ -4,13 +4,11 @@ import { LclLogo } from "..";
 
 function MessageOutWrapper({ children }) {
   return (
-    <Box display="flex" gap="2" alignItems="flex-start">
-      <Box bg="bg.subtle" px="11px" py="10px" borderRadius="full">
-        <LclLogo width="10" avatarOnly fill="var(--chakra-colors-bg-inverted)" />
+    <Box mb="4" p="2" bgColor="bg.muted" borderRadius="md" borderWidth={1} borderColor="border" flexGrow="1" overflow="hidden">
+      <Box float="left" mr="1" mt="0.5">
+        <LclLogo width="12" avatarOnly fill="var(--chakra-colors-bg-inverted)" float="left" />
       </Box>
-      <Box mb="4" p="2" bgColor="bg.subtle" borderRadius="md" flexGrow="1" shadow="md" flexGrow="1" overflow="hidden">
-        {children}
-      </Box>
+      {children}
     </Box>
   );
 }

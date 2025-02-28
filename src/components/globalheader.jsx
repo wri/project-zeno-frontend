@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "@tanstack/react-router";
-import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import {
   MenuContent,
   MenuRadioItemGroup,
@@ -30,9 +30,8 @@ function GlobalHeader() {
 
   return (
     <Box
-      bg="bg.panel"
-      shadow="sm"
-      px="8"
+      px="6"
+      pr="8"
       py="4"
       display="flex"
       justifyContent="space-between"
