@@ -13,16 +13,20 @@ import WRILogo from "./WRIlogo";
 import BEFLogo from "./BEFLogo";
 import { ColorModeButton } from "./ui/color-mode";
 import { CollecticonChevronDownSmall } from "@devseed-ui/collecticons-react";
+import { currentAppTypeAtom } from "../atoms";
+import { useAtom } from "jotai";
 
 function GlobalHeader() {
   const location = useLocation();
   const [selectedMenuItem, setSelectedMenuItem] = useState("alerting");
+  const [, setSelectedAppType] = useAtom(currentAppTypeAtom);
   useEffect(() => {
-    const path = location.pathname.substring(1);
+    const path = location.pathname.split("/").reverse()[0];
     if (path) {
       setSelectedMenuItem(path);
+      setSelectedAppType(path);
     }
-  }, [location]);
+  }, [location, setSelectedAppType]);
 
   return (
     <Box
@@ -74,12 +78,16 @@ function GlobalHeader() {
             textAlign="left"
           >
             <MenuRadioItemGroup value={selectedMenuItem} onValueChange={(e) => setSelectedMenuItem(e.value)}>
-              <MenuRadioItem value="alerting" navigate={() => setSelectedMenuItem("alerting")}>
-                <Link to="/alerting">Alerting</Link>
-              </MenuRadioItem>
-              <MenuRadioItem value="monitoring" navigate={() => setSelectedMenuItem("monitoring")}>
-                <Link to="/monitoring">Monitoring</Link>
-              </MenuRadioItem>
+              <Link to="/alerting">
+                <MenuRadioItem value="alerting" navigate={() => setSelectedMenuItem("alerting")}>
+                  Alerting
+                </MenuRadioItem>
+              </Link>
+              <Link to="/monitoring">
+                <MenuRadioItem value="monitoring" navigate={() => setSelectedMenuItem("monitoring")}>
+                  Monitoring
+                </MenuRadioItem>
+              </Link>
             </MenuRadioItemGroup>
           </MenuContent>
         </MenuRoot>

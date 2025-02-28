@@ -32,13 +32,13 @@ function LocationSelect({ options }) {
             <List.Item key={option} m="0">
               <QueryButton
                 clickHandler={() => {
-                  submit({ query: `${gid}`, queryType: "human_input" });
+                  submit({ query: `${option.join(" ")}`, queryType: "human_input" });
                   confirmLocation(gid);
                 }}
                 onMouseEnter={() => setHighlightedLocation(gid)}
                 onMouseLeave={() => setHighlightedLocation(null)}
               >
-                {i+1}. {name}
+                {i + 1}. {name}
               </QueryButton>
             </List.Item>
           );
