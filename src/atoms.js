@@ -1,4 +1,3 @@
-import { atomWithLocation } from "jotai-location";
 import bbox from "@turf/bbox";
 import { atom } from "jotai";
 import { v4 as uuidv4 } from "uuid";
@@ -29,18 +28,7 @@ export const deleteFromReportAtom = atom(null, (get, set, title) => {
   set(reportContentAtom, (prev) => prev.filter((item) => item.title !== title));
 });
 
-const currentLocationAtom = atomWithLocation();
-export const currentAppTypeAtom = atom((get) => {
-  const location = get(currentLocationAtom);
-  switch (location.pathname.split("/").reverse()[0]) {
-    case "alerting":
-      return "alerting";
-    case "monitoring":
-      return "monitoring";
-    default:
-      return "monitoring";
-  }
-});
+export const currentAppTypeAtom = atom("alerting");
 
 function makeInputMessage(query) {
   return {
