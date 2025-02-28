@@ -17,7 +17,7 @@ function GlobalHeader() {
   const location = useLocation();
   const [selectedMenuItem, setSelectedMenuItem] = useState("alerting");
   useEffect(() => {
-    const path = location.pathname.substring(1);
+    const path = location.pathname.split("/").reverse()[0];
     if (path) {
       setSelectedMenuItem(path);
     }

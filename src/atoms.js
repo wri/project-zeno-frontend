@@ -32,10 +32,10 @@ export const deleteFromReportAtom = atom(null, (get, set, title) => {
 const currentLocationAtom = atomWithLocation();
 export const currentAppTypeAtom = atom((get) => {
   const location = get(currentLocationAtom);
-  switch (location.pathname) {
-    case "/alerting":
+  switch (location.pathname.split("/").reverse()[0]) {
+    case "alerting":
       return "alerting";
-    case "/monitoring":
+    case "monitoring":
       return "monitoring";
     default:
       return "monitoring";

@@ -5,7 +5,6 @@ import "@fontsource/ibm-plex-sans/index.css";
 import "@fontsource/ibm-plex-mono/index.css";
 
 const isMock = import.meta.env.VITE_MOCK_QUERIES === "true";
-const basePath = import.meta.env.BASE_URL || "/";
 
 async function deferRender() {
   if (isMock) {
@@ -22,7 +21,7 @@ import { routeTree } from "./routeTree.gen";
 // Create a new router instance
 const router = createRouter({
   routeTree,
-  basepath: basePath,
+  basepath: "/project-zeno-frontend",
   onLoad: () => {
     router.navigate("/alerting");
   }
