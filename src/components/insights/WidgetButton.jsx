@@ -9,7 +9,7 @@ const iconMap = {
   text: FaFont,
   chart: FaChartBar,
   trend: FaChartLine,
-  time_series: FaChartLine,
+  timeseries: FaChartLine,
   table: FaTable,
 };
 

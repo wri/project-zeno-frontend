@@ -25,7 +25,7 @@ export default function SidePanelWidget() {
       WidgetComponent = TableWidget;
       break;
     case "trend":
-    case "time_series":
+    case "timeseries":
       WidgetComponent = TimeSeriesWidget;
       break;
     case "chart":

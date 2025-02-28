@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import T from "prop-types";
 
-export default function TimeSeriesWidget({ data }) {
+export default function TimeSeriesWidget(data) {
   const chartRef = useRef();
   const tooltipRef = useRef();
   const colors = d3.schemeCategory10; // Use D3's color scheme
