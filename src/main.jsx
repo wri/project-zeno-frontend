@@ -1,10 +1,12 @@
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { RouterProvider, createRouter, createHashHistory } from "@tanstack/react-router";
 import "@fontsource/ibm-plex-sans/index.css";
 import "@fontsource/ibm-plex-mono/index.css";
 
 const isMock = import.meta.env.VITE_MOCK_QUERIES === "true";
+
+const history = createHashHistory();
 
 async function deferRender() {
   if (isMock) {
@@ -21,9 +23,10 @@ import { routeTree } from "./routeTree.gen";
 // Create a new router instance
 const router = createRouter({
   routeTree,
-  basepath: "/project-zeno-frontend",
+  history,
+  basepath: "/",
   onLoad: () => {
-    router.navigate("/alerting");
+    router.navigate("alerting");
   }
 });
 
