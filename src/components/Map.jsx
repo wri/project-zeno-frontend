@@ -241,7 +241,7 @@ function Map() {
           borderRadius={8}
           fontSize="10px"
           bg={useColorModeValue("whiteAlpha.600", "blackAlpha.600")}
-          boxShadow="md"
+          boxShadow="sm"
         >
           lat, lon: {mapCenter[1].toFixed(3)}, {mapCenter[0].toFixed(3)}
         </Code>

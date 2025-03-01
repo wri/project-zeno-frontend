@@ -49,13 +49,14 @@ function Alerting() {
       bg="bg"
     >
       <GlobalHeader />
-      <Grid templateColumns="28rem 1fr" p="6" gap="2">
+      <Grid templateColumns="28rem 1fr" p="4" pt="0" gap="2">
         <Grid
           gap="4"
           templateRows="1fr max-content"
           borderRadius="lg"
           shadow="md"
           p="4"
+          pb="2"
           height="0"
           minH="100%"
           bg={useColorModeValue("bg.panel", "bg.emphasized")}

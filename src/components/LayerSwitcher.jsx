@@ -36,7 +36,7 @@ function LayerSwitcher() {
       borderRadius="md"
       plain="true"
       collapsible
-      boxShadow="md"
+      boxShadow="sm"
       zIndex="1000"
       maxW="16rem"
     >

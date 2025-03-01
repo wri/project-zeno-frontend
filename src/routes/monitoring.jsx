@@ -23,7 +23,7 @@ function Monitoring() {
         bg="bg"
       >
         <GlobalHeader />
-        <Grid templateColumns="1fr" templateRows="1fr" p="6" gap="2">
+        <Grid templateColumns="1fr" templateRows="1fr" p="4" pt="0" gap="2">
           <Grid
             gap="4"
             templateRows="max-content 1fr max-content"
@@ -31,8 +31,7 @@ function Monitoring() {
             borderRadius="lg"
             shadow="md"
             justifyItems="center"
-            px="4"
-            py="6"
+            p="4"
             pb="2"
             height="0"
             minH="100%"
@@ -46,7 +45,7 @@ function Monitoring() {
               alignItems="center"
               h="fit-content"
               px="4"
-              py="2"
+              py="3"
               borderBottomWidth="1px"
               borderColor="border.emphasized"
               justifySelf="stretch"
@@ -102,12 +101,12 @@ function Monitoring() {
               </Collapsible.Trigger>
               <Collapsible.Content>
                 <Box overflow={reportContent.length > 1 ? "auto" : "visible"} maxH="100%">
-                  <List.Root>
-                    <List.Item>
-                      {reportContent.map((data) => (
-                        <ReportContentWidget key={data.title} {...data} />
-                      ))}
-                    </List.Item>
+                  <List.Root listStyle="none" p="0" mt="4" mb="0">
+                    {reportContent.map((data) => (
+                      <List.Item key={data.title}>
+                        <ReportContentWidget {...data} />
+                      </List.Item>
+                    ))}
                   </List.Root>
                 </Box>
               </Collapsible.Content>

@@ -149,8 +149,8 @@ const BarChart = () => {
         ref={tooltipRef}
         style={{
           position: "absolute",
-          background: "rgba(0, 0, 0, 0.7)",
-          color: "white",
+          background: "var(--chakra-colors-bg)",
+          color: "var(--chakra-colors-fg)",
           padding: "5px",
           borderRadius: "4px",
           pointerEvents: "none", // Ensure it doesn't block mouse events

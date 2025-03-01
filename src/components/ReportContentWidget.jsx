@@ -1,14 +1,14 @@
 // Report Widget for Monitoring App
 // Renders different Widgets Based on selected insights
 
-import { Box, IconButton } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import TextWidget from "./insights/TextWidget";
 import TableWidget from "./insights/TableWidget";
 import ChartWidget from "./insights/BarChartWidget";
 import TimeSeriesWidget from "./insights/TimeSeriesWidget";
 import { deleteFromReportAtom } from "../atoms";
 import { useAtom } from "jotai";
-import { TiDelete } from "react-icons/ti";
+import { CollecticonTrashBin } from "@devseed-ui/collecticons-react";
 
 export default function ReportContentWidget(data) {
   const [, deleteFromReport] = useAtom(deleteFromReportAtom);
@@ -37,17 +37,32 @@ export default function ReportContentWidget(data) {
   }
 
   return (
-    <Box position="relative" gridColumn="2" gridRow="2 / -1" my="4" p="12" h="100%" borderRadius="lg" border="1px solid" borderColor="border" bg="bg.subtle" justifySelf="stretch" overflowY="scroll">
-      <IconButton
+    <Box
+      position="relative"
+      gridColumn="2"
+      gridRow="2 / -1"
+      mb="4"
+      p="12"
+      h="100%"
+      borderRadius="lg"
+      bg="bg"
+      border="1px solid"
+      borderColor="border"
+      justifySelf="stretch"
+      overflowY="scroll"
+    >
+      <Button
         position="absolute"
         top="10px"
         right="10px"
         aria-label="Remove from report"
-        size="sm"
+        size="xs"
+        variant="ghost"
         onClick={() => deleteFromReport(data.title)}
       >
-        <TiDelete />
-      </IconButton>
+        <CollecticonTrashBin />
+        Remove from report
+      </Button>
       <WidgetComponent {...data} />
     </Box>
   );

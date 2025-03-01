@@ -46,15 +46,16 @@ export default function SidePanelWidget() {
         position="absolute"
         top="10px"
         right="10px"
+        size="xs"
       >
         {
           isInReport
-            ? <Button size="sm" colorScheme="red" onClick={() => deleteFromReport(sidePanelContent.title)}>Remove From Report</Button>
-            : <Button size="sm" onClick={() => addToReport(sidePanelContent)}>Add To Report</Button>
+            ? <Button colorPalette="red" textTransform="uppercase" variant="surface" onClick={() => deleteFromReport(sidePanelContent.title)}>Remove From Report</Button>
+            : <Button colorPalette="blue" textTransform="uppercase" variant="surface" onClick={() => addToReport(sidePanelContent)}>Add To Report</Button>
         }
         <IconButton
           aria-label="Close panel"
-          size="sm"
+          variant="ghost"
           onClick={() => setSidePanelContent(null)}
         >
           <CgClose />
