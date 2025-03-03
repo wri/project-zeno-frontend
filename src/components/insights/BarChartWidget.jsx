@@ -103,7 +103,7 @@ export default function ChartWidget({ data, title, description }) {
         .style("stroke", "var(--chakra-colors-border-emphasized)")
         .style("stroke-width", "2px")
         .on("mouseover", (event, d) => {
-          tooltip.style("visibility", "visible").text(`${d.data.name}: ${d.data.value}`);
+          tooltip.style("visibility", "visible").style("display", "block").text(`${d.data.name}: ${d.data.value}`);
         })
         .on("mousemove", event => {
           const containerBounds = containerRef.current.getBoundingClientRect();
