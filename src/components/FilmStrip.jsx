@@ -73,7 +73,7 @@ ImageItem.propTypes = {
 function FilmStrip() {
   const recentImages = useAtomValue(recentImageryAtom);
   return (
-    <List.Root display="flex" listStyle="none" flexDir="row" px="0" mt="2" pb="2" gap={4} overflowX="scroll">
+    <List.Root display="flex" listStyle="none" flexDir="row" px="0" mt="2" pb="2" gap={4} overflowX="scroll" mb="0">
       <Suspense
         fallback={
           <>

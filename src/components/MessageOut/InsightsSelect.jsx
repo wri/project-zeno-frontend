@@ -2,11 +2,14 @@ import T from "prop-types";
 import WidgetButton from "../insights/WidgetButton";
 import { Box, List, Text } from "@chakra-ui/react";
 import JSON5 from "json5";
-
+import { useSetAtom } from "jotai";
+import { setInsightsContentAtom } from "../../atoms";
 
 function InsightsSelect({ data }) {
+  const setInsightsContent = useSetAtom(setInsightsContentAtom);
   try {
     let { insights } = JSON5.parse(data);
+    setInsightsContent(insights);
     if (!insights) {
       return <div />;
     }
@@ -15,7 +18,7 @@ function InsightsSelect({ data }) {
         <Text fontSize="xs" fontFamily="mono" mb="2" letterSpacing="0.5px" textTransform="uppercase">
           Zeno Generated Insights
         </Text>
-        <List.Root listStyle="none" pl="0" display="flex" flexDir="column" gap="3">
+        <List.Root listStyle="none" pl="0" display="flex" flexDir="column" gap="3" my="1">
           {
             insights && insights.map((insight) => {
               return (

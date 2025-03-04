@@ -47,7 +47,7 @@ function PersonaSelect() {
 
     <MessageOutWrapper>
       Start by selecting a role that best describes you:
-      <List.Root listStyle="none" pl="0" display="flex" flexDir="row" flexWrap="wrap" gap="2">
+      <List.Root listStyle="none" pl="0" display="flex" flexDir="row" flexWrap="wrap" gap="2" my="1">
         {personas.map(({ title, text }) => {
           return (
             <List.Item key={title} m="0">

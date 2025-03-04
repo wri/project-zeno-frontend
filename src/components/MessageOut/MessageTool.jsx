@@ -8,12 +8,10 @@ import {
   chartDataAtom,
   dataPaneTabAtom,
   addLayerAtom,
-  recentImageryAtom,
-  sidePanelContentAtom
+  recentImageryAtom
 } from "../../atoms";
 import InsightsSelect from "./InsightsSelect";
-import { Box, Text } from "@chakra-ui/react";
-import WidgetButton from "../insights/WidgetButton";
+import { List } from "@chakra-ui/react";
 
 function ContextLayer({ message, artifact }) {
   const addLayer = useSetAtom(addLayerAtom);
@@ -76,15 +74,23 @@ function LocationTool({ artifact }) {
   return (
     <>
       <p>Found {numLocations} Locations:</p>
-      <ol>
+      <List.Root as="ol" my="2">
         {artifact?.map((f) => {
           const regionName = f.properties?.mapbox_context?.region?.name;
-          const adminLevel = f.properties?.admin_level ? ` (${f.properties.admin_level})` : "";
+          const adminLevel = f.properties?.admin_level
+            ? ` (${f.properties.admin_level})`
+            : "";
           const locationName = f.properties.name;
           // dont show repeated region name if it is the same as location name and use admin level to disambiguate
-          return <li key={f.id}>{regionName && locationName !== regionName ? `${locationName}, ${regionName}` : `${locationName}${adminLevel}`}</li>;
+          return (
+            <List.Item key={f.id}>
+              {regionName && locationName !== regionName
+                ? `${locationName}, ${regionName}`
+                : `${locationName}${adminLevel}`}
+            </List.Item>
+          );
         })}
-      </ol>
+      </List.Root>
     </>
   );
 }
@@ -188,7 +194,6 @@ StacTool.propTypes = {
 };
 
 function KBADataTool({ message, artifact }) {
-  const setSidePanelContent = useSetAtom(sidePanelContentAtom);
   const addLayer = useSetAtom(addLayerAtom);
   const [error, setError] = useState(null);
 
@@ -210,22 +215,6 @@ function KBADataTool({ message, artifact }) {
     }
   }, [artifact, addLayer]);
 
-  const handleWidgetClick = () => {
-    try {
-      if (artifact) {
-        const parsedArtifact = JSON.parse(artifact);
-        setSidePanelContent({
-          type: "map",
-          title: "KBA Locations",
-          data: parsedArtifact,
-        });
-      }
-    } catch (e) {
-      console.error("Failed to parse KBA data", e);
-      setError("Failed to parse KBA data. Please try again.");
-    }
-  };
-
   if (error) {
     return (
       <Alert status="error" title="Error">
@@ -233,20 +222,15 @@ function KBADataTool({ message, artifact }) {
       </Alert>
     );
   }
+  
+  const insight = {
+    type: "map",
+    title: "KBA Locations",
+    data: artifact ? JSON.parse(artifact) : null,
+    description: message
+  };
 
-  return (
-    <Box>
-      <Text mb={2}>{message}</Text>
-      <WidgetButton
-        data={{
-          type: "map",
-          title: "KBA Locations",
-          data: artifact ? JSON.parse(artifact) : null
-        }}
-        onClick={handleWidgetClick}
-      />
-    </Box>
-  );
+  return <InsightsSelect data={`{"insights": [${JSON.stringify(insight)}]}`} />;
 }
 
 KBADataTool.propTypes = {

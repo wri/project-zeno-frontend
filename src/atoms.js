@@ -16,6 +16,7 @@ export const recentImageryAtom = atom([]);
 export const mapBoundsAtom = atom([-180, -90, 180, 90]);
 export const showAudioButtonsAtom = atom(false);
 export const currentUserPersonaAtom = atom("");
+export const insightsAtom = atom([]);
 export const sidePanelContentAtom = atom(null);
 export const reportContentAtom = atom([]);
 
@@ -42,6 +43,18 @@ const appURLs = {
   "alerting": "https://dev.api.zeno.ds.io/stream/dist_alert",
   "monitoring": "https://dev.api.zeno.ds.io/stream/kba"
 };
+
+export const setInsightsContentAtom = atom(null, (get, set, insights) => {
+  set(insightsAtom, (prev) => {
+    if (!prev) return insights;
+    return [
+      ...prev,
+      ...insights.filter((insight) => !prev.some((p) => p.title === insight.title))
+    ];
+  });
+});
+
+
 
 export const addPrompt = atom(null, (get, set, prompt) => {
   const appType = get(currentAppTypeAtom);

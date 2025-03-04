@@ -22,7 +22,7 @@ function LocationSelect({ options }) {
   return (
     <MessageOutWrapper>
       Select a location:
-      <List.Root listStyle="none" pl="0" display="flex" flexDir="row" flexWrap="wrap" gap="2">
+      <List.Root listStyle="none" pl="0" display="flex" flexDir="row" flexWrap="wrap" gap="2" my="2">
         {options.map((option, i) => {
 
           let gid = option[1];
