@@ -1,5 +1,5 @@
-import { List } from "@chakra-ui/react";
-import { useSetAtom } from "jotai";
+import { Box, List } from "@chakra-ui/react";
+import { useAtom } from "jotai";
 import { currentUserPersonaAtom } from "../../atoms";
 import { useState } from "react";
 import MessageOutWrapper from "./wrapper";
@@ -29,7 +29,7 @@ export const personas = [
   {
     title: "📰 Journalist",
     text: "I am a journalist covering environmental issues and corporate accountability, with basic GIS skills that enable me to interpret geospatial data by eye but not produce charts or insights myself. I need reliable, accessible data to track whether companies are meeting their EU Deforestation Regulation (EUDR) commitments, identify instances of non-compliance, and write compelling, data-driven stories that hold businesses accountable for their environmental impact.",
-  }
+  },
 ];
 
 /**
@@ -41,13 +41,20 @@ export const personas = [
  *
  */
 function PersonaSelect() {
-  const setUserPersona = useSetAtom(currentUserPersonaAtom);
+  const [userPersona, setUserPersona] = useAtom(currentUserPersonaAtom);
   const [selectedTitle, setSelectedTitle] = useState(null);
   return (
-
     <MessageOutWrapper>
       Start by selecting a role that best describes you:
-      <List.Root listStyle="none" pl="0" display="flex" flexDir="row" flexWrap="wrap" gap="2" my="1">
+      <List.Root
+        listStyle="none"
+        pl="0"
+        display="flex"
+        flexDir="row"
+        flexWrap="wrap"
+        gap="2"
+        my="1"
+      >
         {personas.map(({ title, text }) => {
           return (
             <List.Item key={title} m="0">
@@ -66,10 +73,22 @@ function PersonaSelect() {
           );
         })}
       </List.Root>
+      {selectedTitle && (
+        <Box
+          bg="bg.panel"
+          p="3"
+          mt="2"
+          rounded="md"
+          borderWidth="1px"
+          borderColor="border.info"
+        >
+          <strong>{selectedTitle}</strong>
+          <br />
+          {userPersona}
+        </Box>
+      )}
     </MessageOutWrapper>
   );
 }
 
 export default PersonaSelect;
-
-
