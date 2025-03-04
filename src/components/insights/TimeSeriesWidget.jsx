@@ -58,7 +58,7 @@ export default function TimeSeriesWidget(data) {
       .attr("transform", `translate(0,${height - margin.top - margin.bottom})`)
       .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
 
-    const customTickFormat = d => {
+      const customTickFormat = d => {
         // For small numbers, show as full numbers (no abbreviation)
         if (Math.abs(d) < 1000) return d3.format("~f")(d);
         // For larger numbers, use SI notation (e.g., 1k, 1M)
@@ -70,14 +70,14 @@ export default function TimeSeriesWidget(data) {
       .style("font-size", "0.8em");
   
     if (data.ylabel) {
-        svg.append("text")
-          .attr("transform", "rotate(-90)")
-          .attr("y", -margin.left)
-          .attr("x", -((height - margin.top - margin.bottom) / 2))
-          .attr("dy", "1em")
-          .style("text-anchor", "middle")
-          .text(data.ylabel);
-      }
+      svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", -margin.left)
+        .attr("x", -((height - margin.top - margin.bottom) / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text(data.ylabel);
+    }
 
     if (data.xlabel) {
       svg.append("text")
@@ -104,6 +104,8 @@ export default function TimeSeriesWidget(data) {
       .attr("y2", height - margin.top - margin.bottom)
       .style("display", "none");
 
+    const formatTooltipValue = v => typeof v === "number" ? d3.format(",.0f")(v) : v;
+
     svg.append("rect")
       .attr("width", width - margin.left - margin.right)
       .attr("height", height - margin.top - margin.bottom)
@@ -118,13 +120,20 @@ export default function TimeSeriesWidget(data) {
             .attr("x2", x(year));
 
           const containerBounds = containerRef.current.getBoundingClientRect();
-          tooltip.style("display", "block");
-          tooltip.style("left", `${event.clientX - containerBounds.left + 10}px`)
-            .style("top", `${event.clientY - containerBounds.top + 10}px`)
-            .html(
-              `<strong>Year: ${year}</strong><br>` +
-              keys.map(key => `${key}: ${yearData[key] || 0}`).join("<br>")
-            );
+          tooltip.style("display", "block")
+            .style("left", `${event.clientX - containerBounds.left + 10}px`)
+            .style("top", `${event.clientY - containerBounds.top + 10}px`);
+
+          // Order keys highest to lowest based on value for the selected year
+          const sortedKeys = keys.slice().sort((a, b) => (yearData[b] || 0) - (yearData[a] || 0));
+
+          // Build tooltip HTML with legend colors and formatted values.
+          const tooltipHTML = `<strong>Year: ${year}</strong><br>` +
+            sortedKeys.map(key =>
+              `<span style="display:inline-block;width:10px;height:10px;background-color:${colorScale(key)};margin-right:5px;"></span>` +
+              `${key}: ${formatTooltipValue(yearData[key] || 0)}`
+            ).join("<br>");
+          tooltip.html(tooltipHTML);
         }
       })
       .on("mouseout", () => {
