@@ -1,15 +1,14 @@
 
 
 import T from "prop-types";
-import { Box, Heading, Table, Text } from "@chakra-ui/react";
+import { Box, Table, Text } from "@chakra-ui/react";
 
 /**
  * Data is an array of objects
  */
-export default function TableWidget({ title, data, description }) {
+export default function TableWidget({ data, description }) {
   return (
-    <Box>
-      <Heading>{title}</Heading>
+    <Box p="6">
       <Table.Root variant="line">
         <Table.Header>
           <Table.Row>
@@ -33,7 +32,6 @@ export default function TableWidget({ title, data, description }) {
 
 TableWidget.propTypes = {
   data: T.string.isRequired,
-  title: T.string,
   description: T.string,
 };
 

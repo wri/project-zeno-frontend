@@ -1,6 +1,6 @@
 import { ButtonGroup, Button, IconButton, Text } from "@chakra-ui/react";
 import { Tooltip } from "../ui/tooltip";
-import { sidePanelContentAtom } from "../../atoms";
+import { sidePanelContentAtom, addToReportAtom } from "../../atoms";
 import { useAtom } from "jotai";
 import T from "prop-types";
 import { CollecticonChartBars, CollecticonChartLine, CollecticonMap, CollecticonTable, CollecticonTextBlock } from "@devseed-ui/collecticons-react";
@@ -17,6 +17,7 @@ const iconMap = {
 export default function WidgetButton({ data }) {
   const { title, type, chart_type } = data;
   const [, setSidePanelContent] = useAtom(sidePanelContentAtom);
+  const [reportContent] = useAtom(addToReportAtom);
 
   let IconComponent = CollecticonTextBlock;
 
@@ -25,25 +26,26 @@ export default function WidgetButton({ data }) {
   } else if (iconMap[type]) {
     IconComponent = iconMap[type];
   }
-
+  const isInReport = reportContent.some((item) => item.title === title);
   return (
     <Tooltip content={title} showArrow>
       <ButtonGroup
         w="full"
-        size="sm"
         attached
         _groupHover={{ colorPalette: "blue" }}
+        size="xl"
         onClick={() => {
           setSidePanelContent(data);
         }}
       >
-        <IconButton variant="solid" size="xl" bg="gray.500">
+        <IconButton color="white" bg={isInReport ? "blue.900" : "gray.500"}>
           <IconComponent />
         </IconButton>
-        <Button variant="outline" py="6" flex="1" justifyContent="start">
+        <Button variant="outline" flex="1" justifyContent="start" borderColor={isInReport && "blue.900"}>
           <Text
             isTruncated
             fontWeight="bold"
+            fontSize="sm"
             noOfLines={1}
             whiteSpace="nowrap"
             overflow="hidden"
