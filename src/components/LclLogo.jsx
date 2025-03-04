@@ -1,6 +1,6 @@
 import T from "prop-types";
 
-function LclLogo({ width = "14", fill = "currentColor", avatarOnly }) {
+function LclLogo({ width = 14, fill = "currentColor", avatarOnly }) {
   if (avatarOnly) {
     return (
       <svg
