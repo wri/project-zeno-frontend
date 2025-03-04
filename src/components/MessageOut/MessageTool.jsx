@@ -8,9 +8,12 @@ import {
   chartDataAtom,
   dataPaneTabAtom,
   addLayerAtom,
-  recentImageryAtom
+  recentImageryAtom,
+  sidePanelContentAtom
 } from "../../atoms";
 import InsightsSelect from "./InsightsSelect";
+import { Box, Text } from "@chakra-ui/react";
+import WidgetButton from "../insights/WidgetButton";
 
 function ContextLayer({ message, artifact }) {
   const addLayer = useSetAtom(addLayerAtom);
@@ -184,6 +187,73 @@ StacTool.propTypes = {
   message: T.string.isRequired
 };
 
+function KBADataTool({ message, artifact }) {
+  const setSidePanelContent = useSetAtom(sidePanelContentAtom);
+  const addLayer = useSetAtom(addLayerAtom);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    try {
+      if (artifact) {
+        const parsedArtifact = JSON.parse(artifact);
+        const layer = {
+          id: "kba-layer",
+          type: "geojson",
+          data: parsedArtifact,
+          name: "KBA Locations",
+        };
+        addLayer(layer);
+      }
+    } catch (e) {
+      console.error("Failed to parse KBA data", e);
+      setError("Failed to parse KBA data. Please try again.");
+    }
+  }, [artifact, addLayer]);
+
+  const handleWidgetClick = () => {
+    try {
+      if (artifact) {
+        const parsedArtifact = JSON.parse(artifact);
+        setSidePanelContent({
+          type: "map",
+          title: "KBA Locations",
+          data: parsedArtifact,
+        });
+      }
+    } catch (e) {
+      console.error("Failed to parse KBA data", e);
+      setError("Failed to parse KBA data. Please try again.");
+    }
+  };
+
+  if (error) {
+    return (
+      <Alert status="error" title="Error">
+        {error}
+      </Alert>
+    );
+  }
+
+  return (
+    <Box>
+      <Text mb={2}>{message}</Text>
+      <WidgetButton
+        data={{
+          type: "map",
+          title: "KBA Locations",
+          data: artifact ? JSON.parse(artifact) : null
+        }}
+        onClick={handleWidgetClick}
+      />
+    </Box>
+  );
+}
+
+KBADataTool.propTypes = {
+  message: T.string.isRequired,
+  artifact: T.string,
+};
+
 function MessageTool({ message, toolName, artifact }) {
   let render;
   console.log("toolName", toolName, message, artifact);
@@ -200,6 +270,9 @@ function MessageTool({ message, toolName, artifact }) {
       break;
     case "stac-tool":
       render = <StacTool message={message} artifact={artifact} />;
+      break;
+    case "kba-data-tool":
+      render = <KBADataTool message={message} artifact={artifact} />;
       break;
     case "kba-timeseries-tool":
       render = <InsightsSelect data={`{"insights": [${message}]}`} />;

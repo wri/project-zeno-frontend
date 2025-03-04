@@ -5,6 +5,7 @@ import { Box, Button } from "@chakra-ui/react";
 import TextWidget from "./insights/TextWidget";
 import TableWidget from "./insights/TableWidget";
 import ChartWidget from "./insights/BarChartWidget";
+import MapWidget from "./insights/MapWidget";
 import TimeSeriesWidget from "./insights/TimeSeriesWidget";
 import { deleteFromReportAtom } from "../atoms";
 import { useAtom } from "jotai";
@@ -28,6 +29,9 @@ export default function ReportContentWidget(data) {
     case "trend":
     case "timeseries":
       WidgetComponent = TimeSeriesWidget;
+      break;
+    case "map":
+      WidgetComponent = MapWidget;
       break;
     case "chart":
       WidgetComponent = ChartWidget;

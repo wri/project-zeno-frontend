@@ -8,6 +8,7 @@ import TableWidget from "./insights/TableWidget";
 import { useAtom } from "jotai";
 import ChartWidget from "./insights/BarChartWidget";
 import TimeSeriesWidget from "./insights/TimeSeriesWidget";
+import MapWidget from "./insights/MapWidget";
 import { CgClose } from "react-icons/cg";
 
 export default function SidePanelWidget() {
@@ -16,7 +17,7 @@ export default function SidePanelWidget() {
   const [, deleteFromReport] = useAtom(deleteFromReportAtom);
 
   if (sidePanelContent === null) {
-    return <Box />;
+    return;
   }
 
   let WidgetComponent = null;
@@ -33,6 +34,9 @@ export default function SidePanelWidget() {
       break;
     case "chart":
       WidgetComponent = ChartWidget;
+      break;
+    case "map":
+      WidgetComponent = MapWidget;
       break;
     default:
       WidgetComponent = TextWidget;
