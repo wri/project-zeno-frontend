@@ -1,5 +1,5 @@
 import T from "prop-types";
-import { Box, Heading, Table, Text } from "@chakra-ui/react";
+import { Box, Table, Text } from "@chakra-ui/react";
 
 export default function TableWidget({ title, data, description }) {
   // Helper function to format numeric values
@@ -8,10 +8,8 @@ export default function TableWidget({ title, data, description }) {
       ? new Intl.NumberFormat("en-US").format(value)
       : value;
   };
-
   return (
-    <Box>
-      <Heading>{title}</Heading>
+    <Box p="6">
       <Table.Root variant="line">
         <Table.Header>
           <Table.Row>

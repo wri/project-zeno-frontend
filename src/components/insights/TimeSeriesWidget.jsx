@@ -129,8 +129,7 @@ export default function TimeSeriesWidget(data) {
   }, [data, colors]);
 
   return (
-    <Box ref={containerRef} position="relative">
-      <Text fontSize="lg" fontWeight="bold">{data.title}</Text>
+    <Box ref={containerRef} position="relative" p="6">
       <svg ref={chartRef} />
       <div ref={tooltipRef} />
       <Flex wrap="wrap" mt={2}>

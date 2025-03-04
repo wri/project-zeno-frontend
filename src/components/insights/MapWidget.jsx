@@ -1,11 +1,11 @@
 import T from "prop-types";
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import MapGl, { Layer, Source, AttributionControl, NavigationControl } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import bbox from "@turf/bbox";
 import { useColorModeValue } from "../ui/color-mode";
 
-export default function MapWidget({ data, title, description }) {
+export default function MapWidget({ data, description }) {
   let viewState = {
     longitude: 0,
     latitude: 0,
@@ -28,7 +28,8 @@ export default function MapWidget({ data, title, description }) {
   return (
     <Box
       position="relative"
-      height="100%"
+      height="calc(100% - 3.125rem)"
+      p="6"
       css={{
         _dark: {
           "& .maplibregl-ctrl-scale": {
@@ -59,10 +60,9 @@ export default function MapWidget({ data, title, description }) {
         },
       }}
     >
-      <Heading mb={4}>{title}</Heading>
       <MapGl
         initialViewState={viewState}
-        style={{ width: "100%", height: "calc(100% - 2.75rem)", minHeight: "500px" }}
+        style={{ width: "100%", height: "100%", minHeight: "500px"}}
         attributionControl={false}
       >
         <Source
@@ -106,6 +106,5 @@ export default function MapWidget({ data, title, description }) {
 
 MapWidget.propTypes = {
   data: T.object,
-  title: T.string,
   description: T.string
 };
