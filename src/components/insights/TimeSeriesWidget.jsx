@@ -9,6 +9,11 @@ export default function TimeSeriesWidget(data) {
   const tooltipRef = useRef();
   const colors = d3.schemeCategory10; // Use D3's color scheme
 
+  // If every value in the rest of the keys is null, exclude the object.
+  const filteredData = data.data.filter(({ year, ...rest }) => 
+    !Object.values(rest).every(value => Number.isNaN(value))
+  );
+
   useEffect(() => {
     const width = 600;
     const height = 400;
@@ -20,16 +25,16 @@ export default function TimeSeriesWidget(data) {
       .attr("height", height)
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
+      
     const keys = Object.keys(data.data[0]).filter(key => key !== "year");
     const colorScale = d3.scaleOrdinal().domain(keys).range(colors);
 
     const x = d3.scaleLinear()
-      .domain(d3.extent(data.data, d => d.year))
+      .domain(d3.extent(filteredData, d => d.year))
       .range([0, width - margin.left - margin.right]);
 
     const y = d3.scaleLinear()
-      .domain([0, d3.max(data.data.flatMap(d => keys.map(key => d[key])).filter(v => typeof v === "number"))])
+      .domain([0, d3.max(filteredData.flatMap(d => keys.map(key => d[key])).filter(v => typeof v === "number"))])
       .nice()
       .range([height - margin.top - margin.bottom, 0]);
 
@@ -39,7 +44,7 @@ export default function TimeSeriesWidget(data) {
       .curve(d3.curveMonotoneX);
 
     keys.forEach((key) => {
-      const lineData = data.data.map(d => ({ year: d.year, value: isNaN(d[key]) ? 0 : d[key] }));
+      const lineData = filteredData.map(d => ({ year: d.year, value: isNaN(d[key]) ? 0 : d[key] }));
 
       svg.append("path")
         .datum(lineData)
@@ -106,7 +111,7 @@ export default function TimeSeriesWidget(data) {
       .on("mousemove", function (event) {
         const [mouseX] = d3.pointer(event);
         const year = Math.round(x.invert(mouseX));
-        const yearData = data.data.find(d => d.year === year);
+        const yearData = filteredData.find(d => d.year === year);
         if (yearData) {
           cursorLine.style("display", "block")
             .attr("x1", x(year))
@@ -133,7 +138,7 @@ export default function TimeSeriesWidget(data) {
       <svg ref={chartRef} />
       <div ref={tooltipRef} />
       <Flex wrap="wrap" mt={2}>
-        {Object.keys(data.data[0]).filter(key => key !== "year").map((key, index) => (
+        {Object.keys(filteredData[0]).filter(key => key !== "year").map((key, index) => (
           <Flex key={key} align="center" mr={4}>
             <Box w={4} h={4} bg={colors[index % colors.length]} mr={2} />
             <Text fontSize="xs">{key}</Text>
