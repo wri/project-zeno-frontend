@@ -9,6 +9,7 @@ import { reportContentAtom, sidePanelContentAtom } from "../atoms";
 import { CollecticonClipboard, CollecticonSpeechBalloon } from "@devseed-ui/collecticons-react";
 import { useAtom } from "jotai";
 import ReportContentWidget from "../components/ReportContentWidget";
+import InsightsDrawer from "../components/insights/InsightsDrawer";
 
 function Monitoring() {
   const [isReportOpen, setIsReportOpen] = useState(false);
@@ -47,7 +48,7 @@ function Monitoring() {
               alignItems="center"
               h="fit-content"
               px="4"
-              py="3"
+              py="2"
               borderBottomWidth="1px"
               borderColor="border.emphasized"
               justifySelf="stretch"
@@ -57,6 +58,7 @@ function Monitoring() {
               <Heading size="sm" m="0">
                 Chat
               </Heading>
+              <InsightsDrawer />
             </Box>
             <Box overflowY="auto" height="100%" mx="-4" mt="4" px="1" maxW="2xl" w="100%">
               <ChatOutput />

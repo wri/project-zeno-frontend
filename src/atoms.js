@@ -16,6 +16,7 @@ export const recentImageryAtom = atom([]);
 export const mapBoundsAtom = atom([-180, -90, 180, 90]);
 export const showAudioButtonsAtom = atom(false);
 export const currentUserPersonaAtom = atom("");
+export const insightsAtom = atom([]);
 export const sidePanelContentAtom = atom(null);
 export const reportContentAtom = atom([]);
 
