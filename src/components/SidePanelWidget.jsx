@@ -1,7 +1,7 @@
 // Side Panel for Monitoring App
 // Renders different Widgets Based on selected insights
 
-import { Box, Button, Flex, Heading } from "@chakra-ui/react";
+import { Box, Button, ButtonGroup, IconButton } from "@chakra-ui/react";
 import { sidePanelContentAtom, addToReportAtom, deleteFromReportAtom } from "../atoms";
 import TextWidget from "./insights/TextWidget";
 import TableWidget from "./insights/TableWidget";
@@ -9,8 +9,7 @@ import { useAtom } from "jotai";
 import ChartWidget from "./insights/BarChartWidget";
 import TimeSeriesWidget from "./insights/TimeSeriesWidget";
 import MapWidget from "./insights/MapWidget";
-import { CloseButton } from "./ui/close-button";
-import { CollecticonClipboardTick } from "@devseed-ui/collecticons-react";
+import { CgClose } from "react-icons/cg";
 
 export default function SidePanelWidget() {
   const [sidePanelContent, setSidePanelContent] = useAtom(sidePanelContentAtom);
@@ -46,17 +45,26 @@ export default function SidePanelWidget() {
   const isInReport = reportContent.some((item) => item.title === sidePanelContent.title);
 
   return (
-    <Box position="relative" gridColumn="2" gridRow="2 / -1" my="4" mb="1" borderRadius="lg" border="1px solid" borderColor="border" bg="bg.subtle" justifySelf="stretch" overflowY="scroll">
-      <Flex py="2" px="6" gap="2" alignItems="center" bg={isInReport ? "blue.subtle" : "bg.muted"} borderBottomWidth="1px" borderColor="border">
-        {isInReport && <CollecticonClipboardTick color="var(--chakra-colors-blue-fg)" />}
-        <Heading size="sm" m="0" as="h4">{sidePanelContent.title}</Heading>
+    <Box position="relative" gridColumn="2" gridRow="2 / -1" my="4" mb="1" p="12" borderRadius="lg" border="1px solid" borderColor="border" bg="bg.subtle" justifySelf="stretch" overflowY="scroll">
+      <ButtonGroup
+        position="absolute"
+        top="10px"
+        right="10px"
+        size="xs"
+      >
         {
           isInReport
-            ? <Button size="xs" ml="2" colorPalette="blue" textTransform="uppercase" variant="outline" onClick={() => deleteFromReport(sidePanelContent.title)}>Remove From Report</Button>
-            : <Button size="xs" ml="2" colorPalette="blue" textTransform="uppercase" variant="solid" onClick={() => addToReport(sidePanelContent)}>Add To Report</Button>
+            ? <Button colorPalette="red" textTransform="uppercase" variant="surface" onClick={() => deleteFromReport(sidePanelContent.title)}>Remove From Report</Button>
+            : <Button colorPalette="blue" textTransform="uppercase" variant="surface" onClick={() => addToReport(sidePanelContent)}>Add To Report</Button>
         }
-        <CloseButton size="xs" ml="auto" onClick={() => setSidePanelContent(null)} />
-      </Flex>
+        <IconButton
+          aria-label="Close panel"
+          variant="ghost"
+          onClick={() => setSidePanelContent(null)}
+        >
+          <CgClose />
+        </IconButton>
+      </ButtonGroup>
       <WidgetComponent {...sidePanelContent} />
     </Box>
   );

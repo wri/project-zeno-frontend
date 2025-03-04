@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import T from "prop-types";
-import { Box, Text, IconButton } from "@chakra-ui/react";
+import { Box, Heading, Text, IconButton } from "@chakra-ui/react";
 import { FaChartBar, FaChartPie } from "react-icons/fa";
 
-export default function ChartWidget({ data, description }) {
+export default function ChartWidget({ data, title, description }) {
   const chartRef = useRef();
   const containerRef = useRef();
   const tooltipRef = useRef();
@@ -117,7 +117,8 @@ export default function ChartWidget({ data, description }) {
   }, [data, chartType]);
 
   return (
-    <Box ref={containerRef} style={{ position: "relative" }} p="6">
+    <Box ref={containerRef} style={{ position: "relative" }} padding="0">
+      <Heading>{title}</Heading>
       <IconButton
         onClick={() => setChartType(chartType === "bar" ? "pie" : "bar")}
         aria-label="Toggle Chart Type"
@@ -126,7 +127,7 @@ export default function ChartWidget({ data, description }) {
         variant="surface"
         size="xs"
       >
-        Toggle Chart Type {chartType === "bar" ? <FaChartPie /> : <FaChartBar />}
+        Toggle {chartType === "bar" ? <FaChartPie /> : <FaChartBar />}
       </IconButton>
       <svg ref={chartRef} width={500} height={500} />
       <div ref={tooltipRef} />
@@ -140,5 +141,6 @@ ChartWidget.propTypes = {
     categories: T.arrayOf(T.string).isRequired,
     values: T.arrayOf(T.number).isRequired,
   }).isRequired,
+  title: T.string,
   description: T.string,
 };
