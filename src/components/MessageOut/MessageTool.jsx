@@ -222,7 +222,6 @@ function KBADataTool({ message, artifact }) {
       </Alert>
     );
   }
-  
   const insight = {
     type: "map",
     title: "KBA Locations",
@@ -240,7 +239,6 @@ KBADataTool.propTypes = {
 
 function MessageTool({ message, toolName, artifact }) {
   let render;
-  console.log("toolName", toolName, message, artifact);
 
   switch (toolName) {
     case "context-layer-tool":

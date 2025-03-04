@@ -27,7 +27,7 @@ const QueryButton = ({ children, clickHandler, ...delegated }) => {
 
 QueryButton.propTypes = {
   clickHandler: T.func,
-  children: T.object,
+  children: T.oneOfType([T.object, T.string]),
 };
 
 export default QueryButton;
