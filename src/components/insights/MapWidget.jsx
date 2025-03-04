@@ -28,7 +28,7 @@ export default function MapWidget({ data, description }) {
   return (
     <Box
       position="relative"
-      height="calc(100% - 3.125rem)"
+      height="calc(100% - 5rem)"
       p="6"
       css={{
         _dark: {
