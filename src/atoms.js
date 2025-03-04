@@ -44,7 +44,7 @@ const appURLs = {
   "monitoring": "https://dev.api.zeno.ds.io/stream/kba"
 };
 
-export const setInsightsContentAtom = atom(null, (get, set, insights) => {
+export const addInsightsAtom = atom((get) => get(insightsAtom), (get, set, insights) => {
   set(insightsAtom, (prev) => {
     if (!prev) return insights;
     return [
