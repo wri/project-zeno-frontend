@@ -62,7 +62,7 @@ export default function MapWidget({ data, title, description }) {
       <Heading mb={4}>{title}</Heading>
       <MapGl
         initialViewState={viewState}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: "calc(100% - 2.75rem)" }}
         attributionControl={false}
       >
         <Source
@@ -100,7 +100,7 @@ export default function MapWidget({ data, title, description }) {
         <NavigationControl showCompass={false} position="bottom-left" />
       </MapGl>
       {description && <Text mt={4}>{description}</Text>}
-    </Box >
+    </Box>
   );
 }
 
@@ -108,4 +108,4 @@ MapWidget.propTypes = {
   data: T.object,
   title: T.string,
   description: T.string
-}; 
+};

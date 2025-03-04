@@ -17,7 +17,7 @@ export default function SidePanelWidget() {
   const [, deleteFromReport] = useAtom(deleteFromReportAtom);
 
   if (sidePanelContent === null) {
-    return <Box />;
+    return;
   }
 
   let WidgetComponent = null;

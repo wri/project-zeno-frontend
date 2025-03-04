@@ -1,23 +1,24 @@
 import { ButtonGroup, Button, IconButton, Text } from "@chakra-ui/react";
 import { Tooltip } from "../ui/tooltip";
-import { FaChartLine, FaFont, FaTable, FaChartBar } from "react-icons/fa";
 import { sidePanelContentAtom } from "../../atoms";
 import { useAtom } from "jotai";
 import T from "prop-types";
+import { CollecticonChartBars, CollecticonChartLine, CollecticonMap, CollecticonTable, CollecticonTextBlock } from "@devseed-ui/collecticons-react";
 
 const iconMap = {
-  text: FaFont,
-  chart: FaChartBar,
-  trend: FaChartLine,
-  timeseries: FaChartLine,
-  table: FaTable,
+  text: CollecticonTextBlock,
+  chart: CollecticonChartBars,
+  trend: CollecticonChartLine,
+  timeseries: CollecticonChartLine,
+  table: CollecticonTable,
+  map: CollecticonMap,
 };
 
 export default function WidgetButton({ data }) {
   const { title, type, chart_type } = data;
   const [, setSidePanelContent] = useAtom(sidePanelContentAtom);
 
-  let IconComponent = FaFont;
+  let IconComponent = CollecticonTextBlock;
 
   if (type === "chart" && chart_type && iconMap.chart[chart_type]) {
     IconComponent = iconMap.chart[chart_type];

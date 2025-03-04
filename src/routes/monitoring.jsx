@@ -5,7 +5,7 @@ import Providers from "../Providers";
 import { ChatInput, ChatOutput, SidePanelWidget } from "../components";
 import GlobalHeader from "../components/globalheader";
 import { useColorModeValue } from "../components/ui/color-mode";
-import { reportContentAtom } from "../atoms";
+import { reportContentAtom, sidePanelContentAtom } from "../atoms";
 import { CollecticonClipboard, CollecticonSpeechBalloon } from "@devseed-ui/collecticons-react";
 import { useAtom } from "jotai";
 import ReportContentWidget from "../components/ReportContentWidget";
@@ -13,6 +13,7 @@ import ReportContentWidget from "../components/ReportContentWidget";
 function Monitoring() {
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [reportContent] = useAtom(reportContentAtom);
+  const [sidePanelContent] = useAtom(sidePanelContentAtom);
   const panelBg = useColorModeValue("bg.panel", "bg.emphasized");
   return (
     <Providers>
@@ -26,6 +27,7 @@ function Monitoring() {
         <Grid templateColumns="1fr" templateRows="1fr" p="4" pt="0" gap="2">
           <Grid
             gap="4"
+            autoColumns="minmax(0px, 2fr)"
             templateRows="max-content 1fr max-content"
             templateColumns="minmax(28rem, 1fr)"
             borderRadius="lg"
@@ -49,20 +51,20 @@ function Monitoring() {
               borderBottomWidth="1px"
               borderColor="border.emphasized"
               justifySelf="stretch"
-              gridColumn="1 / span all"
+              gridColumn={sidePanelContent && !isReportOpen && "1 / span all"}
             >
               <CollecticonSpeechBalloon size="24" />
               <Heading size="sm" m="0">
                 Chat
               </Heading>
             </Box>
-            <Box overflowY="auto" gridColumn="1" height="100%" mx="-4" mt="4" px="1" maxW="2xl" w="100%">
+            <Box overflowY="auto" height="100%" mx="-4" mt="4" px="1" maxW="2xl" w="100%">
               <ChatOutput />
             </Box>
-            <Box gridColumn="1" maxW="2xl" w="100%">
+            <Box maxW="2xl" w="100%">
               <ChatInput />
             </Box>
-            {!isReportOpen &&
+            {!!sidePanelContent && !isReportOpen &&
               <SidePanelWidget />}
           </Grid>
           {reportContent.length > 0 &&
