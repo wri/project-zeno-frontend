@@ -53,7 +53,35 @@ export default function TimeSeriesWidget(data) {
       .attr("transform", `translate(0,${height - margin.top - margin.bottom})`)
       .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
 
-    svg.append("g").call(d3.axisLeft(y));
+    const customTickFormat = d => {
+        // For small numbers, show as full numbers (no abbreviation)
+        if (Math.abs(d) < 1000) return d3.format("~f")(d);
+        // For larger numbers, use SI notation (e.g., 1k, 1M)
+        return d3.format(".2s")(d);
+      };
+
+    svg.append("g")
+      .call(d3.axisLeft(y).tickFormat(customTickFormat))
+      .style("font-size", "0.8em");
+  
+    if (data.ylabel) {
+        svg.append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("y", -margin.left)
+          .attr("x", -((height - margin.top - margin.bottom) / 2))
+          .attr("dy", "1em")
+          .style("text-anchor", "middle")
+          .text(data.ylabel);
+      }
+
+    if (data.xlabel) {
+      svg.append("text")
+        .attr("y", height - margin.top - margin.bottom + 20)
+        .attr("x", (width - margin.left - margin.right) / 2)
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text(data.xlabel);
+    } 
 
     // Cursor, Tooltip, and Dashed Line
     const tooltip = d3.select(tooltipRef.current)
