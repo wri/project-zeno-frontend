@@ -8,10 +8,10 @@ import { chatHistoryAtom, isLoadingAtom, currentAppTypeAtom } from "../atoms";
 import PersonaSelect from "./MessageOut/PersonaSelect";
 
 function ChatOutput() {
-  const [ chatHistory ] = useAtom(chatHistoryAtom);
-  const [ isLoading ] = useAtom(isLoadingAtom);
+  const [chatHistory] = useAtom(chatHistoryAtom);
+  const [isLoading] = useAtom(isLoadingAtom);
   const containerRef = useRef();
-  const [ appType ] = useAtom(currentAppTypeAtom);
+  const [appType] = useAtom(currentAppTypeAtom);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -33,7 +33,7 @@ function ChatOutput() {
     }
   }, []);
 
-  const message = appType === "alerting" ?`
+  const message = appType === "alerting" ? `
   Hi! I'm Land & Carbon Lab's alert explorer. I can help you find and investigate disturbances in your area of interest using the Land Disturbance Alert Classification System and other contextual data. 
   \nStart by asking me what I can do.
   ` : `
@@ -42,8 +42,8 @@ function ChatOutput() {
 
   return (
     <Box ref={containerRef} fontSize="sm">
-    <MessageAssistant message={message} />
-    { appType === "monitoring" && <PersonaSelect /> /* only show persona select in monitoring application */} 
+      <MessageAssistant message={message} />
+      {appType === "monitoring" && <PersonaSelect /> /* only show persona select in monitoring application */}
       {chatHistory.map((msg) => {
         switch (msg.type) {
           case "in":
@@ -55,25 +55,40 @@ function ChatOutput() {
             }
             return <MessageTool key={msg.timestamp} message={msg.content} toolName={msg.tool_name} artifact={msg.artifact} />;
           case "interrupted":
-          { let options;
-          try {
-            options = JSON.parse(msg.payload);
-          // eslint-disable-next-line no-unused-vars
-          } catch (e) {
-            return (
-              <Alert status="error" title="Error">
-                There was a problem processing your request. Please try again or try another prompt;
-              </Alert>
-            );
-          }
-          return <LocationSelect key={msg.timestamp} type={msg.type} options={options} />; }
+            {
+              let options;
+              try {
+                options = JSON.parse(msg.payload);
+                // eslint-disable-next-line no-unused-vars
+              } catch (e) {
+                return (
+                  <Alert status="error" title="Error">
+                    There was a problem processing your request. Please try again or try another prompt;
+                  </Alert>
+                );
+              }
+              return <LocationSelect key={msg.timestamp} type={msg.type} options={options} />;
+            }
           case "update":
+            if (msg.summary && msg.summary === true) {
+              const messageObject = {
+                insights: [
+                  {
+                    type: "text",
+                    title: "Summary",
+                    data: msg.content
+                  }
+                ]
+              };
+              return <MessageTool key={msg.timestamp} message={JSON.stringify(messageObject)} toolName="kba-insights-tool" />;
+
+            }
             return <MessageAssistant key={msg.timestamp} message={msg.content} />;
           default:
             return <MessageDefault key={msg.timestamp} type={msg.type} message={JSON.stringify(msg)} />;
         }
       })}
-      { isLoading && <Loading />}
+      {isLoading && <Loading />}
     </Box>
   );
 }
