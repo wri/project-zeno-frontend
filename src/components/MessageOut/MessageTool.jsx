@@ -240,7 +240,7 @@ function KBADataTool({ message, artifact }) {
       <WidgetButton
         data={{
           type: "map",
-          title: "View KBAs on Map",
+          title: "KBA Locations",
           data: artifact ? JSON.parse(artifact) : null
         }}
         onClick={handleWidgetClick}
