@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "@tanstack/react-router";
-import { Box, Button, Flex, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
 import {
   MenuContent,
   MenuRadioItemGroup,
@@ -9,8 +9,8 @@ import {
   MenuTrigger,
 } from "./ui/menu";
 import { LclLogo } from ".";
-import WRILogo from "./WRIlogo";
 import BEFLogo from "./BEFLogo";
+import WRILogo from "/WRI_logo.png";
 import { ColorModeButton } from "./ui/color-mode";
 import { CollecticonChevronDownSmall } from "@devseed-ui/collecticons-react";
 import { currentAppTypeAtom } from "../atoms";
@@ -97,7 +97,7 @@ function GlobalHeader() {
           <BEFLogo width="92" />
         </a>
         <a href="https://www.wri.org/" target="_blank" rel="noreferrer" title="WRI Logo">
-          <WRILogo width="120" />
+          <Image src={WRILogo} alt="WRI Logo" width="120px" css={{ _dark: { filter: "invert(1) saturate(0) brightness(6)" }}} />
         </a>
       </Flex>
     </Box>

@@ -5,10 +5,9 @@ function BEFLogo({ width = "170" }) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width={width}
-      viewBox="0 0 180 75"
+      viewBox="0 0 180 76"
       fill="none"
       aria-hidden="true"
-      className='h-[50px] lg:h-[75px] w-auto [&amp;_#logo-text]:fill-current lg:[#header[data-nav-transparent="true"]_&amp;_#logo-text]:fill-current'
       data-icon="logo"
     >
       <path
