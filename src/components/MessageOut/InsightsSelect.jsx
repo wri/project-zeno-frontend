@@ -3,10 +3,10 @@ import WidgetButton from "../insights/WidgetButton";
 import { Box, List, Text } from "@chakra-ui/react";
 import JSON5 from "json5";
 import { useSetAtom } from "jotai";
-import { insightsAtom } from "../../atoms";
+import { setInsightsContentAtom } from "../../atoms";
 
 function InsightsSelect({ data }) {
-  const setInsightsContent = useSetAtom(insightsAtom);
+  const setInsightsContent = useSetAtom(setInsightsContentAtom);
   try {
     let { insights } = JSON5.parse(data);
     setInsightsContent(insights);

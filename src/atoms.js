@@ -44,6 +44,18 @@ const appURLs = {
   "monitoring": "https://dev.api.zeno.ds.io/stream/kba"
 };
 
+export const setInsightsContentAtom = atom(null, (get, set, insights) => {
+  set(insightsAtom, (prev) => {
+    if (!prev) return insights;
+    return [
+      ...prev,
+      ...insights.filter((insight) => !prev.some((p) => p.title === insight.title))
+    ];
+  });
+});
+
+
+
 export const addPrompt = atom(null, (get, set, prompt) => {
   const appType = get(currentAppTypeAtom);
   const userPersona = get(currentUserPersonaAtom);
