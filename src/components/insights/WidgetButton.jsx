@@ -3,7 +3,13 @@ import { Tooltip } from "../ui/tooltip";
 import { sidePanelContentAtom, addToReportAtom } from "../../atoms";
 import { useAtom } from "jotai";
 import T from "prop-types";
-import { CollecticonChartBars, CollecticonChartLine, CollecticonMap, CollecticonTable, CollecticonTextBlock } from "@devseed-ui/collecticons-react";
+import {
+  CollecticonChartBars,
+  CollecticonChartLine,
+  CollecticonMap,
+  CollecticonTable,
+  CollecticonTextBlock,
+} from "@devseed-ui/collecticons-react";
 
 const iconMap = {
   text: CollecticonTextBlock,
@@ -32,7 +38,7 @@ export default function WidgetButton({ data }) {
       <ButtonGroup
         w="full"
         attached
-        _groupHover={{ colorPalette: "blue" }}
+        _hover={{ shadow: "md" }}
         size="xl"
         onClick={() => {
           setSidePanelContent(data);
@@ -41,7 +47,13 @@ export default function WidgetButton({ data }) {
         <IconButton color="white" bg={isInReport ? "blue.900" : "gray.500"}>
           <IconComponent />
         </IconButton>
-        <Button variant="outline" flex="1" justifyContent="start" borderColor={isInReport && "blue.900"}>
+        <Button
+          variant="outline"
+          flex="1"
+          justifyContent="start"
+          borderColor={isInReport ? "blue.900" : "border.emphasized"}
+          bg={isInReport && "bg.panel"}
+        >
           <Text
             isTruncated
             fontWeight="bold"
