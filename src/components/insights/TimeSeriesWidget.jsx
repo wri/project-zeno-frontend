@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import T from "prop-types";
+import Markdown from "react-markdown";
 
 export default function TimeSeriesWidget(data) {
   const chartRef = useRef();
@@ -10,7 +11,8 @@ export default function TimeSeriesWidget(data) {
   const colors = d3.schemeCategory10; // Use D3's color scheme
 
   // If every value in the rest of the keys is null, exclude the object.
-  const filteredData = data.data.filter(({ year, ...rest }) => 
+  // eslint-disable-next-line no-unused-vars
+  const filteredData = data.data.filter(({ year, ...rest }) =>
     !Object.values(rest).every(value => Number.isNaN(value))
   );
 
@@ -25,7 +27,7 @@ export default function TimeSeriesWidget(data) {
       .attr("height", height)
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
-      
+
     const keys = Object.keys(data.data[0]).filter(key => key !== "year");
     const colorScale = d3.scaleOrdinal().domain(keys).range(colors);
 
@@ -58,17 +60,17 @@ export default function TimeSeriesWidget(data) {
       .attr("transform", `translate(0,${height - margin.top - margin.bottom})`)
       .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")));
 
-      const customTickFormat = d => {
-        // For small numbers, show as full numbers (no abbreviation)
-        if (Math.abs(d) < 1000) return d3.format("~f")(d);
-        // For larger numbers, use SI notation (e.g., 1k, 1M)
-        return d3.format(".2s")(d);
-      };
+    const customTickFormat = d => {
+      // For small numbers, show as full numbers (no abbreviation)
+      if (Math.abs(d) < 1000) return d3.format("~f")(d);
+      // For larger numbers, use SI notation (e.g., 1k, 1M)
+      return d3.format(".2s")(d);
+    };
 
     svg.append("g")
       .call(d3.axisLeft(y).tickFormat(customTickFormat))
       .style("font-size", "0.8em");
-  
+
     if (data.ylabel) {
       svg.append("text")
         .attr("transform", "rotate(-90)")
@@ -86,7 +88,7 @@ export default function TimeSeriesWidget(data) {
         .attr("dy", "1em")
         .style("text-anchor", "middle")
         .text(data.xlabel);
-    } 
+    }
 
     // Cursor, Tooltip, and Dashed Line
     const tooltip = d3.select(tooltipRef.current)
@@ -155,6 +157,8 @@ export default function TimeSeriesWidget(data) {
         ))}
       </Flex>
       <Text mt={4}>{data.description}</Text>
+      <Text mt={4} mb={2} fontWeight="bold">Analysis:</Text>
+      <Markdown>{data.analysis}</Markdown>
     </Box>
   );
 }
