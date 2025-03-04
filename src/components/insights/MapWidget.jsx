@@ -63,6 +63,7 @@ export default function MapWidget({ data, description }) {
     <Box
       position="relative"
       height="calc(100% - 3.125rem)"
+      p={6}
       css={{
         _dark: {
           "& .maplibregl-ctrl-scale": {
