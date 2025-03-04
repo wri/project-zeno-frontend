@@ -1,11 +1,16 @@
 import T from "prop-types";
 import { Box, Text } from "@chakra-ui/react";
-import MapGl, { Layer, Source, AttributionControl, NavigationControl } from "react-map-gl/maplibre";
+import MapGl, { Layer, Source, AttributionControl, NavigationControl, Popup } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import bbox from "@turf/bbox";
 import { useColorModeValue } from "../ui/color-mode";
+import { useState } from "react";
+import { Alert } from "../ui/alert";
 
 export default function MapWidget({ data, description }) {
+  const [popupInfo, setPopupInfo] = useState(null);
+  const [error, setError] = useState(null);
+
   let viewState = {
     longitude: 0,
     latitude: 0,
@@ -13,23 +18,52 @@ export default function MapWidget({ data, description }) {
   };
 
   if (data) {
-    const bounds = bbox(data);
-    viewState = {
-      bounds: [
-        [bounds[0], bounds[1]],
-        [bounds[2], bounds[3]]
-      ],
-      fitBoundsOptions: {
-        padding: 50
-      }
-    };
+    try {
+      const bounds = bbox(data);
+      viewState = {
+        bounds: [
+          [bounds[0], bounds[1]],
+          [bounds[2], bounds[3]]
+        ],
+        fitBoundsOptions: {
+          padding: 50
+        }
+      };
+    } catch (e) {
+      console.error("Error calculating bounds:", e);
+      setError("Error calculating map bounds");
+    }
   }
+
+  const onMapClick = (event) => {
+    if (!data) return;
+
+    try {
+      const feature = event.features[0];
+      if (feature) {
+        const siteName = feature.properties?.siteName;
+        if (siteName) {
+          setPopupInfo({
+            longitude: event.lngLat.lng,
+            latitude: event.lngLat.lat,
+            siteName
+          });
+        }
+      } else {
+        setPopupInfo(null);
+      }
+    } catch (e) {
+      console.error("Error handling map click:", e);
+      setError("Error displaying site information");
+    }
+  };
+
 
   return (
     <Box
       position="relative"
       height="calc(100% - 3.125rem)"
-      p="6"
+      p={6}
       css={{
         _dark: {
           "& .maplibregl-ctrl-scale": {
@@ -60,10 +94,29 @@ export default function MapWidget({ data, description }) {
         },
       }}
     >
+      {error && (
+        <Alert
+          status="error"
+          title="Error"
+          position="absolute"
+          top={4}
+          left={0}
+          right={0}
+          zIndex={1}
+          width="90%"
+          margin="auto"
+          closable
+          onClose={() => setError(null)}
+        >
+          {error}
+        </Alert>
+      )}
       <MapGl
         initialViewState={viewState}
-        style={{ width: "100%", height: "100%", minHeight: "500px"}}
+        style={{ width: "100%", height: "100%", minHeight: "500px" }}
         attributionControl={false}
+        interactiveLayerIds={["fill-layer", "line-layer"]}
+        onClick={onMapClick}
       >
         <Source
           id="background"
@@ -98,6 +151,19 @@ export default function MapWidget({ data, description }) {
         )}
         <AttributionControl customAttribution="© OpenStreetMap contributors" position="bottom-left" />
         <NavigationControl showCompass={false} position="bottom-left" />
+        {popupInfo && (
+          <Popup
+            longitude={popupInfo.longitude}
+            latitude={popupInfo.latitude}
+            closeButton={false}
+            closeOnClick={true}
+            closeOnMove={false}
+            anchor="bottom"
+            onClose={() => setPopupInfo(null)}
+          >
+            <Text fontWeight="bold">{popupInfo.siteName}</Text>
+          </Popup>
+        )}
       </MapGl>
       {description && <Text mt={4}>{description}</Text>}
     </Box>

@@ -34,7 +34,7 @@ function InsightsSelect({ data }) {
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error("Error parsing insights data", e);
-    return <div />;
+    return null;
   }
 }
 
