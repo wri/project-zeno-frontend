@@ -222,7 +222,7 @@ function KBADataTool({ message, artifact }) {
       </Alert>
     );
   }
-
+  
   const insight = {
     type: "map",
     title: "KBA Locations",

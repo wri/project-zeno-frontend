@@ -62,7 +62,7 @@ export default function MapWidget({ data, description }) {
     >
       <MapGl
         initialViewState={viewState}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: "100%", minHeight: "500px"}}
         attributionControl={false}
       >
         <Source
