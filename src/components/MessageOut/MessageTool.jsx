@@ -8,12 +8,10 @@ import {
   chartDataAtom,
   dataPaneTabAtom,
   addLayerAtom,
-  recentImageryAtom,
-  sidePanelContentAtom
+  recentImageryAtom
 } from "../../atoms";
 import InsightsSelect from "./InsightsSelect";
-import { Box, List, Text } from "@chakra-ui/react";
-import WidgetButton from "../insights/WidgetButton";
+import { List } from "@chakra-ui/react";
 
 function ContextLayer({ message, artifact }) {
   const addLayer = useSetAtom(addLayerAtom);
@@ -196,7 +194,6 @@ StacTool.propTypes = {
 };
 
 function KBADataTool({ message, artifact }) {
-  const setSidePanelContent = useSetAtom(sidePanelContentAtom);
   const addLayer = useSetAtom(addLayerAtom);
   const [error, setError] = useState(null);
 
@@ -218,22 +215,6 @@ function KBADataTool({ message, artifact }) {
     }
   }, [artifact, addLayer]);
 
-  const handleWidgetClick = () => {
-    try {
-      if (artifact) {
-        const parsedArtifact = JSON.parse(artifact);
-        setSidePanelContent({
-          type: "map",
-          title: "KBA Locations",
-          data: parsedArtifact,
-        });
-      }
-    } catch (e) {
-      console.error("Failed to parse KBA data", e);
-      setError("Failed to parse KBA data. Please try again.");
-    }
-  };
-
   if (error) {
     return (
       <Alert status="error" title="Error">
@@ -242,19 +223,14 @@ function KBADataTool({ message, artifact }) {
     );
   }
 
-  return (
-    <Box>
-      <Text mb={2}>{message}</Text>
-      <WidgetButton
-        data={{
-          type: "map",
-          title: "View KBAs on Map",
-          data: artifact ? JSON.parse(artifact) : null
-        }}
-        onClick={handleWidgetClick}
-      />
-    </Box>
-  );
+  const insight = {
+    type: "map",
+    title: "KBA Locations",
+    data: artifact ? JSON.parse(artifact) : null,
+    description: message
+  };
+
+  return <InsightsSelect data={`{"insights": [${JSON.stringify(insight)}]}`} />;
 }
 
 KBADataTool.propTypes = {
