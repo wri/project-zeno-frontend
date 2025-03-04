@@ -12,7 +12,7 @@ import {
   sidePanelContentAtom
 } from "../../atoms";
 import InsightsSelect from "./InsightsSelect";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, List, Text } from "@chakra-ui/react";
 import WidgetButton from "../insights/WidgetButton";
 
 function ContextLayer({ message, artifact }) {
@@ -76,15 +76,23 @@ function LocationTool({ artifact }) {
   return (
     <>
       <p>Found {numLocations} Locations:</p>
-      <ol>
+      <List.Root as="ol" my="2">
         {artifact?.map((f) => {
           const regionName = f.properties?.mapbox_context?.region?.name;
-          const adminLevel = f.properties?.admin_level ? ` (${f.properties.admin_level})` : "";
+          const adminLevel = f.properties?.admin_level
+            ? ` (${f.properties.admin_level})`
+            : "";
           const locationName = f.properties.name;
           // dont show repeated region name if it is the same as location name and use admin level to disambiguate
-          return <li key={f.id}>{regionName && locationName !== regionName ? `${locationName}, ${regionName}` : `${locationName}${adminLevel}`}</li>;
+          return (
+            <List.Item key={f.id}>
+              {regionName && locationName !== regionName
+                ? `${locationName}, ${regionName}`
+                : `${locationName}${adminLevel}`}
+            </List.Item>
+          );
         })}
-      </ol>
+      </List.Root>
     </>
   );
 }
