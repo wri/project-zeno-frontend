@@ -9,9 +9,31 @@ export default function ChartWidget({ data, description }) {
   const containerRef = useRef();
   const tooltipRef = useRef();
   const [chartType, setChartType] = useState("bar");
+  const [ chartDimensions, setChartDimensions ] = useState([0, 0]);
 
   useEffect(() => {
-    const [width, height] = [500, 500];
+    if (containerRef.current) {
+      const observer = new ResizeObserver(entries => {
+        const e = entries[0];
+        const parentElement = e.target.parentElement;
+        const newDimensions = [parentElement.clientWidth - 60, (parentElement.clientHeight * 0.75) - 40];
+        setChartDimensions(newDimensions);
+      });
+      observer.observe(containerRef.current);
+
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, [containerRef]);
+
+  useEffect(() => {
+    // Exit effect if at least one dimension is 0
+    if (!chartDimensions.every((x) => !!x) || !data) return;
+  
+    const width = chartDimensions[0];
+    const height = chartDimensions[1];
+  
     const svg = d3.select(chartRef.current);
     svg.selectAll("*").remove();
 
@@ -27,7 +49,7 @@ export default function ChartWidget({ data, description }) {
 
     if (chartType === "bar") {
       const maxValue = d3.max(data.values);
-      const margin = { top: 12, right: 1, bottom: 24, left: 60 };
+      const margin = { top: 24, right: 1, bottom: 24, left: 60 };
 
       const x = d3.scaleBand()
         .domain(data.categories)
@@ -119,7 +141,7 @@ export default function ChartWidget({ data, description }) {
           tooltip.style("visibility", "hidden");
         });
     }
-  }, [data, chartType]);
+  }, [data, chartType, chartDimensions]);
 
   return (
     <Box ref={containerRef} style={{ position: "relative" }} p="6">
@@ -133,9 +155,13 @@ export default function ChartWidget({ data, description }) {
       >
         Toggle Chart Type {chartType === "bar" ? <FaChartPie /> : <FaChartBar />}
       </IconButton>
-      <svg ref={chartRef} width={500} height={500} />
+      <svg
+        ref={chartRef}
+        width={chartDimensions[0]}
+        height={chartDimensions[1]}
+      />
       <div ref={tooltipRef} />
-      <Text>{description}</Text>
+      <Text mt={2}>{description}</Text>
     </Box>
   );
 }

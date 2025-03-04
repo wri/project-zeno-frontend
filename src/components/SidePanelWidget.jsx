@@ -75,6 +75,7 @@ export default function SidePanelWidget() {
         borderColor="border"
         position="sticky"
         top="0"
+        zIndex="1000"
       >
         {isInReport && (
           <CollecticonClipboardTick color="var(--chakra-colors-blue-fg)" />
