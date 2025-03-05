@@ -9,14 +9,18 @@ export default function TimeSeriesWidget(data) {
   const containerRef = useRef();
   const tooltipRef = useRef();
   const colors = d3.schemeCategory10; // Use D3's color scheme
-  const [ chartDimensions, setChartDimensions ] = useState([0, 0]);
-  
+  const [chartDimensions, setChartDimensions] = useState([0, 0]);
+
   useEffect(() => {
     if (containerRef.current) {
       const observer = new ResizeObserver(entries => {
         const e = entries[0];
         const parentElement = e.target.parentElement;
-        const newDimensions = [parentElement.clientWidth - 32, (parentElement.clientHeight * 0.75) - 40];
+        const maxHeight = 600; // Maximum height in pixels
+        const newDimensions = [
+          parentElement.clientWidth - 32,
+          Math.min((parentElement.clientHeight * 0.75) - 40, maxHeight)
+        ];
         setChartDimensions(newDimensions);
       });
       observer.observe(containerRef.current);
@@ -36,7 +40,7 @@ export default function TimeSeriesWidget(data) {
   useEffect(() => {
     // Exit effect if at least one dimension is 0
     if (!chartDimensions.every((x) => !!x) || !data) return;
-  
+
     const width = chartDimensions[0];
     const height = chartDimensions[1];
     const margin = { top: 20, right: 100, bottom: 40, left: 60 };

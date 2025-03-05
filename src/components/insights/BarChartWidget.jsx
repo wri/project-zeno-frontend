@@ -9,14 +9,18 @@ export default function ChartWidget({ data, description }) {
   const containerRef = useRef();
   const tooltipRef = useRef();
   const [chartType, setChartType] = useState("bar");
-  const [ chartDimensions, setChartDimensions ] = useState([0, 0]);
+  const [chartDimensions, setChartDimensions] = useState([0, 0]);
 
   useEffect(() => {
     if (containerRef.current) {
       const observer = new ResizeObserver(entries => {
         const e = entries[0];
         const parentElement = e.target.parentElement;
-        const newDimensions = [parentElement.clientWidth - 60, (parentElement.clientHeight * 0.75) - 40];
+        const maxHeight = 600; // Maximum height in pixels
+        const newDimensions = [
+          parentElement.clientWidth - 60,
+          Math.min((parentElement.clientHeight * 0.75) - 40, maxHeight)
+        ];
         setChartDimensions(newDimensions);
       });
       observer.observe(containerRef.current);
@@ -30,10 +34,10 @@ export default function ChartWidget({ data, description }) {
   useEffect(() => {
     // Exit effect if at least one dimension is 0
     if (!chartDimensions.every((x) => !!x) || !data) return;
-  
+
     const width = chartDimensions[0];
     const height = chartDimensions[1];
-  
+
     const svg = d3.select(chartRef.current);
     svg.selectAll("*").remove();
 
