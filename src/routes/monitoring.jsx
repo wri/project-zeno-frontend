@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Box, Collapsible, Grid, Heading, List } from "@chakra-ui/react";
 import Providers from "../Providers";
@@ -15,6 +15,12 @@ function Monitoring() {
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [reportContent] = useAtom(reportContentAtom);
   const [sidePanelContent] = useAtom(sidePanelContentAtom);
+  useEffect(() => {
+    if(reportContent.length === 0){
+      setIsReportOpen(false);
+    }
+  }, [reportContent]);
+  
   const panelBg = useColorModeValue("bg.panel", "bg.emphasized");
   return (
     <Providers>
@@ -25,7 +31,7 @@ function Monitoring() {
         bg="bg"
       >
         <GlobalHeader />
-        <Grid templateColumns="1fr" templateRows="1fr" p="4" pt="0" gap="2">
+        <Grid templateColumns="1fr" templateRows="1fr" autoColumns={isReportOpen ? "minmax(0px, 2fr)" : "3.5rem"} p="4" pt="0" gap="2">
           <Grid
             gap="4"
             autoColumns="minmax(0px, 2fr)"

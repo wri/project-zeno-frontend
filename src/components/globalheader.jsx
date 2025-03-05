@@ -37,7 +37,7 @@ function GlobalHeader() {
       justifyContent="space-between"
     >
       <Flex gap={12} alignItems="center">
-        <LclLogo width="80" />
+        <LclLogo width={80} />
         <Text
           fontFamily="mono"
           fontVariantNumeric="slashed-zero"
@@ -94,7 +94,7 @@ function GlobalHeader() {
       <Flex gap={12} alignItems="center">
         <ColorModeButton />
         <a href="https://www.bezosearthfund.org/" target="_blank" rel="noreferrer" title="Bezos Earth Fund Logo">
-          <BEFLogo width="92" />
+          <BEFLogo width={92} />
         </a>
         <a href="https://www.wri.org/" target="_blank" rel="noreferrer" title="WRI Logo">
           <Image src={WRILogo} alt="WRI Logo" width="120px" css={{ _dark: { filter: "invert(1) saturate(0) brightness(6)" }}} />
