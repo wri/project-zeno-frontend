@@ -37,8 +37,7 @@ function ChatOutput() {
   Hi! I'm Land & Carbon Lab's alert explorer. I can help you find and investigate disturbances in your area of interest using the Land Disturbance Alert Classification System and other contextual data. 
   \nStart by asking me what I can do.
   ` : `
-  Hi! I'm Land & Carbon Lab's monitoring assistant. I can help you find answer your queries about KBAs.
-  \nStart by asking me what I can do.`;
+  Hi! I'm Land & Carbon Lab's monitoring assistant. I can help you answer queries about Key Biodiversity Areas, generate insights, and set up a nature monitoring dashboard.`;
 
   return (
     <Box ref={containerRef} fontSize="sm">

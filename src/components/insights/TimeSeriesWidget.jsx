@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import T from "prop-types";
+import ReactMarkdown from "react-markdown";
 
 export default function TimeSeriesWidget(data) {
   const chartRef = useRef();
@@ -179,6 +180,12 @@ export default function TimeSeriesWidget(data) {
         ))}
       </Flex>
       <Text mt={4}>{data.description}</Text>
+      <Text fontSize="lg" fontWeight="bold" mt={4}>
+        Insights
+      </Text>
+      <Text mt={4}>
+        <ReactMarkdown>{data.analysis}</ReactMarkdown>
+      </Text>
     </Box>
   );
 }
