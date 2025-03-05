@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import T from "prop-types";
@@ -8,15 +8,35 @@ export default function TimeSeriesWidget(data) {
   const containerRef = useRef();
   const tooltipRef = useRef();
   const colors = d3.schemeCategory10; // Use D3's color scheme
+  const [ chartDimensions, setChartDimensions ] = useState([0, 0]);
+  
+  useEffect(() => {
+    if (containerRef.current) {
+      const observer = new ResizeObserver(entries => {
+        const e = entries[0];
+        const parentElement = e.target.parentElement;
+        const newDimensions = [parentElement.clientWidth - 32, (parentElement.clientHeight * 0.75) - 40];
+        setChartDimensions(newDimensions);
+      });
+      observer.observe(containerRef.current);
+
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, [containerRef]);
 
   // If every value in the rest of the keys is null, exclude the object.
-  const filteredData = data.data.filter(({ year, ...rest }) => 
+  const filteredData = data.data.filter(({ ...rest }) => 
     !Object.values(rest).every(value => Number.isNaN(value))
   );
 
   useEffect(() => {
-    const width = 600;
-    const height = 400;
+    // Exit effect if at least one dimension is 0
+    if (!chartDimensions.every((x) => !!x) || !data) return;
+  
+    const width = chartDimensions[0];
+    const height = chartDimensions[1];
     const margin = { top: 20, right: 100, bottom: 40, left: 60 };
 
     d3.select(chartRef.current).selectAll("*").remove();
@@ -140,11 +160,15 @@ export default function TimeSeriesWidget(data) {
         tooltip.style("display", "none");
         cursorLine.style("display", "none");
       });
-  }, [data, colors]);
+  }, [data, colors, chartDimensions, filteredData]);
 
   return (
     <Box ref={containerRef} position="relative" p="6">
-      <svg ref={chartRef} />
+      <svg
+        ref={chartRef}
+        width={chartDimensions[0]}
+        height={chartDimensions[1]}
+      />
       <div ref={tooltipRef} />
       <Flex wrap="wrap" mt={2}>
         {Object.keys(filteredData[0]).filter(key => key !== "year").map((key, index) => (
