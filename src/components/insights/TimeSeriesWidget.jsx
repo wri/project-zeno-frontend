@@ -181,7 +181,7 @@ export default function TimeSeriesWidget(data) {
         ))}
       </Flex>
       <Text mt={4}>{data.description}</Text>
-      <Text mt={4} mb={2} fontWeight="bold">Analysis:</Text>
+      <Text mt={4} mb={2} fontWeight="bold">Insights</Text>
       <Markdown>{data.analysis}</Markdown>
     </Box>
   );
