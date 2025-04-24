@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WRI Auth Callback</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+  </style>
+</head>
+<body>
+  <p id="message">Processing login...</p>
+
+  <script>
+    const WRI_TOKEN_KEY = "wriToken"; // Must match the key used in src/atoms.js
+
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('token');
+
+      if (token) {
+        console.log("Callback HTML: Received token", token.substring(0, 10) + "...");
+        localStorage.setItem(WRI_TOKEN_KEY, token);
+        document.getElementById('message').textContent = 'Login successful! Closing this window...';
+        // Attempt to close the window
+        window.close();
+        // If window.close() fails (e.g., due to browser restrictions),
+        // this message will remain visible.
+        setTimeout(() => {
+             document.getElementById('message').textContent = 'Login successful! Please close this window manually.';
+        }, 1500); // Show manual close message after 1.5s if not closed
+      } else {
+        console.error("Callback HTML: No token received");
+        document.getElementById('message').textContent = 'Error: No token received in callback.';
+      }
+    } catch (error) {
+        console.error("Callback HTML: Error processing callback", error);
+        document.getElementById('message').textContent = 'Error processing login. Please try again.';
+    }
+  </script>
+</body>
+</html> 

@@ -2,6 +2,40 @@ import bbox from "@turf/bbox";
 import { atom } from "jotai";
 import { v4 as uuidv4 } from "uuid";
 
+// --- Authentication Atoms ---
+const WRI_TOKEN_KEY = "wriToken";
+
+// Atom to manage the token state and sync with localStorage
+export const authTokenAtom = atom(
+  localStorage.getItem(WRI_TOKEN_KEY),
+  (get, set, token) => {
+    if (token) {
+      localStorage.setItem(WRI_TOKEN_KEY, token);
+      set(authTokenAtom, token);
+    } else {
+      localStorage.removeItem(WRI_TOKEN_KEY);
+      set(authTokenAtom, null);
+    }
+  }
+);
+
+// Subscribe to storage events to sync across tabs/windows
+authTokenAtom.onMount = (setAtom) => {
+  const handler = (e) => {
+    if (e.key === WRI_TOKEN_KEY) {
+      // Update the atom's state based on the storage change
+      setAtom(e.newValue); // Note: e.newValue is null if item is removed
+    }
+  };
+
+  window.addEventListener("storage", handler);
+  return () => {
+    window.removeEventListener("storage", handler);
+  };
+};
+
+// Derived atom for checking authentication status
+export const isAuthenticatedAtom = atom((get) => !!get(authTokenAtom));
 
 export const mapLayersAtom = atom([]);
 export const highlightedLocationAtom = atom();
@@ -54,13 +88,10 @@ export const addInsightsAtom = atom((get) => get(insightsAtom), (get, set, insig
   });
 });
 
-
-
 export const addPrompt = atom(null, (get, set, prompt) => {
   const appType = get(currentAppTypeAtom);
   const userPersona = get(currentUserPersonaAtom);
   const { queryType, query } = prompt;
-
 
   if (queryType === "query") {
     set(chatHistoryAtom, (prev => [...prev, makeInputMessage(query)]));

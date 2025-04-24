@@ -13,20 +13,43 @@ import BEFLogo from "./BEFLogo";
 import WRILogo from "/WRI_logo.png";
 import { ColorModeButton } from "./ui/color-mode";
 import { CollecticonChevronDownSmall } from "@devseed-ui/collecticons-react";
-import { currentAppTypeAtom } from "../atoms";
-import { useAtom } from "jotai";
+import {
+  currentAppTypeAtom,
+  isAuthenticatedAtom,
+  authTokenAtom
+} from "../atoms";
+import { useAtom, useSetAtom, useAtomValue } from "jotai";
+
+const wriAuthUrl = "https://api.resourcewatch.org/auth/login";
+const callbackUrl = `${window.location.origin}/callback.html`; // Use the static HTML callback file
 
 function GlobalHeader() {
   const location = useLocation();
   const [selectedMenuItem, setSelectedMenuItem] = useState("alerting");
   const [, setSelectedAppType] = useAtom(currentAppTypeAtom);
+  const isAuthenticated = useAtomValue(isAuthenticatedAtom);
+  const setAuthToken = useSetAtom(authTokenAtom);
+
   useEffect(() => {
     const path = location.pathname.split("/").reverse()[0];
-    if (path) {
+    if (path && (path === "alerting" || path === "monitoring")) {
       setSelectedMenuItem(path);
       setSelectedAppType(path);
+    } else {
+      setSelectedMenuItem("alerting");
+      setSelectedAppType("alerting");
     }
   }, [location, setSelectedAppType]);
+
+  const handleLogin = () => {
+    // Construct the auth URL with callback and open in a popup
+    const authUrl = `${wriAuthUrl}?callbackUrl=${encodeURIComponent(callbackUrl)}&token=true`;
+    window.open(authUrl, "WRI Login", "width=600,height=700");
+  };
+
+  const handleLogout = () => {
+    setAuthToken(null);
+  };
 
   return (
     <Box
@@ -91,13 +114,18 @@ function GlobalHeader() {
           </MenuContent>
         </MenuRoot>
       </Flex>
-      <Flex gap={12} alignItems="center">
+      <Flex gap={4} alignItems="center">
         <ColorModeButton />
+        {isAuthenticated ? (
+          <Button size="sm" onClick={handleLogout}>Logout</Button>
+        ) : (
+          <Button size="sm" onClick={handleLogin}>Login with WRI</Button>
+        )}
         <a href="https://www.bezosearthfund.org/" target="_blank" rel="noreferrer" title="Bezos Earth Fund Logo">
           <BEFLogo width={92} />
         </a>
         <a href="https://www.wri.org/" target="_blank" rel="noreferrer" title="WRI Logo">
-          <Image src={WRILogo} alt="WRI Logo" width="120px" css={{ _dark: { filter: "invert(1) saturate(0) brightness(6)" }}} />
+          <Image src={WRILogo} alt="WRI Logo" width="120px" css={{ _dark: { filter: "invert(1) saturate(0) brightness(6)" } }} />
         </a>
       </Flex>
     </Box>
