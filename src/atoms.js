@@ -1,6 +1,7 @@
 import bbox from "@turf/bbox";
 import { atom } from "jotai";
 import { v4 as uuidv4 } from "uuid";
+import { jwtDecode } from "jwt-decode";
 
 // --- Authentication Atoms ---
 const WRI_TOKEN_KEY = "wriToken";
@@ -36,6 +37,24 @@ authTokenAtom.onMount = (setAtom) => {
 
 // Derived atom for checking authentication status
 export const isAuthenticatedAtom = atom((get) => !!get(authTokenAtom));
+
+// Derived atom to get the user's email from the JWT payload
+export const currentUserEmailAtom = atom((get) => {
+  const token = get(authTokenAtom);
+  if (!token) {
+    return null; // No token, no email
+  }
+  try {
+    const decoded = jwtDecode(token); // Decode the token
+    // Adjust the property access based on the actual JWT structure
+    // Common properties are 'email', 'sub', 'name', etc.
+    return decoded?.email || null; // Return email or null if not found
+  } catch (error) {
+    console.error("Failed to decode JWT:", error);
+    // If decoding fails (invalid token), treat as unauthenticated
+    return null;
+  }
+});
 
 export const mapLayersAtom = atom([]);
 export const highlightedLocationAtom = atom();

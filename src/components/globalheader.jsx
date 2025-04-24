@@ -16,7 +16,8 @@ import { CollecticonChevronDownSmall } from "@devseed-ui/collecticons-react";
 import {
   currentAppTypeAtom,
   isAuthenticatedAtom,
-  authTokenAtom
+  authTokenAtom,
+  currentUserEmailAtom
 } from "../atoms";
 import { useAtom, useSetAtom, useAtomValue } from "jotai";
 
@@ -29,6 +30,7 @@ function GlobalHeader() {
   const [, setSelectedAppType] = useAtom(currentAppTypeAtom);
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const setAuthToken = useSetAtom(authTokenAtom);
+  const userEmail = useAtomValue(currentUserEmailAtom);
 
   useEffect(() => {
     const path = location.pathname.split("/").reverse()[0];
@@ -117,7 +119,10 @@ function GlobalHeader() {
       <Flex gap={4} alignItems="center">
         <ColorModeButton />
         {isAuthenticated ? (
-          <Button size="sm" onClick={handleLogout}>Logout</Button>
+          <Flex alignItems="center" gap={3}>
+            {userEmail && <Text fontSize="sm">Welcome, {userEmail}!</Text>}
+            <Button size="sm" onClick={handleLogout}>Logout</Button>
+          </Flex>
         ) : (
           <Button size="sm" onClick={handleLogin}>Login with WRI</Button>
         )}
