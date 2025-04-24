@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Box, Collapsible, Grid, Heading, List } from "@chakra-ui/react";
+import { Box, Collapsible, Grid, Heading } from "@chakra-ui/react";
 import Providers from "../Providers";
 import { ChatInput, ChatOutput, SidePanelWidget } from "../components";
 import GlobalHeader from "../components/globalheader";
@@ -10,17 +10,55 @@ import { CollecticonClipboard, CollecticonSpeechBalloon } from "@devseed-ui/coll
 import { useAtom } from "jotai";
 import ReportContentWidget from "../components/ReportContentWidget";
 import InsightsDrawer from "../components/insights/InsightsDrawer";
+import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
+import "react-grid-layout/css/styles.css";
+import "react-resizable/css/styles.css";
 
 function Monitoring() {
   const [isReportOpen, setIsReportOpen] = useState(false);
-  const [reportContent] = useAtom(reportContentAtom);
+  const [reportContent, setReportContent] = useAtom(reportContentAtom);
   const [sidePanelContent] = useAtom(sidePanelContentAtom);
+  const [layouts, setLayouts] = useState({});
+
   useEffect(() => {
-    if(reportContent.length === 0){
+    if (reportContent.length === 0) {
       setIsReportOpen(false);
     }
   }, [reportContent]);
-  
+
+  // Generate initial layout if not exists
+  useEffect(() => {
+    const generateLayout = () => {
+      return reportContent.map((item, index) => ({
+        i: item.title,
+        x: 0,
+        y: index,
+        w: 1,
+        h: item.h || 1,
+        minH: 1,
+        maxH: 10
+      }));
+    };
+
+    setLayouts({ lg: generateLayout() });
+  }, [reportContent]);
+
+  const handleLayoutChange = (layout, layouts) => {
+    setLayouts(layouts);
+    // Reorder reportContent based on layout y positions and save heights
+    const newOrder = layout
+      .slice()
+      .sort((a, b) => a.y - b.y)
+      .map(item => {
+        const content = reportContent.find(content => content.title === item.i);
+        return {
+          ...content,
+          h: item.h
+        };
+      });
+    setReportContent(newOrder);
+  };
+
   const panelBg = useColorModeValue("bg.panel", "bg.emphasized");
   return (
     <Providers>
@@ -111,13 +149,28 @@ function Monitoring() {
               </Collapsible.Trigger>
               <Collapsible.Content>
                 <Box overflow={reportContent.length > 1 ? "auto" : "visible"} maxH="100%">
-                  <List.Root listStyle="none" p="0" mt="4" mb="0">
-                    {reportContent.map((data) => (
-                      <List.Item key={data.title}>
-                        <ReportContentWidget {...data} />
-                      </List.Item>
-                    ))}
-                  </List.Root>
+                  {layouts.lg && (
+                    <ResponsiveGridLayout
+                      className="layout"
+                      layouts={layouts}
+                      breakpoints={{ lg: 1200 }}
+                      cols={{ lg: 1 }}
+                      rowHeight={300}
+                      width={900}
+                      margin={[10, 10]}
+                      onLayoutChange={handleLayoutChange}
+                      isDraggable={true}
+                      isResizable={true}
+                      useCSSTransforms={true}
+                      draggableHandle=".drag-handle"
+                    >
+                      {reportContent.map((data) => (
+                        <div key={data.title}>
+                          <ReportContentWidget {...data} />
+                        </div>
+                      ))}
+                    </ResponsiveGridLayout>
+                  )}
                 </Box>
               </Collapsible.Content>
             </Collapsible.Root>}
