@@ -40,8 +40,8 @@ function makeInputMessage(query) {
 }
 
 const appURLs = {
-  "alerting": "https://dev.api.zeno.ds.io/stream/dist_alert",
-  "monitoring": "https://dev.api.zeno.ds.io/stream/kba"
+  "alerting": "https://api.zeno.ds.io/stream/dist_alert",
+  "monitoring": "https://api.zeno.ds.io/stream/kba"
 };
 
 export const addInsightsAtom = atom((get) => get(insightsAtom), (get, set, insights) => {
