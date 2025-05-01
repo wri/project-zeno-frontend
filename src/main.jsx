@@ -26,9 +26,6 @@ const router = createRouter({
   routeTree,
   history,
   basepath: "/",
-  onLoad: () => {
-    router.navigate("alerting");
-  }
 });
 
 // Render the app
