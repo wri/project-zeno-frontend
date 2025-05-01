@@ -21,9 +21,6 @@ import {
 } from "../atoms";
 import { useAtom, useSetAtom, useAtomValue } from "jotai";
 
-const wriAuthUrl = "https://api.resourcewatch.org/auth/login";
-const callbackUrl = `${window.location.origin}/callback.html`; // Use the static HTML callback file
-
 function GlobalHeader() {
   const location = useLocation();
   const [selectedMenuItem, setSelectedMenuItem] = useState("alerting");
@@ -42,12 +39,6 @@ function GlobalHeader() {
       setSelectedAppType("alerting");
     }
   }, [location, setSelectedAppType]);
-
-  const handleLogin = () => {
-    // Construct the auth URL with callback and open in a popup
-    const authUrl = `${wriAuthUrl}?callbackUrl=${encodeURIComponent(callbackUrl)}&token=true`;
-    window.open(authUrl, "WRI Login", "width=600,height=700");
-  };
 
   const handleLogout = () => {
     setAuthToken(null);
@@ -124,7 +115,7 @@ function GlobalHeader() {
             <Button size="sm" onClick={handleLogout}>Logout</Button>
           </Flex>
         ) : (
-          <Button size="sm" onClick={handleLogin}>Login with WRI</Button>
+          <Text fontSize="sm" fontStyle="italic" color="gray.500">Not logged in</Text>
         )}
         <a href="https://www.bezosearthfund.org/" target="_blank" rel="noreferrer" title="Bezos Earth Fund Logo">
           <BEFLogo width={92} />
