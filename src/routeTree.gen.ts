@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as MonitoringImport } from './routes/monitoring'
 import { Route as AlertingImport } from './routes/alerting'
+import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
 
@@ -28,10 +29,23 @@ const AlertingRoute = AlertingImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const IndexRoute = IndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
     '/alerting': {
       id: '/alerting'
       path: '/alerting'
@@ -52,36 +66,41 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
   '/alerting': typeof AlertingRoute
   '/monitoring': typeof MonitoringRoute
 }
 
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/alerting': typeof AlertingRoute
   '/monitoring': typeof MonitoringRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
+  '/': typeof IndexRoute
   '/alerting': typeof AlertingRoute
   '/monitoring': typeof MonitoringRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/alerting' | '/monitoring'
+  fullPaths: '/' | '/alerting' | '/monitoring'
   fileRoutesByTo: FileRoutesByTo
-  to: '/alerting' | '/monitoring'
-  id: '__root__' | '/alerting' | '/monitoring'
+  to: '/' | '/alerting' | '/monitoring'
+  id: '__root__' | '/' | '/alerting' | '/monitoring'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   AlertingRoute: typeof AlertingRoute
   MonitoringRoute: typeof MonitoringRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AlertingRoute: AlertingRoute,
   MonitoringRoute: MonitoringRoute,
 }
@@ -96,9 +115,13 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.jsx",
       "children": [
+        "/",
         "/alerting",
         "/monitoring"
       ]
+    },
+    "/": {
+      "filePath": "index.jsx"
     },
     "/alerting": {
       "filePath": "alerting.jsx"

@@ -13,20 +13,36 @@ import BEFLogo from "./BEFLogo";
 import WRILogo from "/WRI_logo.png";
 import { ColorModeButton } from "./ui/color-mode";
 import { CollecticonChevronDownSmall } from "@devseed-ui/collecticons-react";
-import { currentAppTypeAtom } from "../atoms";
-import { useAtom } from "jotai";
+import {
+  currentAppTypeAtom,
+  isAuthenticatedAtom,
+  authTokenAtom,
+  currentUserEmailAtom
+} from "../atoms";
+import { useAtom, useSetAtom, useAtomValue } from "jotai";
 
 function GlobalHeader() {
   const location = useLocation();
   const [selectedMenuItem, setSelectedMenuItem] = useState("alerting");
   const [, setSelectedAppType] = useAtom(currentAppTypeAtom);
+  const isAuthenticated = useAtomValue(isAuthenticatedAtom);
+  const setAuthToken = useSetAtom(authTokenAtom);
+  const userEmail = useAtomValue(currentUserEmailAtom);
+
   useEffect(() => {
     const path = location.pathname.split("/").reverse()[0];
-    if (path) {
+    if (path && (path === "alerting" || path === "monitoring")) {
       setSelectedMenuItem(path);
       setSelectedAppType(path);
+    } else {
+      setSelectedMenuItem("alerting");
+      setSelectedAppType("alerting");
     }
   }, [location, setSelectedAppType]);
+
+  const handleLogout = () => {
+    setAuthToken(null);
+  };
 
   return (
     <Box
@@ -91,13 +107,21 @@ function GlobalHeader() {
           </MenuContent>
         </MenuRoot>
       </Flex>
-      <Flex gap={12} alignItems="center">
+      <Flex gap={4} alignItems="center">
         <ColorModeButton />
+        {isAuthenticated ? (
+          <Flex alignItems="center" gap={3}>
+            {userEmail && <Text fontSize="sm">Welcome, {userEmail}!</Text>}
+            <Button size="sm" onClick={handleLogout}>Logout</Button>
+          </Flex>
+        ) : (
+          <Text fontSize="sm" fontStyle="italic" color="gray.500">Not logged in</Text>
+        )}
         <a href="https://www.bezosearthfund.org/" target="_blank" rel="noreferrer" title="Bezos Earth Fund Logo">
           <BEFLogo width={92} />
         </a>
         <a href="https://www.wri.org/" target="_blank" rel="noreferrer" title="WRI Logo">
-          <Image src={WRILogo} alt="WRI Logo" width="120px" css={{ _dark: { filter: "invert(1) saturate(0) brightness(6)" }}} />
+          <Image src={WRILogo} alt="WRI Logo" width="120px" css={{ _dark: { filter: "invert(1) saturate(0) brightness(6)" } }} />
         </a>
       </Flex>
     </Box>
