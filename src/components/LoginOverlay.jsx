@@ -14,7 +14,10 @@ import {
 import { isAuthenticatedAtom, authTokenAtom, currentUserEmailAtom } from '../atoms';
 
 const wriAuthUrl = "https://api.resourcewatch.org/auth/login";
-const callbackUrl = `${window.location.origin}/callback.html`; 
+
+// Construct callbackUrl using Vite's base URL environment variable
+const callbackUrl = `${window.location.origin}${import.meta.env.BASE_URL}callback.html`;
+
 const ALLOWED_DOMAINS = ['wri.org', 'developmentseed.org']; 
 
 function LoginOverlay() {
