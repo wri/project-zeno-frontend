@@ -43,7 +43,7 @@ AuthDialog.propTypes = {
 // --- Constants ---
 const wriAuthUrl = "https://api.resourcewatch.org/auth/login";
 const callbackUrl = `${window.location.origin}${import.meta.env.BASE_URL}callback.html`;
-const ALLOWED_DOMAINS = ["wri.org", "developmentseed.org"];
+const ALLOWED_DOMAINS = ["wri.org", "developmentseed.org", "wriconsultant.org"];
 
 // --- Main Login Overlay Component ---
 function LoginOverlay() {
