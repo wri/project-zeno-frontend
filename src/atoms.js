@@ -92,9 +92,16 @@ function makeInputMessage(query) {
   };
 }
 
+const API_DOMAIN = "https://api.zeno-staging.ds.io";
+
 const appURLs = {
+<<<<<<< Updated upstream
   "alerting": "https://dev.api.zeno.ds.io/stream/dist_alert",
   "monitoring": "https://dev.api.zeno.ds.io/stream/kba"
+=======
+  "alerting": `${API_DOMAIN}/stream/dist_alert`,
+  "monitoring": `${API_DOMAIN}/stream/kba`
+>>>>>>> Stashed changes
 };
 
 export const addInsightsAtom = atom((get) => get(insightsAtom), (get, set, insights) => {
@@ -134,9 +141,24 @@ export const addPrompt = atom(null, (get, set, prompt) => {
   set(isLoadingAtom, true);
   fetch(queryUrl, {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: {
+      "content-type": "application/json",
+      "Authorization": `Bearer ${get(authTokenAtom)}`
+    },
     body: JSON.stringify(queryToSend)
   }).then(async (response) => {
+    if (!response.ok) {
+      if (response.status === 401) {
+        set(chatHistoryAtom, (prev) => [...prev, {
+          type: "error",
+          message: "Authentication failed. Please log in again.",
+          timestamp: Date.now()
+        }]);
+        set(authTokenAtom, null); // Clear the invalid token
+        return;
+      }
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     const utf8Decoder = new TextDecoder("utf-8");
     const reader = response.body.getReader();
     let { value: chunk, done: readerDone } = await reader.read();
