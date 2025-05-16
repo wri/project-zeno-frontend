@@ -92,7 +92,7 @@ function makeInputMessage(query) {
   };
 }
 
-const API_DOMAIN = "https://api.zeno-staging.ds.io";
+const API_DOMAIN = "https://api.zeno.ds.io";
 
 const appURLs = {
   "alerting": `${API_DOMAIN}/stream/dist_alert`,
